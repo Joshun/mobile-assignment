@@ -1,7 +1,9 @@
 package com4510.thebestphotogallery;
 
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import pl.aprilapps.easyphotopicker.EasyImage;
 
@@ -24,13 +27,7 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("permissions not granted");
         }
         else {
-            String externalStorageDirP = Environment.getExternalStorageDirectory().getAbsolutePath();
-            File externalStorageDirF = new File(externalStorageDirP);
-            System.out.println(externalStorageDirP);
-            File[] files = externalStorageDirF.listFiles();
-            for (File f: files) {
-                System.out.println(f.getAbsolutePath());
-            }
+           ImageLoader.loadImages(this);
         }
 
     }
