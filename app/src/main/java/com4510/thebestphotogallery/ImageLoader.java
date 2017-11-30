@@ -1,7 +1,9 @@
 package com4510.thebestphotogallery;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 
@@ -13,7 +15,7 @@ import java.util.ArrayList;
  */
 
 public class ImageLoader {
-    public static ArrayList<Integer> loadImages(Activity activity) {
+    public static ArrayList<String> loadImages(Activity activity) {
 //        String externalStorageDirP = Environment.getExternalStorageDirectory().getAbsolutePath();
 //        File externalStorageDirF = new File(externalStorageDirP);
 //        System.out.println(externalStorageDirP);
@@ -28,14 +30,23 @@ public class ImageLoader {
                 new String[]{},
                 null,
                 null);
+        ArrayList<String> imgPaths = new ArrayList<>();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             imgIds.add(cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
+//            Uri imageUri = ContentUris.withAppendedId(
+//                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//                    cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID))
+//            );
+//            imgPaths.add(imageUri);
+            imgPaths.add(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)));
+//            cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.EXTERNAL_CONTENT_URI))
 //                System.out.println(cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
             cursor.moveToNext();
         }
         cursor.close();
         System.out.println(imgIds);
-        return imgIds;
+//        return imgIds;
+        return imgPaths;
     }
 }
