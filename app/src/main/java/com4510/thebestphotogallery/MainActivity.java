@@ -96,10 +96,8 @@ public class MainActivity extends AppCompatActivity {
 
         Util.checkPermissions(getApplicationContext(), this);
 
-
+        SendToServerTask sendToServerTask = new SendToServerTask();
+        sendToServerTask.execute(new ServerData());
     }
-
-
-
 
 }
