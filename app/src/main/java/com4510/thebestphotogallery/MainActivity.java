@@ -96,8 +96,17 @@ public class MainActivity extends AppCompatActivity {
 
         Util.checkPermissions(getApplicationContext(), this);
 
-        SendToServerTask sendToServerTask = new SendToServerTask();
-        sendToServerTask.execute(new ServerData());
+//        SendToServerTask sendToServerTask = new SendToServerTask();
+//        sendToServerTask.execute(new ServerData());
+        ServerComm serverComm = new ServerComm(getCacheDir());
+        ServerData sd = new ServerData();
+        sd.date = "today";
+        sd.title = "test title";
+        sd.description = "test description";
+        sd.latitude = "0.0";
+        sd.longitude = "0.0";
+        serverComm.sendData(sd);
+
     }
 
 }
