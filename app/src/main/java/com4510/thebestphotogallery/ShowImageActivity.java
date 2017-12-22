@@ -8,14 +8,24 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 
 public class ShowImageActivity extends AppCompatActivity {
+
+    private Bitmap currentImage = null;
+    private String currentImageFile = "file.png";
+
+    private ServerComm serverComm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message2);
+
+        serverComm = new ServerComm(getCacheDir());
 
         Bundle b = getIntent().getExtras();
         int position=-1;
@@ -30,7 +40,29 @@ public class ShowImageActivity extends AppCompatActivity {
                 } else if (element.file!=null) {
                     Bitmap myBitmap = BitmapFactory.decodeFile(element.file.getAbsolutePath());
                     imageView.setImageBitmap(myBitmap);
+                    currentImage = myBitmap;
+                    currentImageFile = element.file.getName();
                 }
+
+                imageView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        Log.v(getClass().getName(), "touch event");
+                        if (currentImage != null) {
+                            Log.v(getClass().getName(), "attempting to send to server...");
+                            ServerData serverData = new ServerData();
+                            serverData.imageData = currentImage;
+                            serverData.title = "title";
+                            serverData.longitude = "0.0";
+                            serverData.latitude = "0.0";
+                            serverData.description = "description";
+                            serverData.imageFilename = currentImageFile;
+                            serverData.date = "1/1/1";
+                            serverComm.sendData(serverData);
+                        }
+                        return false;
+                    }
+                });
             }
 
         }

@@ -1,5 +1,6 @@
 package com4510.thebestphotogallery;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -18,7 +19,9 @@ import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,13 +54,14 @@ public class ServerComm {
             new Response.Listener<NetworkResponse>() {
                 @Override
                 public void onResponse(NetworkResponse response) {
+                    Log.v(getClass().getName(), "response received");
 
                 }
         },
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    Log.v(getClass().getName(), "server error");
                 }
             }
         ) {
@@ -65,8 +69,12 @@ public class ServerComm {
             @Override
             protected Map<String, DataPart> getByteData() throws AuthFailureError {
                 Map<String, DataPart> params = new HashMap<>();
-//                params.put("image", new DataPart("file.jpg", AppHelper.getFileDataFromDrawable()
-                return super.getByteData();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                serverData.imageData.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+                params.put("image", new DataPart(serverData.imageFilename, byteArray, "image/png"));
+//                return super.getByteData();
+                return params;
             }
 
             @Override
@@ -79,6 +87,8 @@ public class ServerComm {
                 return params;
             }
         };
+
+        mRequestQueue.add(multipartRequest);
 
 //        JSONObject jsonObject = new JSONObject(serverDataHashMap);
 //
