@@ -9,6 +9,7 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/main_appbar"
         >
         <android.support.v7.widget.Toolbar
             android:id="@+id/main_toolbar"
@@ -22,7 +23,10 @@
 
     </android.support.design.widget.AppBarLayout>
 
-<include layout="@layout/imagegrid"/>
+<include layout="@layout/imagegrid"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toBottomOf="@id/main_appbar"/>
 
 
 </android.support.constraint.ConstraintLayout>
