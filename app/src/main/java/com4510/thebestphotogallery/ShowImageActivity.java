@@ -4,6 +4,7 @@
 
 package com4510.thebestphotogallery;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,6 +27,8 @@ public class ShowImageActivity extends AppCompatActivity {
 
     private ServerComm serverComm;
 
+    Integer imageIndex = null;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -38,16 +41,18 @@ public class ShowImageActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.image_details_menuentry:
                 Log.v(getClass().getName(), "detail option selected");
-                Bundle b = getIntent().getExtras();
-                int position = b.getInt("position");
                 Intent intent = new Intent(this, ImageDetailsActivity.class);
-                intent.putExtra("position", position);
+                intent.putExtra("position", imageIndex);
                 startActivity(intent);
+                return true;
+            case android.R.id.home:
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,44 +64,61 @@ public class ShowImageActivity extends AppCompatActivity {
 
         serverComm = new ServerComm(getCacheDir());
 
-        Bundle b = getIntent().getExtras();
-        int position=-1;
-        if(b != null) {
-            // this is the image position in the itemList
-            position = b.getInt("position");
-            if (position!=-1){
-                ImageView imageView = (ImageView) findViewById(R.id.image);
-                ImageElement element= MyAdapter.getItems().get(position);
-                if (element.image!=-1) {
-                    imageView.setImageResource(element.image);
-                } else if (element.file!=null) {
-                    Bitmap myBitmap = BitmapFactory.decodeFile(element.file.getAbsolutePath());
-                    imageView.setImageBitmap(myBitmap);
-                    currentImage = myBitmap;
-                    currentImageFile = element.file.getName();
-                }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-                imageView.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        Log.v(getClass().getName(), "touch event");
-                        if (currentImage != null) {
-                            Log.v(getClass().getName(), "attempting to send to server...");
-                            ServerData serverData = new ServerData();
-                            serverData.imageData = currentImage;
-                            serverData.title = "title";
-                            serverData.longitude = "0.0";
-                            serverData.latitude = "0.0";
-                            serverData.description = "description";
-                            serverData.imageFilename = currentImageFile;
-                            serverData.date = "1/1/1";
-                            serverComm.sendData(serverData);
-                        }
-                        return false;
-                    }
-                });
+
+
+        Log.v(getClass().getName(), "image index is null");
+
+        if (savedInstanceState != null) {
+            Log.v(getClass().getName(), "loaded instance state");
+            imageIndex = savedInstanceState.getInt("position");
+        }
+        else {
+
+            Bundle b = getIntent().getExtras();
+            //            int position = -1;
+            imageIndex = -1;
+            if (b != null) {
+                // this is the image position in the itemList
+                imageIndex = b.getInt("position");
+            }
+        }
+
+
+
+        if (imageIndex!=-1){
+            ImageView imageView = (ImageView) findViewById(R.id.image);
+            ImageElement element= MyAdapter.getItems().get(imageIndex);
+            if (element.image!=-1) {
+                imageView.setImageResource(element.image);
+            } else if (element.file!=null) {
+                Bitmap myBitmap = BitmapFactory.decodeFile(element.file.getAbsolutePath());
+                imageView.setImageBitmap(myBitmap);
+                currentImage = myBitmap;
+                currentImageFile = element.file.getName();
             }
 
+            imageView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    Log.v(getClass().getName(), "touch event");
+                    if (currentImage != null) {
+                        Log.v(getClass().getName(), "attempting to send to server...");
+                        ServerData serverData = new ServerData();
+                        serverData.imageData = currentImage;
+                        serverData.title = "title";
+                        serverData.longitude = "0.0";
+                        serverData.latitude = "0.0";
+                        serverData.description = "description";
+                        serverData.imageFilename = currentImageFile;
+                        serverData.date = "1/1/1";
+                        serverComm.sendData(serverData);
+                    }
+                    return false;
+                }
+            });
         }
     }
 
