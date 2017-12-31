@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,12 +52,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
 //            } else
               if (items.get(position).file!=null){
                   BitmapFactory.Options options = new BitmapFactory.Options();
-                  options.inJustDecodeBounds = true;
+                  options.inJustDecodeBounds = false;
                   options.inPreferredConfig = Bitmap.Config.RGB_565;
                   options.inSampleSize = 4;
                   options.inDither = true;
                   Bitmap myBitmap = BitmapFactory.decodeFile(items.get(position).file.getAbsolutePath(), options);
-                  holder.imageView.setImageBitmap(myBitmap);
+//                  Log.v("Image Dimensions", options.outWidth + "x" + options.outHeight);
+                  if (myBitmap != null)
+                  {
+                      float resize = options.outWidth > options.outHeight ? 512.0f / (float)options.outHeight : 512.0f / (float)options.outWidth;
+                      int width = (int)(resize * options.outWidth);
+                      int height = (int)(resize * options.outHeight);
+//                      Log.v("Dimensions", width + ", " + height + "\n");
+                      myBitmap = Bitmap.createScaledBitmap(myBitmap, width, height, true);
+                      holder.imageView.setImageBitmap(myBitmap);
+                  }
+
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
