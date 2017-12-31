@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,13 +26,17 @@ public class ImageLoader {
 //        }
 
         ArrayList<Integer> imgIds = new ArrayList<>();
-        Cursor cursor = activity.getContentResolver().query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[]{},
-                null,
-                null);
+//        Cursor cursor = activity.getContentResolver().query(
+//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//                new String[]{},
+//                null,
+//                null);
+        Cursor cursor = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{}, "", new String[]{}, "");
         ArrayList<String> imgPaths = new ArrayList<>();
         cursor.moveToFirst();
+
+        byte temp = 0;
+
         while (!cursor.isAfterLast()) {
             imgIds.add(cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
 //            Uri imageUri = ContentUris.withAppendedId(
@@ -43,6 +48,11 @@ public class ImageLoader {
 //            cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.EXTERNAL_CONTENT_URI))
 //                System.out.println(cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
             cursor.moveToNext();
+            ++temp;
+            if (temp > 12)
+            {
+                break;
+            }
         }
         cursor.close();
         System.out.println(imgIds);
