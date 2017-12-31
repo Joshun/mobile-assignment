@@ -51,10 +51,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
 //            } else
               if (items.get(position).file!=null){
                   BitmapFactory.Options options = new BitmapFactory.Options();
-                  options.inJustDecodeBounds = false;
+                  options.inJustDecodeBounds = true;
                   options.inPreferredConfig = Bitmap.Config.RGB_565;
+                  options.inSampleSize = 4;
                   options.inDither = true;
-                  Bitmap myBitmap = BitmapFactory.decodeFile(items.get(position).file.getAbsolutePath());
+                  Bitmap myBitmap = BitmapFactory.decodeFile(items.get(position).file.getAbsolutePath(), options);
                   holder.imageView.setImageBitmap(myBitmap);
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
