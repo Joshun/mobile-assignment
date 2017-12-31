@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -42,6 +44,24 @@ public class Util {
                 .setCopyTakenPhotosToPublicGalleryAppFolder(true)
                 .setCopyPickedImagesToPublicGalleryAppFolder(false)
                 .setAllowMultiplePickInGallery(true);
+    }
+
+    public static Bitmap loadBitmap(File file) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = false;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        options.inSampleSize = 4;
+        options.inDither = true;
+        Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+        if (myBitmap != null)
+        {
+            float resize = options.outWidth > options.outHeight ? 512.0f / (float)options.outHeight : 512.0f / (float)options.outWidth;
+            int width = (int)(resize * options.outWidth);
+            int height = (int)(resize * options.outHeight);
+            return Bitmap.createScaledBitmap(myBitmap, width, height, true);
+        }
+
+        return null;
     }
 
     /**

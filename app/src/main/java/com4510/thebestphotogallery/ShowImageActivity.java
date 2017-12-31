@@ -94,10 +94,16 @@ public class ShowImageActivity extends AppCompatActivity {
             if (element.image!=-1) {
                 imageView.setImageResource(element.image);
             } else if (element.file!=null) {
-                Bitmap myBitmap = BitmapFactory.decodeFile(element.file.getAbsolutePath());
-                imageView.setImageBitmap(myBitmap);
-                currentImage = myBitmap;
-                currentImageFile = element.file.getName();
+                Bitmap image = Util.loadBitmap(element.file);
+                if (image != null) {
+                    imageView.setImageBitmap(image);
+                    currentImage = image;
+                    currentImageFile = element.file.getName();
+                }
+                else {
+                    Log.e("Error", "Failed to load bitmap");
+                }
+
             }
 
             imageView.setOnTouchListener(new View.OnTouchListener() {

@@ -47,36 +47,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         //Use the provided View Holder on the onCreateViewHolder method to populate the
         // current row on the RecyclerView
         if (holder!=null && items.get(position)!=null) {
-//            if (items.get(position).image!=-1) {
-//                holder.imageView.setImageResource(items.get(position).image);
-//            } else
-              if (items.get(position).file!=null){
-                  BitmapFactory.Options options = new BitmapFactory.Options();
-                  options.inJustDecodeBounds = false;
-                  options.inPreferredConfig = Bitmap.Config.RGB_565;
-                  options.inSampleSize = 4;
-                  options.inDither = true;
-                  Bitmap myBitmap = BitmapFactory.decodeFile(items.get(position).file.getAbsolutePath(), options);
-//                  Log.v("Image Dimensions", options.outWidth + "x" + options.outHeight);
-                  if (myBitmap != null)
-                  {
-                      float resize = options.outWidth > options.outHeight ? 512.0f / (float)options.outHeight : 512.0f / (float)options.outWidth;
-                      int width = (int)(resize * options.outWidth);
-                      int height = (int)(resize * options.outHeight);
-//                      Log.v("Dimensions", width + ", " + height + "\n");
-                      myBitmap = Bitmap.createScaledBitmap(myBitmap, width, height, true);
-                      holder.imageView.setImageBitmap(myBitmap);
-                  }
-
+            Bitmap image = Util.loadBitmap(items.get(position).file);
+            if (image != null) {
+                holder.imageView.setImageBitmap(image);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, ShowImageActivity.class);
+                        intent.putExtra("position", position);
+                        context.startActivity(intent);
+                    }
+                });
             }
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, ShowImageActivity.class);
-                    intent.putExtra("position", position);
-                    context.startActivity(intent);
-                }
-            });
+            else {
+                Log.e("Error", "Failed to load bitmap");
+            }
+
         }
         //animate(holder);
     }
