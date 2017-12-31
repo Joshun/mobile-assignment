@@ -11,12 +11,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import java.io.File;
@@ -46,7 +48,13 @@ public class Util {
                 .setAllowMultiplePickInGallery(true);
     }
 
-    public static Bitmap loadBitmap(File file) {
+    public static Bitmap loadBitmap(File file, int sampleSize, int dimension) {
+        if (dimension > 4096) {
+            Log.w("Dimension warning", "dimension set too large. Reducing to 4096");
+            dimension = 4096;
+        }
+        float fdimension = (float)dimension;
+
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = false;
         options.inPreferredConfig = Bitmap.Config.RGB_565;
@@ -55,13 +63,21 @@ public class Util {
         Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
         if (myBitmap != null)
         {
-            float resize = options.outWidth > options.outHeight ? 512.0f / (float)options.outHeight : 512.0f / (float)options.outWidth;
+            float resize = options.outWidth > options.outHeight ? fdimension / (float)options.outHeight : fdimension / (float)options.outWidth;
             int width = (int)(resize * options.outWidth);
             int height = (int)(resize * options.outHeight);
             return Bitmap.createScaledBitmap(myBitmap, width, height, true);
         }
 
         return null;
+    }
+
+    public static Bitmap loadBitmap(File file, int sampleSize) {
+        return loadBitmap(file, sampleSize, 512);
+    }
+
+    public static Bitmap loadBitmap(File file) {
+        return loadBitmap(file, 4);
     }
 
     /**

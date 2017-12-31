@@ -94,7 +94,7 @@ public class ShowImageActivity extends AppCompatActivity {
             if (element.image!=-1) {
                 imageView.setImageResource(element.image);
             } else if (element.file!=null) {
-                Bitmap image = Util.loadBitmap(element.file);
+                Bitmap image = Util.loadBitmap(element.file, 2, 2048);
                 if (image != null) {
                     imageView.setImageBitmap(image);
                     currentImage = image;
