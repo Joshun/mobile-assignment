@@ -45,7 +45,13 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         for (String p: imagePaths) {
             pictureList.add(new ImageElement(new File(p)));
         }
-        recyclerViewAdapter.notifyDataSetChanged();
+
+        recyclerView.post(new Runnable() {
+            public void run() {
+                recyclerViewAdapter.notifyDataSetChanged();
+            }
+        });
+
 //        recyclerView.setAdapter(recyclerViewAdapter);
         Util.initEasyImage(this);
 
