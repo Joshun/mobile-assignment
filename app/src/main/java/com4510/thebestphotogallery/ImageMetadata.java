@@ -28,17 +28,52 @@ public class ImageMetadata {
         this.description = description;
     }
 
-    public String getTitle() {
+    public void setWidth(int width) { this.width = width; }
+
+    public void setHeight(int height) { this.height = height; }
+
+    public void setFileSize(int fileSize) { this.fileSize = fileSize; }
+
+    public void setLongitude(int longitude) { this.longitude = longitude; }
+
+    public void setLatitude(int latitude) { this.latitude = latitude; }
+
+    public final String getTitle() {
         return title;
     }
 
-    public String getDescription() {
+    public final String getDescription() {
         return description;
     }
+
+    public final int getWidth() { return width; }
+
+    public final int getHeight() { return height; }
+
+    public final int getFileSize() { return fileSize; }
+
+    public final int getLongitude() { return longitude; }
+
+    public final int getLatitude() { return latitude; }
 
     @ColumnInfo(name="title")
     private String title;
 
     @ColumnInfo(name="description")
     private String description;
+
+    @ColumnInfo(name="width")
+    private int width;
+
+    @ColumnInfo(name="height")
+    private int height;
+
+    @ColumnInfo(name="fileSize")
+    private int fileSize;
+
+    @ColumnInfo(name="longitude")
+    private int longitude;
+
+    @ColumnInfo(name="latitude")
+    private int latitude;
 }

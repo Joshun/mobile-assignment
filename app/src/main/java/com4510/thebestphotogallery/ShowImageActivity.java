@@ -86,11 +86,11 @@ public class ShowImageActivity extends AppCompatActivity {
             }
         }
 
-
-
         if (imageIndex!=-1){
             ImageView imageView = (ImageView) findViewById(R.id.image);
             ImageElement element= MyAdapter.getItems().get(imageIndex);
+            Log.v("Name", "" + element.file.getName());
+
             currentImageFile = element.file.getAbsolutePath();
             if (element.image!=-1) {
                 imageView.setImageResource(element.image);

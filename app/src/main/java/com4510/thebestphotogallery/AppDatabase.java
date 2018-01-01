@@ -7,7 +7,7 @@ import android.content.Context;
  * Created by joshua on 27/12/17.
  */
 
-@android.arch.persistence.room.Database(entities = {ImageMetadata.class}, version = 1)
+@android.arch.persistence.room.Database(entities = {ImageMetadata.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase INSTANCE;
 
@@ -15,7 +15,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public static AppDatabase getInstance(Context applicationContext) {
         if (INSTANCE == null) {
-            INSTANCE = Room.databaseBuilder(applicationContext, AppDatabase.class, "photogallery-db").build();
+            INSTANCE = Room.databaseBuilder(applicationContext, AppDatabase.class, "photogallery-db").fallbackToDestructiveMigration().build();
         }
         return INSTANCE;
     }
