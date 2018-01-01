@@ -26,6 +26,8 @@ import java.util.List;
 
 import pl.aprilapps.easyphotopicker.EasyImage;
 
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
+
 
 public class MainActivity extends AppCompatActivity implements DatabaseResponseListener {
     private RecyclerView recyclerView;
@@ -108,12 +110,36 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         recyclerViewAdapter = new MyAdapter(pictureList);
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private boolean moving = false;
+            private boolean fastScroll = false;
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 final int firstItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
+                final int lastItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
                 final boolean scrolledUp = dy < 0;
-                ((MyAdapter) recyclerViewAdapter).cancelLoading(firstItemPosition, scrolledUp);
+
+                if (!fastScroll) {
+                    fastScroll = Math.abs(dy) > 200;
+                    if (fastScroll) {
+                        ((MyAdapter) recyclerViewAdapter).cancelAll();
+                    }
+                }
+
+                if (!fastScroll && moving) {
+                    ((MyAdapter) recyclerViewAdapter).cancelLoading(firstItemPosition, lastItemPosition, scrolledUp);
+                }
+                else if (fastScroll && !moving) {
+                    fastScroll = false;
+                    doLoadImages();
+                }
                 super.onScrolled(recyclerView, dx, dy);
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int state) {
+                moving = state == SCROLL_STATE_DRAGGING;
+                super.onScrollStateChanged(recyclerView, state);
             }
         });
 

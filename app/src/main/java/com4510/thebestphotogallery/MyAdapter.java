@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
-    private final int RANGE = 26;
     private Context context;
     private static List<ImageElement> items;
     private List<MenuImageAsync> currentTasks;
@@ -75,14 +74,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
     public class View_Holder extends RecyclerView.ViewHolder  {
         ImageView imageView;
 
-
         View_Holder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image_item);
 
         }
-
-
     }
 
     private void clearFinished() {
@@ -97,15 +93,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         }
     }
 
-    public void cancelLoading(int firstVisibleItem, boolean scrollingUp) {
+    public void cancelLoading(int firstVisibleItem, int lastVisibleItem, boolean scrollingUp) {
         clearFinished();
         if (currentTasks != null && currentTasks.size() > 0) {
             for (MenuImageAsync i : currentTasks) {
                 if (!scrollingUp && i.getPosition() < firstVisibleItem
-                        || scrollingUp && i.getPosition() > firstVisibleItem + RANGE) {
+                        || scrollingUp && i.getPosition() > lastVisibleItem) {
                     i.cancel(true);
                 }
             }
+        }
+    }
+
+    public void cancelAll() {
+        clearFinished();
+        for (MenuImageAsync i : currentTasks) {
+            i.cancel(true);
         }
     }
 
