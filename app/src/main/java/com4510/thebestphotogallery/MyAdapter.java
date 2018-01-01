@@ -47,22 +47,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         //Use the provided View Holder on the onCreateViewHolder method to populate the
         // current row on the RecyclerView
         if (holder!=null && items.get(position)!=null) {
-            Bitmap image = Util.loadBitmap(items.get(position).file);
-            if (image != null) {
-                holder.imageView.setImageBitmap(image);
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, ShowImageActivity.class);
-                        intent.putExtra("position", position);
-                        context.startActivity(intent);
-                    }
-                });
-            }
-            else {
-                Log.e("Error", "Failed to load bitmap");
-            }
-
+            MenuImageAsync imageAsync = new MenuImageAsync(holder, context, items.get(position).file, position);
+            imageAsync.execute();
         }
         //animate(holder);
     }

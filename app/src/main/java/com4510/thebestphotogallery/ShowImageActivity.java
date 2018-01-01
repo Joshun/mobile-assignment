@@ -91,18 +91,21 @@ public class ShowImageActivity extends AppCompatActivity {
         if (imageIndex!=-1){
             ImageView imageView = (ImageView) findViewById(R.id.image);
             ImageElement element= MyAdapter.getItems().get(imageIndex);
+            currentImageFile = element.file.getAbsolutePath();
             if (element.image!=-1) {
                 imageView.setImageResource(element.image);
             } else if (element.file!=null) {
-                Bitmap image = Util.loadBitmap(element.file, 2, 2048);
-                if (image != null) {
-                    imageView.setImageBitmap(image);
-                    currentImage = image;
-                    currentImageFile = element.file.getName();
-                }
-                else {
-                    Log.e("Error", "Failed to load bitmap");
-                }
+                ShowImageAsync imageAsync = new ShowImageAsync(imageView, element.file);
+                imageAsync.execute();
+//                Bitmap image = Util.loadBitmap(element.file, 2, 2048);
+//                if (image != null) {
+//                    imageView.setImageBitmap(image);
+//                    currentImage = image;
+//                    currentImageFile = element.file.getName();
+//                }
+//                else {
+//                    Log.e("Error", "Failed to load bitmap");
+//                }
 
             }
 
@@ -113,7 +116,7 @@ public class ShowImageActivity extends AppCompatActivity {
                     if (currentImage != null) {
                         Log.v(getClass().getName(), "attempting to send to server...");
                         ServerData serverData = new ServerData();
-                        serverData.imageData = currentImage;
+                        serverData.imageData = v.getDrawingCache();
                         serverData.title = "title";
                         serverData.longitude = "0.0";
                         serverData.latitude = "0.0";
