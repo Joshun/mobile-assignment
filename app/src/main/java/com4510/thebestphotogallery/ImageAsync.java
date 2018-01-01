@@ -42,7 +42,7 @@ public class ImageAsync extends AsyncTask<Void, Void, Bitmap> {
         if (isCancelled()) {
             return null;
         }
-        return Util.loadBitmap(file);
+        return b;
     }
 
 }
