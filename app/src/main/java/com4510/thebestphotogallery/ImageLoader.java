@@ -34,7 +34,7 @@ public class ImageLoader {
         Cursor cursor = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{}, "", new String[]{}, "");
         ArrayList<String> imgPaths = new ArrayList<>();
         cursor.moveToFirst();
-        
+
         while (!cursor.isAfterLast()) {
             imgIds.add(cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
 //            Uri imageUri = ContentUris.withAppendedId(
@@ -48,7 +48,6 @@ public class ImageLoader {
             cursor.moveToNext();
         }
         cursor.close();
-        System.out.println(imgIds);
 //        return imgIds;
         return imgPaths;
     }

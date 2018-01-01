@@ -37,6 +37,12 @@ public class ImageAsync extends AsyncTask<Void, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(Void... data) {
+        Bitmap b = Util.loadBitmap(file);
+
+        if (isCancelled()) {
+            return null;
+        }
         return Util.loadBitmap(file);
     }
+
 }

@@ -16,6 +16,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.DragEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
@@ -39,14 +41,13 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
 //               System.out.println(imgId);
 //           }
         for (String p: imagePaths) {
-            System.out.println(p);
             pictureList.add(new ImageElement(new File(p)));
         }
         recyclerViewAdapter.notifyDataSetChanged();
 //        recyclerView.setAdapter(recyclerViewAdapter);
         Util.initEasyImage(this);
 
-        System.out.println(pictureList);
+        Log.v("Image Count", "" + pictureList.size());
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -102,9 +103,19 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
 
         recyclerView = findViewById(R.id.grid_recycler_view);
         int numberOfColumns = 4;
-        recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+        final GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerViewAdapter = new MyAdapter(pictureList);
         recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                final int firstItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
+                final boolean scrolledUp = dy < 0;
+                ((MyAdapter) recyclerViewAdapter).cancelLoading(firstItemPosition, scrolledUp);
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
 
         Util.checkPermissions(getApplicationContext(), this);
 

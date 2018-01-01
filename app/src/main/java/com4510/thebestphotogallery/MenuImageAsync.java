@@ -46,4 +46,9 @@ public class MenuImageAsync extends ImageAsync {
         super.onPostExecute(bitmap);
     }
 
+    public final int getPosition() {
+        return position;
+    }
+
+
 }

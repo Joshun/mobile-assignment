@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,20 +16,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
-    static private Context context;
+    private final int RANGE = 26;
+    private Context context;
     private static List<ImageElement> items;
-
-    public MyAdapter(List<ImageElement> items) {
-        this.items = items;
-    }
+    private List<MenuImageAsync> currentTasks;
 
     public MyAdapter(Context cont, List<ImageElement> items) {
         super();
-        this.items = items;
+        MyAdapter.items = items;
+        this.currentTasks = new ArrayList<>();
         context = cont;
+    }
+
+    public MyAdapter(List<ImageElement> items) {
+        this(null, items);
     }
 
     @Override
@@ -46,8 +51,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
 
         //Use the provided View Holder on the onCreateViewHolder method to populate the
         // current row on the RecyclerView
+
         if (holder!=null && items.get(position)!=null) {
+            holder.imageView.setImageBitmap(null);
             MenuImageAsync imageAsync = new MenuImageAsync(holder, context, items.get(position).file, position);
+            currentTasks.add(imageAsync);
             imageAsync.execute();
         }
         //animate(holder);
@@ -75,6 +83,30 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         }
 
 
+    }
+
+    private void clearFinished() {
+        if (currentTasks != null && currentTasks.size() > 0) {
+            ArrayList<MenuImageAsync> toRemove = new ArrayList<>();
+            for (MenuImageAsync i : currentTasks) {
+                if (i.getStatus() == AsyncTask.Status.FINISHED) {
+                    toRemove.add(i);
+                }
+            }
+            currentTasks.removeAll(toRemove);
+        }
+    }
+
+    public void cancelLoading(int firstVisibleItem, boolean scrollingUp) {
+        clearFinished();
+        if (currentTasks != null && currentTasks.size() > 0) {
+            for (MenuImageAsync i : currentTasks) {
+                if (!scrollingUp && i.getPosition() < firstVisibleItem
+                        || scrollingUp && i.getPosition() > firstVisibleItem + RANGE) {
+                    i.cancel(true);
+                }
+            }
+        }
     }
 
     public static List<ImageElement> getItems() {
