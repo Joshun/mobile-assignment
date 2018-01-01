@@ -113,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
             private boolean moving = false;
             private boolean fastScroll = false;
 
+            //Logic here is designed to cancel out of view async tasks if scrolling slowly,
+            //but if scrolling fast all async tasks are cancelled and restarted once scrolling has stopped
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 final int firstItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
