@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         ReadFromDatabaseTask readFromDatabaseTask = new ReadFromDatabaseTask(this);
         readFromDatabaseTask.execute(AppDatabase.getInstance(this).imageMetadataDao());
 
+        doLoadImages();
     }
 
 }
