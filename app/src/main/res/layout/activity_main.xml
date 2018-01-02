@@ -6,19 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com4510.thebestphotogallery.Activities.MainActivity">
 
-    <Button
-        android:id="@+id/button_image"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="takePhoto"
-        android:text="Take a picture!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/main_appbar"
         android:layout_width="match_parent"

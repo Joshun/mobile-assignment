@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.util.Log;
@@ -31,19 +33,29 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 
 
 public class MainActivity extends AppCompatActivity implements DatabaseResponseListener, LoadImagesResponseListener {
-    private RecyclerView recyclerView;
     private RecyclerView.Adapter recyclerViewAdapter;
     private SwipeRefreshLayout swipeContainer;
     private List<ImageMetadata> imageMetadataList = new ArrayList<>();
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    private Button takePhotoButton;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_view, menu);
+        return true;
+    }
 
-    public void takePhoto(View view) {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.btn_camera:
+                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                }
+                return true;
         }
+        return true;
     }
 
     @Override
@@ -92,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.main_toolbar);
-        takePhotoButton = (Button) findViewById(R.id.button_image);
         setSupportActionBar(toolbar);
 
         swipeContainer = findViewById(R.id.swipe_refresh_layout);
@@ -106,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         });
 
 
-        recyclerView = findViewById(R.id.grid_recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.grid_recycler_view);
         int numberOfColumns = 4;
         final GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
         recyclerView.setLayoutManager(layoutManager);

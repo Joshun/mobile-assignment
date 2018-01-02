@@ -16,8 +16,8 @@ public class EditDetailsActivity extends DetailsActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editimagedetails);
+        super.onCreate(savedInstanceState);
     }
 
 }
