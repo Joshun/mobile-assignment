@@ -2,6 +2,7 @@ package com4510.thebestphotogallery.Activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -32,6 +33,11 @@ public class EditDetailsActivity extends DetailsActivity implements UpdateImageM
         Bundle b = getIntent().getExtras();
         int index = b.getInt("position");
         currentImageMetadata = MyAdapter.getItems().get(index);
+
+        TextInputEditText nameInput = findViewById(R.id.edit_name);
+        TextInputEditText descInput = findViewById(R.id.edit_description);
+        nameInput.setText(currentImageMetadata.getTitle());
+        descInput.setText(currentImageMetadata.getDescription());
     }
 
     @Override
@@ -51,6 +57,11 @@ public class EditDetailsActivity extends DetailsActivity implements UpdateImageM
     @Override
     public void onBackPressed() {
         if (currentImageMetadata != null) {
+            TextInputEditText nameInput = findViewById(R.id.edit_name);
+            TextInputEditText descInput = findViewById(R.id.edit_description);
+            currentImageMetadata.setTitle(nameInput.getText().toString());
+            currentImageMetadata.setDescription(descInput.getText().toString());
+
             Log.v(getClass().getName(), "Updating metadata for image " + currentImageMetadata.getFilePath());
             UpdateImageMetadataTask updateImageMetadataTask = new UpdateImageMetadataTask(this);
             UpdateImageMetadataTask.UpdateMetadataParam updateMetadataParam = new UpdateImageMetadataTask.UpdateMetadataParam();
