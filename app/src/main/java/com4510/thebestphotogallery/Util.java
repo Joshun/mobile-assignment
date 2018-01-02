@@ -64,11 +64,15 @@ public class Util {
 
         //Using outWidth and outHeight to calculate a suitable sampleSize
         if (dimension != -1) {
-            options.inJustDecodeBounds = false;
             float resize = 1;
-            if (options.outHeight > dimension || options.outWidth > dimension) {
+
+            if (!square && (options.outHeight > dimension || options.outWidth > dimension)) {
                 resize = options.outWidth > options.outHeight ? (float)options.outWidth / fdimension : (float)options.outHeight / fdimension;
             }
+            else if (square && (options.outHeight > dimension && options.outWidth > dimension)) {
+                resize = options.outWidth < options.outHeight ? (float)options.outWidth / fdimension : (float)options.outHeight / fdimension;
+            }
+            options.inJustDecodeBounds = false;
             options.inSampleSize = (int)resize;
             bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 
