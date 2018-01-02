@@ -2,14 +2,19 @@ package com4510.thebestphotogallery;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+
+import java.io.File;
 
 /**
  * Created by joshua on 27/12/17.
  */
-@Entity(tableName = "image_metadata")
+@Entity(tableName = "image_metadata", indices = {@Index(value="filePath", unique = true)})
+//@Entity(tableName = "image_metadata")
 public class ImageMetadata {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int uid;
 
     public int getUid() {
@@ -38,6 +43,10 @@ public class ImageMetadata {
 
     public void setLatitude(int latitude) { this.latitude = latitude; }
 
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
     public final String getTitle() {
         return title;
     }
@@ -55,6 +64,10 @@ public class ImageMetadata {
     public final int getLongitude() { return longitude; }
 
     public final int getLatitude() { return latitude; }
+
+    public String getFilePath() {
+        return filePath;
+    }
 
     @ColumnInfo(name="title")
     private String title;
@@ -76,4 +89,10 @@ public class ImageMetadata {
 
     @ColumnInfo(name="latitude")
     private int latitude;
+
+    @ColumnInfo(name="filePath")
+    private String filePath;
+
+    @Ignore
+    public File file;
 }

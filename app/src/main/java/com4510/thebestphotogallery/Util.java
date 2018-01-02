@@ -66,6 +66,8 @@ public class Util {
         if (dimension != -1) {
             float resize = 1;
 
+            //If the image isn't going to be a square, then prioritise reducing the maximum dimension
+            //If the image IS going to be a square (and therefore will be cropped), reduce based on smallest dimension
             if (!square && (options.outHeight > dimension || options.outWidth > dimension)) {
                 resize = options.outWidth > options.outHeight ? (float)options.outWidth / fdimension : (float)options.outHeight / fdimension;
             }
