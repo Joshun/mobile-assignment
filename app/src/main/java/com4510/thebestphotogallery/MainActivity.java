@@ -41,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
 
         for (String p: imagePaths) {
             pictureList.add(new ImageElement(new File(p)));
+            ImageMetadata imageMetadata = new ImageMetadata();
+            imageMetadata.setFilePath(p);
+            AppDatabase.getInstance(this).imageMetadataDao().insert(imageMetadata);
         }
 
         recyclerView.post(new Runnable() {
