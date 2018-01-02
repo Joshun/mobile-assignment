@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
     private RecyclerView recyclerView;
     private RecyclerView.Adapter recyclerViewAdapter;
     private SwipeRefreshLayout swipeContainer;
-    private List<ImageElement> pictureList = new ArrayList<>();
     private List<ImageMetadata> imageMetadataList = new ArrayList<>();
 
     @Override
@@ -50,34 +49,10 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
 
 
     public void doLoadImages() {
-//        pictureList.clear();
-//        ArrayList<String> imagePaths = ImageLoader.loadImages(this);
-//           for (Integer imgId: imageIds) {
-//               pictureList.add(new ImageElement(imgId));
-//               System.out.println(imgId);
-//           }
-//        for (String p: imagePaths) {
-//            pictureList.add(new ImageElement(new File(p)));
-//            ImageMetadata imageMetadata = new ImageMetadata();
-//            imageMetadata.setFilePath(p);
-//            AppDatabase.getInstance(this).imageMetadataDao().insert(imageMetadata);
-//        }
-
         LoadImagesTask loadImagesTask = new LoadImagesTask(this);
         LoadImagesTask.LoadImagesTaskParam loadImagesTaskParam = new LoadImagesTask.LoadImagesTaskParam();
         loadImagesTaskParam.activity = this;
         loadImagesTask.execute(loadImagesTaskParam);
-//
-//        recyclerView.post(new Runnable() {
-//            public void run() {
-//                recyclerViewAdapter.notifyDataSetChanged();
-//            }
-//        });
-
-//        recyclerView.setAdapter(recyclerViewAdapter);
-//        Util.initEasyImage(this);
-
-//        Log.v("Image Count", "" + imageMetadataList.size());
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -87,21 +62,7 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
                 System.out.println("permissions not granted");
         }
         else {
-//           ArrayList<String> imagePaths = ImageLoader.loadImages(this);
-////           for (Integer imgId: imageIds) {
-////               pictureList.add(new ImageElement(imgId));
-////               System.out.println(imgId);
-////           }
-//            for (String p: imagePaths) {
-//                System.out.println(p);
-//                pictureList.add(new ImageElement(new File(p)));
-//            }
-//            Util.initEasyImage(this);
-//           recyclerViewAdapter.notifyDataSetChanged();
-//           System.out.println(pictureList);
             doLoadImages();
-
-
         }
 
     }
@@ -124,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
             @Override
             public void onRefresh() {
                 System.out.println("refreshing...");
-//                pictureList = new ArrayList<>();
                 doLoadImages();
                 swipeContainer.setRefreshing(false);
             }
@@ -135,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         int numberOfColumns = 4;
         final GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
         recyclerView.setLayoutManager(layoutManager);
-//        recyclerViewAdapter = new MyAdapter(pictureList);
         recyclerViewAdapter = new MyAdapter(imageMetadataList);
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -176,19 +135,6 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         });
 
         Util.checkPermissions(getApplicationContext(), this);
-
-//        SendToServerTask sendToServerTask = new SendToServerTask();
-//        sendToServerTask.execute(new ServerData());
-//        ServerComm serverComm = new ServerComm(getCacheDir());
-//        ServerData sd = new ServerData();
-//        sd.date = "today";
-//        sd.title = "test title";
-//        sd.description = "test description";
-//        sd.latitude = "0.0";
-//        sd.longitude = "0.0";
-//        serverComm.sendData(sd);
-//        AppDatabase.getInstance(this).imageMetadataDao().insert(new ImageMetadata());
-
         ReadFromDatabaseTask readFromDatabaseTask = new ReadFromDatabaseTask(this);
         readFromDatabaseTask.execute(AppDatabase.getInstance(this).imageMetadataDao());
 
