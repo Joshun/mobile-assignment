@@ -1,4 +1,4 @@
-package com4510.thebestphotogallery;
+package com4510.thebestphotogallery.Images;
 
 import android.app.Activity;
 import android.content.ContentUris;

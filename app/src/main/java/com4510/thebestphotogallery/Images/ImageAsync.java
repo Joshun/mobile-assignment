@@ -1,4 +1,4 @@
-package com4510.thebestphotogallery;
+package com4510.thebestphotogallery.Images;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,8 @@ import android.view.View;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+
+import com4510.thebestphotogallery.Util;
 
 /**
  * Created by George on 01-Jan-18.

@@ -1,4 +1,4 @@
-package com4510.thebestphotogallery;
+package com4510.thebestphotogallery.Tasks;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -6,6 +6,11 @@ import android.os.AsyncTask;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import com4510.thebestphotogallery.Database.AppDatabase;
+import com4510.thebestphotogallery.Database.ImageMetadata;
+import com4510.thebestphotogallery.Images.ImageLoader;
+import com4510.thebestphotogallery.Images.LoadImagesResponseListener;
 
 /**
  * Created by joshua on 02/01/18.

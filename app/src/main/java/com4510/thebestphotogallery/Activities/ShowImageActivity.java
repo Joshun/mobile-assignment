@@ -2,13 +2,10 @@
  * Copyright (c) 2017. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
  */
 
-package com4510.thebestphotogallery;
+package com4510.thebestphotogallery.Activities;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +16,13 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+
+import com4510.thebestphotogallery.Database.ImageMetadata;
+import com4510.thebestphotogallery.MyAdapter;
+import com4510.thebestphotogallery.R;
+import com4510.thebestphotogallery.ServerComm;
+import com4510.thebestphotogallery.ServerData;
+import com4510.thebestphotogallery.Images.ShowImageAsync;
 
 public class ShowImageActivity extends AppCompatActivity {
 
@@ -38,16 +42,20 @@ public class ShowImageActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.view_map_menuentry:
                 Log.v(getClass().getName(), "map option selected");
                 return true;
             case R.id.view_image_details_menuentry:
                 Log.v(getClass().getName(), "view detail option selected");
+                intent = new Intent(this, ViewDetailsActivity.class);
+                intent.putExtra("position", imageIndex);
+                startActivity(intent);
                 return true;
             case R.id.edit_image_details_menuentry:
                 Log.v(getClass().getName(), "edit detail option selected");
-                Intent intent = new Intent(this, ImageDetailsActivity.class);
+                intent = new Intent(this, EditDetailsActivity.class);
                 intent.putExtra("position", imageIndex);
                 startActivity(intent);
                 return true;

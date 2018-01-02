@@ -1,13 +1,6 @@
-package com4510.thebestphotogallery;
+package com4510.thebestphotogallery.Activities;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -16,15 +9,19 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.DragEvent;
-import android.view.View;
-import android.widget.Toast;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.aprilapps.easyphotopicker.EasyImage;
+import com4510.thebestphotogallery.Database.AppDatabase;
+import com4510.thebestphotogallery.Database.DatabaseResponseListener;
+import com4510.thebestphotogallery.Database.ImageMetadata;
+import com4510.thebestphotogallery.Images.LoadImagesResponseListener;
+import com4510.thebestphotogallery.Tasks.LoadImagesTask;
+import com4510.thebestphotogallery.MyAdapter;
+import com4510.thebestphotogallery.R;
+import com4510.thebestphotogallery.Tasks.ReadFromDatabaseTask;
+import com4510.thebestphotogallery.Util;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 
@@ -99,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             private boolean moving = false;
-            
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 final int firstItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition();

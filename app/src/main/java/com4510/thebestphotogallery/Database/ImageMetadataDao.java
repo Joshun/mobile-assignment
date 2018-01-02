@@ -1,4 +1,4 @@
-package com4510.thebestphotogallery;
+package com4510.thebestphotogallery.Database;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;

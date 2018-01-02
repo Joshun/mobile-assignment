@@ -1,4 +1,4 @@
-package com4510.thebestphotogallery;
+package com4510.thebestphotogallery.Tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import com4510.thebestphotogallery.ServerData;
 
 /**
  * Created by joshua on 19/12/17.

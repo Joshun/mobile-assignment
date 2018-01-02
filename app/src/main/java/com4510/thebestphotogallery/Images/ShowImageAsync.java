@@ -1,9 +1,7 @@
-package com4510.thebestphotogallery;
+package com4510.thebestphotogallery.Images;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -17,7 +15,7 @@ public class ShowImageAsync extends ImageAsync {
 
     protected WeakReference<ImageView> imageView;
 
-    ShowImageAsync(final ImageView imageView, final File file) {
+    public ShowImageAsync(final ImageView imageView, final File file) {
         super(file, 2048, false);
         this.imageView = new WeakReference<ImageView>(imageView);
     }

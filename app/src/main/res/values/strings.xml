@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">The Best Photo Gallery</string>
+
+    <!--data-->
+    <string name="details_name">Name</string>
+    <string name="details_description">Description</string>
+    <string name="details_dimensions">Dimensions</string>
+    <string name="details_filesize">File Size</string>
+    <string name="details_longitude">Longitude</string>
+    <string name="details_latitude">Latitude</string>
+
+    <!--menu-->
+    <string name="view_map_menuentry_title">View On Map</string>
+    <string name="view_image_details_menuentry_title">View Details</string>
+    <string name="edit_image_details_menuentry_title">Edit Details</string>
 </resources>

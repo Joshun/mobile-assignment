@@ -5,12 +5,8 @@
 package com4510.thebestphotogallery;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +14,9 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com4510.thebestphotogallery.Database.ImageMetadata;
+import com4510.thebestphotogallery.Images.MenuImageAsync;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
     private Context context;
@@ -72,7 +71,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
     }
 
     public class View_Holder extends RecyclerView.ViewHolder  {
-        ImageView imageView;
+        public ImageView imageView;
 
         View_Holder(View itemView) {
             super(itemView);
@@ -119,4 +118,5 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
     public static void setItems(List<ImageMetadata> items) {
         MyAdapter.items = items;
     }
+
 }

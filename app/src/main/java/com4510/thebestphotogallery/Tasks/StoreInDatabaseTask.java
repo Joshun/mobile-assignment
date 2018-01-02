@@ -1,6 +1,9 @@
-package com4510.thebestphotogallery;
+package com4510.thebestphotogallery.Tasks;
 
 import android.os.AsyncTask;
+
+import com4510.thebestphotogallery.Database.ImageMetadata;
+import com4510.thebestphotogallery.Database.ImageMetadataDao;
 
 /**
  * Created by joshua on 01/01/18.

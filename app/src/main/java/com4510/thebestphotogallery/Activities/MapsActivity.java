@@ -1,4 +1,4 @@
-package com4510.thebestphotogallery;
+package com4510.thebestphotogallery.Activities;
 
 /**
  * Created by FrancisALR on 31/12/2017.
@@ -11,6 +11,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import com4510.thebestphotogallery.R;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 

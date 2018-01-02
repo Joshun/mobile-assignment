@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imagedetails_appbar"
+
+        >
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/viewimagedetails_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            />
+    </android.support.design.widget.AppBarLayout>
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/imagedetails_appbar"
+        android:id="@+id/view_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/details_name"/>
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/view_name"
+        android:id="@+id/view_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/details_description"
+        />
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/view_description"
+        android:id="@+id/view_dimensions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/details_dimensions"
+        />
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/view_dimensions"
+        android:id="@+id/view_filesize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/details_filesize"
+        />
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/view_filesize"
+        android:id="@+id/view_longitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/details_longitude"
+        />
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/view_longitude"
+        android:id="@+id/view_latitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/details_latitude"
+        />
+
+</android.support.constraint.ConstraintLayout>
