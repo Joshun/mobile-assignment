@@ -1,6 +1,8 @@
 package com4510.thebestphotogallery.Activities;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +10,8 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -31,6 +35,16 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
     private RecyclerView.Adapter recyclerViewAdapter;
     private SwipeRefreshLayout swipeContainer;
     private List<ImageMetadata> imageMetadataList = new ArrayList<>();
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private Button takePhotoButton;
+
+    public void takePhoto(View view) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
 
     @Override
     public void imagesLoaded(List<ImageMetadata> imageMetadataList) {
@@ -70,11 +84,15 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         Log.v(getClass().getName(), "loaded image metadata database.");
     }
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.main_toolbar);
+        takePhotoButton = (Button) findViewById(R.id.button_image);
         setSupportActionBar(toolbar);
 
         swipeContainer = findViewById(R.id.swipe_refresh_layout);
