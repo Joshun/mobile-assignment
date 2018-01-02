@@ -11,25 +11,25 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by Philip on 01-Jan-18.
+ * Created by George on 01-Jan-18.
  */
 
 public class ImageAsync extends AsyncTask<Void, Void, Bitmap> {
 
     protected File file = null;
-    protected int sampleSize = 0;
     protected int dimension = 0;
+    protected boolean square = false;
 
-    ImageAsync(final File file, final int sampleSize, final int dimension) {
+    ImageAsync(final File file, final int dimension, final boolean square) {
         this.file = file;
-        this.sampleSize = sampleSize;
         this.dimension = dimension;
+        this.square = square;
     }
-    ImageAsync(final File file, final int sampleSize) {
-        this(file, sampleSize, 512);
+    ImageAsync(final File file, final int dimension) {
+        this(file, dimension, true);
     }
     ImageAsync(final File file) {
-        this(file,4);
+        this(file, 128);
     }
     ImageAsync() {
         this(null);
@@ -37,7 +37,7 @@ public class ImageAsync extends AsyncTask<Void, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(Void... data) {
-        Bitmap b = Util.loadBitmap(file);
+        Bitmap b = Util.loadBitmap(file, dimension, square);
 
         if (isCancelled()) {
             return null;

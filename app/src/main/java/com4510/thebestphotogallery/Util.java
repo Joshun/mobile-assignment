@@ -48,36 +48,66 @@ public class Util {
                 .setAllowMultiplePickInGallery(true);
     }
 
-    public static Bitmap loadBitmap(File file, int sampleSize, int dimension) {
+    public static Bitmap loadBitmap(File file, int dimension, boolean square) {
         if (dimension > 4096) {
             Log.w("Dimension warning", "dimension set too large. Reducing to 4096");
             dimension = 4096;
         }
         float fdimension = (float)dimension;
 
+        //Setting options and deriving outWidth and outHeight
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = false;
+        options.inJustDecodeBounds = true;
         options.inPreferredConfig = Bitmap.Config.RGB_565;
-        options.inSampleSize = sampleSize;
         options.inDither = true;
-        Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-        if (myBitmap != null)
-        {
-            float resize = options.outWidth > options.outHeight ? fdimension / (float)options.outHeight : fdimension / (float)options.outWidth;
-            int width = (int)(resize * options.outWidth);
-            int height = (int)(resize * options.outHeight);
-            return Bitmap.createScaledBitmap(myBitmap, width, height, true);
+        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+
+        //Using outWidth and outHeight to calculate a suitable sampleSize
+        if (dimension != -1) {
+            options.inJustDecodeBounds = false;
+            float resize = 1;
+            if (options.outHeight > dimension || options.outWidth > dimension) {
+                resize = options.outWidth > options.outHeight ? (float)options.outWidth / fdimension : (float)options.outHeight / fdimension;
+            }
+            options.inSampleSize = (int)resize;
+            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+
+            int w = options.outWidth;
+            int h = options.outHeight;
+
+            //Resize image if width or height is less than dimension
+            if (options.outWidth < dimension) {
+                float r = fdimension / (float)w;
+                w = (int)Math.ceil(r * w);
+                h = (int)Math.ceil(r * h);
+            }
+            if (options.outHeight < dimension) {
+                float r = fdimension / (float)h;
+                w = (int)Math.ceil(r * w);
+                h = (int)Math.ceil(r * h);
+            }
+            if (options.outWidth < dimension || options.outHeight < dimension) {
+                bitmap = Bitmap.createScaledBitmap(bitmap, w, h, true);
+            }
+
+            //Cropping the image to a square
+            if (square && bitmap != null) {
+                int d = dimension;
+                int x = Math.max(0, (w - d) / 2);
+                int y = Math.max(0, (h - d) / 2);
+                return Bitmap.createBitmap(bitmap, x, y, d, d);
+            }
         }
 
-        return null;
+        return bitmap;
     }
 
-    public static Bitmap loadBitmap(File file, int sampleSize) {
-        return loadBitmap(file, sampleSize, 512);
+    public static Bitmap loadBitmap(File file, int dimension) {
+        return loadBitmap(file, dimension, true);
     }
 
     public static Bitmap loadBitmap(File file) {
-        return loadBitmap(file, 4);
+        return loadBitmap(file, 128);
     }
 
     /**

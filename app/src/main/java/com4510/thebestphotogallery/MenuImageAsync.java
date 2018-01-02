@@ -10,7 +10,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by Philip on 01-Jan-18.
+ * Created by George on 01-Jan-18.
  */
 
 public class MenuImageAsync extends ImageAsync {

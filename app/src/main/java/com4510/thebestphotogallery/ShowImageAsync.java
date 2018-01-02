@@ -10,7 +10,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by Philip on 01-Jan-18.
+ * Created by George on 01-Jan-18.
  */
 
 public class ShowImageAsync extends ImageAsync {
@@ -18,7 +18,7 @@ public class ShowImageAsync extends ImageAsync {
     protected WeakReference<ImageView> imageView;
 
     ShowImageAsync(final ImageView imageView, final File file) {
-        super(file, 2, 2048);
+        super(file, 2048, false);
         this.imageView = new WeakReference<ImageView>(imageView);
     }
 

@@ -38,10 +38,7 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
     public void doLoadImages() {
         pictureList.clear();
         ArrayList<String> imagePaths = ImageLoader.loadImages(this);
-//           for (Integer imgId: imageIds) {
-//               pictureList.add(new ImageElement(imgId));
-//               System.out.println(imgId);
-//           }
+
         for (String p: imagePaths) {
             pictureList.add(new ImageElement(new File(p)));
         }
@@ -51,9 +48,6 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
                 recyclerViewAdapter.notifyDataSetChanged();
             }
         });
-
-//        recyclerView.setAdapter(recyclerViewAdapter);
-        Util.initEasyImage(this);
 
         Log.v("Image Count", "" + pictureList.size());
     }
@@ -65,21 +59,7 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
                 System.out.println("permissions not granted");
         }
         else {
-//           ArrayList<String> imagePaths = ImageLoader.loadImages(this);
-////           for (Integer imgId: imageIds) {
-////               pictureList.add(new ImageElement(imgId));
-////               System.out.println(imgId);
-////           }
-//            for (String p: imagePaths) {
-//                System.out.println(p);
-//                pictureList.add(new ImageElement(new File(p)));
-//            }
-//            Util.initEasyImage(this);
-//           recyclerViewAdapter.notifyDataSetChanged();
-//           System.out.println(pictureList);
             doLoadImages();
-
-
         }
 
     }
@@ -102,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
             @Override
             public void onRefresh() {
                 System.out.println("refreshing...");
-//                pictureList = new ArrayList<>();
                 doLoadImages();
                 swipeContainer.setRefreshing(false);
             }
@@ -169,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         ReadFromDatabaseTask readFromDatabaseTask = new ReadFromDatabaseTask(this);
         readFromDatabaseTask.execute(AppDatabase.getInstance(this).imageMetadataDao());
 
+        Util.initEasyImage(this);
         doLoadImages();
     }
 
