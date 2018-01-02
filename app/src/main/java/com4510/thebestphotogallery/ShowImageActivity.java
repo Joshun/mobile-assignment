@@ -60,14 +60,7 @@ public class ShowImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_message2);
 
         Toolbar toolbar = findViewById(R.id.showmessage_toolbar);
-        setSupportActionBar(toolbar);
-
         serverComm = new ServerComm(getCacheDir());
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-
 
         Log.v(getClass().getName(), "image index is null");
 
@@ -97,17 +90,12 @@ public class ShowImageActivity extends AppCompatActivity {
             } else if (element.file!=null) {
                 ShowImageAsync imageAsync = new ShowImageAsync(imageView, element.file);
                 imageAsync.execute();
-//                Bitmap image = Util.loadBitmap(element.file, 2, 2048);
-//                if (image != null) {
-//                    imageView.setImageBitmap(image);
-//                    currentImage = image;
-//                    currentImageFile = element.file.getName();
-//                }
-//                else {
-//                    Log.e("Error", "Failed to load bitmap");
-//                }
-
             }
+
+            toolbar.setTitle(element.file.getName());
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
 
             imageView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
