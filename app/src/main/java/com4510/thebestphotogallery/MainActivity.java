@@ -29,30 +29,54 @@ import pl.aprilapps.easyphotopicker.EasyImage;
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 
 
-public class MainActivity extends AppCompatActivity implements DatabaseResponseListener {
+public class MainActivity extends AppCompatActivity implements DatabaseResponseListener, LoadImagesResponseListener {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter recyclerViewAdapter;
     private SwipeRefreshLayout swipeContainer;
     private List<ImageElement> pictureList = new ArrayList<>();
+    private List<ImageMetadata> imageMetadataList = new ArrayList<>();
+
+    @Override
+    public void imagesLoaded(List<ImageMetadata> imageMetadataList) {
+        imageMetadataList.clear();
+        this.imageMetadataList.addAll(imageMetadataList);
+
+        recyclerViewAdapter.notifyDataSetChanged();
+
+        Util.initEasyImage(this);
+        Log.v("Image Count", "" + imageMetadataList.size());
+    }
+
 
     public void doLoadImages() {
-        pictureList.clear();
-        ArrayList<String> imagePaths = ImageLoader.loadImages(this);
+//        pictureList.clear();
+//        ArrayList<String> imagePaths = ImageLoader.loadImages(this);
+//           for (Integer imgId: imageIds) {
+//               pictureList.add(new ImageElement(imgId));
+//               System.out.println(imgId);
+//           }
+//        for (String p: imagePaths) {
+//            pictureList.add(new ImageElement(new File(p)));
+//            ImageMetadata imageMetadata = new ImageMetadata();
+//            imageMetadata.setFilePath(p);
+//            AppDatabase.getInstance(this).imageMetadataDao().insert(imageMetadata);
+//        }
 
-        for (String p: imagePaths) {
-            pictureList.add(new ImageElement(new File(p)));
-            ImageMetadata imageMetadata = new ImageMetadata();
-            imageMetadata.setFilePath(p);
-            AppDatabase.getInstance(this).imageMetadataDao().insert(imageMetadata);
-        }
+        LoadImagesTask loadImagesTask = new LoadImagesTask(this);
+        LoadImagesTask.LoadImagesTaskParam loadImagesTaskParam = new LoadImagesTask.LoadImagesTaskParam();
+        loadImagesTaskParam.activity = this;
+        loadImagesTask.execute(loadImagesTaskParam);
+//
+//        recyclerView.post(new Runnable() {
+//            public void run() {
+//                recyclerViewAdapter.notifyDataSetChanged();
+//            }
+//        });
 
-        recyclerView.post(new Runnable() {
-            public void run() {
-                recyclerViewAdapter.notifyDataSetChanged();
-            }
-        });
+//        recyclerView.setAdapter(recyclerViewAdapter);
+//        Util.initEasyImage(this);
 
-        Log.v("Image Count", "" + pictureList.size());
+        Log.v("Image Count", "" + imageMetadataList.size());
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -62,7 +86,21 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
                 System.out.println("permissions not granted");
         }
         else {
+//           ArrayList<String> imagePaths = ImageLoader.loadImages(this);
+////           for (Integer imgId: imageIds) {
+////               pictureList.add(new ImageElement(imgId));
+////               System.out.println(imgId);
+////           }
+//            for (String p: imagePaths) {
+//                System.out.println(p);
+//                pictureList.add(new ImageElement(new File(p)));
+//            }
+//            Util.initEasyImage(this);
+//           recyclerViewAdapter.notifyDataSetChanged();
+//           System.out.println(pictureList);
             doLoadImages();
+
+
         }
 
     }
@@ -85,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
             @Override
             public void onRefresh() {
                 System.out.println("refreshing...");
+//                pictureList = new ArrayList<>();
                 doLoadImages();
                 swipeContainer.setRefreshing(false);
             }
@@ -95,7 +134,8 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         int numberOfColumns = 4;
         final GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerViewAdapter = new MyAdapter(pictureList);
+//        recyclerViewAdapter = new MyAdapter(pictureList);
+        recyclerViewAdapter = new MyAdapter(imageMetadataList);
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             private boolean moving = false;

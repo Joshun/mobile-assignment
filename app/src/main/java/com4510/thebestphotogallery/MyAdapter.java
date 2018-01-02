@@ -21,17 +21,22 @@ import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
     private Context context;
-    private static List<ImageElement> items;
+//    private static List<ImageElement> items;
+    private static List<ImageMetadata> items;
     private List<MenuImageAsync> currentTasks;
 
-    public MyAdapter(Context cont, List<ImageElement> items) {
+//    public MyAdapter(Context cont, List<ImageElement> items) {
+    public MyAdapter(Context cont, List<ImageMetadata> items) {
         super();
         MyAdapter.items = items;
         this.currentTasks = new ArrayList<>();
         context = cont;
     }
 
-    public MyAdapter(List<ImageElement> items) {
+//    public MyAdapter(List<ImageElement> items) {
+//        this(null, items);
+//    }
+    public MyAdapter(List<ImageMetadata> items) {
         this(null, items);
     }
 
@@ -62,7 +67,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
 
 
     // convenience method for getting data at click position
-    ImageElement getItem(int id) {
+//    ImageElement getItem(int id) {
+//        return items.get(id);
+//    }
+    ImageMetadata getItem(int id) {
         return items.get(id);
     }
 
@@ -112,11 +120,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         }
     }
 
-    public static List<ImageElement> getItems() {
+//    public static List<ImageElement> getItems() {
+//        return items;
+//    }
+
+    public static List<ImageMetadata> getItems() {
         return items;
     }
 
-    public static void setItems(List<ImageElement> items) {
+//    public static void setItems(List<ImageElement> items) {
+//        MyAdapter.items = items;
+//    }
+
+    public static void setItems(List<ImageMetadata> items) {
         MyAdapter.items = items;
     }
 }

@@ -2,8 +2,11 @@ package com4510.thebestphotogallery;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+
+import java.io.File;
 
 /**
  * Created by joshua on 27/12/17.
@@ -88,4 +91,7 @@ public class ImageMetadata {
 
     @ColumnInfo(name="filePath")
     private String filePath;
+
+    @Ignore
+    public File file;
 }

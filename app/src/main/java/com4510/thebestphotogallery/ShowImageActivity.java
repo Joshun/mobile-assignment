@@ -86,15 +86,16 @@ public class ShowImageActivity extends AppCompatActivity {
             }
         }
 
-        if (imageIndex!=-1){
+//        if (imageIndex!=-1){
             ImageView imageView = (ImageView) findViewById(R.id.image);
-            ImageElement element= MyAdapter.getItems().get(imageIndex);
+//            ImageElement element= MyAdapter.getItems().get(imageIndex);
+            ImageMetadata element = MyAdapter.getItems().get(imageIndex);
             Log.v("Name", "" + element.file.getName());
 
             currentImageFile = element.file.getAbsolutePath();
-            if (element.image!=-1) {
-                imageView.setImageResource(element.image);
-            } else if (element.file!=null) {
+//            if (element.image!=-1) {
+//                imageView.setImageResource(element.image);
+//            } else if (element.file!=null) {
                 ShowImageAsync imageAsync = new ShowImageAsync(imageView, element.file);
                 imageAsync.execute();
 //                Bitmap image = Util.loadBitmap(element.file, 2, 2048);
@@ -107,7 +108,7 @@ public class ShowImageActivity extends AppCompatActivity {
 //                    Log.e("Error", "Failed to load bitmap");
 //                }
 
-            }
+//            }
 
             imageView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -128,7 +129,7 @@ public class ShowImageActivity extends AppCompatActivity {
                     return false;
                 }
             });
-        }
+//        }
     }
 
 }
