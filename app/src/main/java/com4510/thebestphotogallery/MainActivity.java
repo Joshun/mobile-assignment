@@ -38,12 +38,13 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
 
     @Override
     public void imagesLoaded(List<ImageMetadata> imageMetadataList) {
-        imageMetadataList.clear();
+        this.imageMetadataList.clear();
         this.imageMetadataList.addAll(imageMetadataList);
 
         recyclerViewAdapter.notifyDataSetChanged();
 
         Util.initEasyImage(this);
+        Log.v("Init image", "LOADED");
         Log.v("Image Count", "" + imageMetadataList.size());
     }
 
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
 //        recyclerView.setAdapter(recyclerViewAdapter);
 //        Util.initEasyImage(this);
 
-        Log.v("Image Count", "" + imageMetadataList.size());
+//        Log.v("Image Count", "" + imageMetadataList.size());
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

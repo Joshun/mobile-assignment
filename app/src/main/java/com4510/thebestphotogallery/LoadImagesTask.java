@@ -49,7 +49,12 @@ public class LoadImagesTask extends AsyncTask<LoadImagesTask.LoadImagesTaskParam
         System.out.println(imagePaths);
 //        System.out.println(imageMetadataList.toArray());
 //        AppDatabase.getInstance(activity).imageMetadataDao().insertAll((ImageMetadata[])imageMetadataList.toArray());
-        AppDatabase.getInstance(activity).imageMetadataDao().insertAll((imageMetadataList.toArray(new ImageMetadata[imageMetadataList.size()])));
+//        AppDatabase.getInstance(activity).imageMetadataDao().insertAll((imageMetadataList.toArray(new ImageMetadata[imageMetadataList.size()])));
+
+        for (ImageMetadata imageMetadata: imageMetadataList) {
+            AppDatabase.getInstance(activity).imageMetadataDao().insert(imageMetadata);
+        }
+
 
         List<ImageMetadata> allImageMetadata = AppDatabase.getInstance(activity).imageMetadataDao().getAll();
         System.out.println(allImageMetadata);

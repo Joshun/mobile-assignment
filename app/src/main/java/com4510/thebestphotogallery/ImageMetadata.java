@@ -12,8 +12,9 @@ import java.io.File;
  * Created by joshua on 27/12/17.
  */
 @Entity(tableName = "image_metadata", indices = {@Index(value="filePath", unique = true)})
+//@Entity(tableName = "image_metadata")
 public class ImageMetadata {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int uid;
 
     public int getUid() {

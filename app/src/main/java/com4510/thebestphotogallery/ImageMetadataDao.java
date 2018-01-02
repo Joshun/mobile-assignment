@@ -21,7 +21,7 @@ public interface ImageMetadataDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(ImageMetadata... imageMetadatas);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(ImageMetadata imageMetadata);
 
     @Update
