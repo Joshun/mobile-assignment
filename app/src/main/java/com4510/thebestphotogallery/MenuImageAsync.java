@@ -36,6 +36,8 @@ public class MenuImageAsync extends ImageAsync {
                     Intent intent = new Intent(context.get(), ShowImageActivity.class);
                     intent.putExtra("position", position);
                     context.get().startActivity(intent);
+//                    Intent intent = new Intent(context.get(), MapsActivity.class);
+//                    context.get().startActivity(intent);
                 }
             });
         }
