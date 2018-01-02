@@ -7,7 +7,7 @@ import android.content.Context;
  * Created by joshua on 27/12/17.
  */
 
-@android.arch.persistence.room.Database(entities = {ImageMetadata.class}, version = 2)
+@android.arch.persistence.room.Database(entities = {ImageMetadata.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase INSTANCE;
 

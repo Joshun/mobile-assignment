@@ -79,44 +79,38 @@ public class ShowImageActivity extends AppCompatActivity {
             }
         }
 
-        if (imageIndex!=-1){
-            ImageView imageView = (ImageView) findViewById(R.id.image);
-            ImageElement element= MyAdapter.getItems().get(imageIndex);
-            Log.v("Name", "" + element.file.getName());
+        ImageView imageView = (ImageView) findViewById(R.id.image);
+        ImageMetadata element = MyAdapter.getItems().get(imageIndex);
+        Log.v("Name", "" + element.file.getName());
 
-            currentImageFile = element.file.getAbsolutePath();
-            if (element.image!=-1) {
-                imageView.setImageResource(element.image);
-            } else if (element.file!=null) {
-                ShowImageAsync imageAsync = new ShowImageAsync(imageView, element.file);
-                imageAsync.execute();
-            }
+        currentImageFile = element.file.getAbsolutePath();
+        ShowImageAsync imageAsync = new ShowImageAsync(imageView, element.file);
+        imageAsync.execute();
 
-            toolbar.setTitle(element.file.getName());
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setTitle(element.file.getName());
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-            imageView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    Log.v(getClass().getName(), "touch event");
-                    if (currentImage != null) {
-                        Log.v(getClass().getName(), "attempting to send to server...");
-                        ServerData serverData = new ServerData();
-                        serverData.imageData = v.getDrawingCache();
-                        serverData.title = "title";
-                        serverData.longitude = "0.0";
-                        serverData.latitude = "0.0";
-                        serverData.description = "description";
-                        serverData.imageFilename = currentImageFile;
-                        serverData.date = "1/1/1";
-                        serverComm.sendData(serverData);
-                    }
-                    return false;
+        imageView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.v(getClass().getName(), "touch event");
+                if (currentImage != null) {
+                    Log.v(getClass().getName(), "attempting to send to server...");
+                    ServerData serverData = new ServerData();
+                    serverData.imageData = v.getDrawingCache();
+                    serverData.title = "title";
+                    serverData.longitude = "0.0";
+                    serverData.latitude = "0.0";
+                    serverData.description = "description";
+                    serverData.imageFilename = currentImageFile;
+                    serverData.date = "1/1/1";
+                    serverComm.sendData(serverData);
                 }
-            });
-        }
+                return false;
+            }
+        });
     }
 
 }
