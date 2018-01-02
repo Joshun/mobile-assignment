@@ -39,8 +39,14 @@ public class ShowImageActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.image_details_menuentry:
-                Log.v(getClass().getName(), "detail option selected");
+            case R.id.view_map_menuentry:
+                Log.v(getClass().getName(), "map option selected");
+                return true;
+            case R.id.view_image_details_menuentry:
+                Log.v(getClass().getName(), "view detail option selected");
+                return true;
+            case R.id.edit_image_details_menuentry:
+                Log.v(getClass().getName(), "edit detail option selected");
                 Intent intent = new Intent(this, ImageDetailsActivity.class);
                 intent.putExtra("position", imageIndex);
                 startActivity(intent);

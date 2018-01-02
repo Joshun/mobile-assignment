@@ -99,31 +99,17 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             private boolean moving = false;
-            private boolean fastScroll = false;
-
-            //Logic here is designed to cancel out of view async tasks if scrolling slowly,
-            //but if scrolling fast all async tasks are cancelled and restarted once scrolling has stopped
-
+            
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 final int firstItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
                 final int lastItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
                 final boolean scrolledUp = dy < 0;
 
-                if (!fastScroll) {
-                    fastScroll = Math.abs(dy) > 200;
-                    if (fastScroll) {
-                        ((MyAdapter) recyclerViewAdapter).cancelAll();
-                    }
-                }
-
-                if (!fastScroll && moving) {
+                if (moving) {
                     ((MyAdapter) recyclerViewAdapter).cancelLoading(firstItemPosition, lastItemPosition, scrolledUp);
                 }
-                else if (fastScroll && !moving) {
-                    fastScroll = false;
-                    doLoadImages();
-                }
+
                 super.onScrolled(recyclerView, dx, dy);
             }
 
