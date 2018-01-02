@@ -76,6 +76,8 @@ public class ShowImageActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.showmessage_toolbar);
         serverComm = new ServerComm(getCacheDir());
 
+        View loadingView = findViewById(R.id.image_loading);
+
         Log.v(getClass().getName(), "image index is null");
 
         if (savedInstanceState != null) {
@@ -98,7 +100,7 @@ public class ShowImageActivity extends AppCompatActivity {
         Log.v("Name", "" + element.file.getName());
 
         currentImageFile = element.file.getAbsolutePath();
-        ShowImageAsync imageAsync = new ShowImageAsync(imageView, element.file);
+        ShowImageAsync imageAsync = new ShowImageAsync(imageView, loadingView, element.file);
         imageAsync.execute();
 
         toolbar.setTitle(element.file.getName());

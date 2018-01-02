@@ -2,10 +2,13 @@ package com4510.thebestphotogallery.Images;
 
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+
+import com4510.thebestphotogallery.R;
 
 /**
  * Created by George on 01-Jan-18.
@@ -14,15 +17,18 @@ import java.lang.ref.WeakReference;
 public class ShowImageAsync extends ImageAsync {
 
     protected WeakReference<ImageView> imageView;
+    protected WeakReference<View> loadingView;
 
-    public ShowImageAsync(final ImageView imageView, final File file) {
+    public ShowImageAsync(final ImageView imageView, final View loadingView, final File file) {
         super(file, 2048, false);
         this.imageView = new WeakReference<ImageView>(imageView);
+        this.loadingView = new WeakReference<View>(loadingView);
     }
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         if (bitmap != null) {
+            loadingView.get().setVisibility(View.GONE);
             imageView.get().setImageBitmap(bitmap);
         }
         else {

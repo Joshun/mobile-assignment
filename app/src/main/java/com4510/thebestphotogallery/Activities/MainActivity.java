@@ -31,7 +31,6 @@ import com4510.thebestphotogallery.Util;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 
-
 public class MainActivity extends AppCompatActivity implements DatabaseResponseListener, LoadImagesResponseListener {
     private RecyclerView.Adapter recyclerViewAdapter;
     private SwipeRefreshLayout swipeContainer;
@@ -90,14 +89,10 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
 
     }
 
-
     @Override
     public void onDatabaseRead(List<ImageMetadata> imageMetadataList) {
         Log.v(getClass().getName(), "loaded image metadata database.");
     }
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

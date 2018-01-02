@@ -20,9 +20,7 @@
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-
     </android.support.design.widget.AppBarLayout>
-
 
     <include
         android:id="@+id/include"
@@ -30,6 +28,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/main_appbar" />
-
 
 </android.support.constraint.ConstraintLayout>
