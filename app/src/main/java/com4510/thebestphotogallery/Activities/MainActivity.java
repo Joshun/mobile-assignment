@@ -1,12 +1,15 @@
 package com4510.thebestphotogallery.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,7 +18,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.util.Log;
+import android.net.Uri;
+import android.support.v4.content.FileProvider;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +37,7 @@ import com4510.thebestphotogallery.MyAdapter;
 import com4510.thebestphotogallery.R;
 import com4510.thebestphotogallery.Tasks.ReadFromDatabaseTask;
 import com4510.thebestphotogallery.Util;
+import pl.aprilapps.easyphotopicker.EasyImage;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 
@@ -36,12 +46,48 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
     private SwipeRefreshLayout swipeContainer;
     private List<ImageMetadata> imageMetadataList = new ArrayList<>();
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private Activity activity;
+
+    String mCurrentPhotoPath;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_view, menu);
         return true;
     }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+
+//        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        //  File storageDir = new File("/storage/emulated/0/DCIM/Camera/");
+         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        // Above works but does not save, first and second lines camera won't load?
+
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+
+        return image;
+    }
+
+    private void galleryAddPic() {
+        File f = new File(mCurrentPhotoPath);
+        System.out.println(f);
+        System.out.println("Here");
+        Uri contentUri = Uri.fromFile(f);
+        System.out.println(contentUri);
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,contentUri);
+        mediaScanIntent.setData(contentUri);
+        System.out.println(mediaScanIntent);
+        this.sendBroadcast(mediaScanIntent);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -50,7 +96,23 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
             case R.id.btn_camera:
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                        mCurrentPhotoPath = photoFile.getAbsolutePath();
+                        galleryAddPic();
+                    } catch (IOException ex) {
+                        // Error occurred while creating the File
+
+                    }
+//                     Continue only if the File was successfully created
+                    if (photoFile != null) {
+                        Uri photoURI = FileProvider.getUriForFile(this,
+                                "com.example.android.fileprovider",
+                                photoFile);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                    }
                 }
                 return true;
         }
@@ -100,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
+        Util.initEasyImage(this);
 
         swipeContainer = findViewById(R.id.swipe_refresh_layout);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -147,6 +210,10 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
 
         Util.initEasyImage(this);
         doLoadImages();
+    }
+
+    public Activity getActivity() {
+        return activity;
     }
 
 }
