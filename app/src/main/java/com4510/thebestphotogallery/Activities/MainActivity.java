@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
 
     String mCurrentPhotoPath;
 
-    private boolean permissionsOk = false;
+    private boolean permissionsOk = true;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -155,11 +155,11 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (grantResults.length < 1 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            permissionsOk = false;
             System.out.println("permissions not granted");
             Toast.makeText(this, "View photo permission is required!", Toast.LENGTH_SHORT).show();
         }
         else {
-            permissionsOk = true;
             doLoadImages();
         }
 
