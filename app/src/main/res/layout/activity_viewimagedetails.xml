@@ -27,13 +27,19 @@
         android:id="@+id/view_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/details_name"/>
+        android:hint="@string/details_name"
+        android:padding="15dp"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        />
     <TextView
         app:layout_constraintTop_toBottomOf="@+id/view_name"
         android:id="@+id/view_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/details_description"
+        android:textSize="20sp"
+        android:padding="15dp"
         />
     <TextView
         app:layout_constraintTop_toBottomOf="@+id/view_description"
@@ -41,6 +47,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/details_dimensions"
+        android:textSize="20sp"
+        android:padding="15dp"
         />
     <TextView
         app:layout_constraintTop_toBottomOf="@+id/view_dimensions"
@@ -48,6 +56,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/details_filesize"
+        android:textSize="20sp"
+        android:padding="15dp"
         />
     <TextView
         app:layout_constraintTop_toBottomOf="@+id/view_filesize"
@@ -55,6 +65,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/details_longitude"
+        android:textSize="20sp"
+        android:padding="15dp"
         />
     <TextView
         app:layout_constraintTop_toBottomOf="@+id/view_longitude"
@@ -62,6 +74,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/details_latitude"
+        android:textSize="20sp"
+        android:padding="15dp"
         />
+
 
 </android.support.constraint.ConstraintLayout>
