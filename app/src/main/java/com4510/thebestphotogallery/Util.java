@@ -37,6 +37,35 @@ public class Util {
     private static final int REQUEST_READ_EXTERNAL_STORAGE = 2987;
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 7829;
 
+    public static class BitmapList {
+
+        private List<Bitmap> bitmaps;
+        private int loadedSize;
+
+        public BitmapList() {
+            this.bitmaps = new ArrayList<>();
+            this.loadedSize = 0;
+        }
+
+        public final List<Bitmap> getList() {
+            return bitmaps;
+        }
+
+        public final int getLoadedSize() {
+            return loadedSize;
+        }
+
+        public void incLoadedSize(final int x) {
+            loadedSize += x;
+        }
+
+        public void clear() {
+            bitmaps.clear();
+            loadedSize = 0;
+        }
+
+    }
+
     /**
      * it initialises EasyImage
      */

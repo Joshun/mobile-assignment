@@ -25,11 +25,17 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
 
     private static final int BLOCK_SIZE = 40;
     protected List<ImageMetadata> imageMetadataList = new ArrayList<>();
-    protected List<Bitmap> bitmaps = new ArrayList<>();
+    protected Util.BitmapList bitmaps = new Util.BitmapList();
 
     public void dispatchBitmapLoad(final int numberToLoad, final int offset) {
+        //Also no checks for whether trying to load a file that doesn't exist!
+
         for (int i = 0; i < numberToLoad; ++i) {
-            PreloadImageAsync imageAsync = new PreloadImageAsync(this, bitmaps, imageMetadataList.get(i).file, offset + numberToLoad);
+            if (i + bitmaps.getList().size() > imageMetadataList.size()) {
+                break;
+            }
+            bitmaps.getList().add(null);
+            PreloadImageAsync imageAsync = new PreloadImageAsync(this, bitmaps, imageMetadataList.get(i).file, offset + i, offset + numberToLoad);
             imageAsync.execute();
         }
         Log.v("Test", "Finished dispatching!");
@@ -44,7 +50,7 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         Log.v("Init image", "LOADED");
         Log.v("Image Count", "" + imageMetadataList.size());
 
-        dispatchBitmapLoad(BLOCK_SIZE, bitmaps.size());
+        dispatchBitmapLoad(BLOCK_SIZE, bitmaps.getList().size());
     }
 
     @Override
