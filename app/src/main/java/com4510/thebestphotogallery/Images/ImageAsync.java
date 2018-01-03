@@ -22,18 +22,18 @@ public class ImageAsync extends AsyncTask<Void, Void, Bitmap> {
     protected int dimension = 0;
     protected boolean square = false;
 
-    ImageAsync(final File file, final int dimension, final boolean square) {
+    public ImageAsync(final File file, final int dimension, final boolean square) {
         this.file = file;
         this.dimension = dimension;
         this.square = square;
     }
-    ImageAsync(final File file, final int dimension) {
+    public ImageAsync(final File file, final int dimension) {
         this(file, dimension, true);
     }
-    ImageAsync(final File file) {
+    public ImageAsync(final File file) {
         this(file, 128);
     }
-    ImageAsync() {
+    public ImageAsync() {
         this(null);
     }
 

@@ -1,6 +1,7 @@
 package com4510.thebestphotogallery.Activities;
 
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import java.util.List;
 import com4510.thebestphotogallery.Database.DatabaseResponseListener;
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Images.LoadImagesResponseListener;
+import com4510.thebestphotogallery.Images.PreloadImageAsync;
 import com4510.thebestphotogallery.Tasks.LoadImagesTask;
 import com4510.thebestphotogallery.Util;
 
@@ -21,11 +23,16 @@ import com4510.thebestphotogallery.Util;
 
 public abstract class ImageLoadActivity extends AppCompatActivity implements LoadImagesResponseListener, DatabaseResponseListener {
 
-    private static final int BLOCK_SIZE = 30;
+    private static final int BLOCK_SIZE = 40;
     protected List<ImageMetadata> imageMetadataList = new ArrayList<>();
+    protected List<Bitmap> bitmaps = new ArrayList<>();
 
-    public void dispatchBitmapLoad(final int numberToLoad) {
-        Log.v("Test", "Loading!");
+    public void dispatchBitmapLoad(final int numberToLoad, final int offset) {
+        for (int i = 0; i < numberToLoad; ++i) {
+            PreloadImageAsync imageAsync = new PreloadImageAsync(this, bitmaps, imageMetadataList.get(i).file, offset + numberToLoad);
+            imageAsync.execute();
+        }
+        Log.v("Test", "Finished dispatching!");
     }
 
     @Override
@@ -37,7 +44,7 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         Log.v("Init image", "LOADED");
         Log.v("Image Count", "" + imageMetadataList.size());
 
-        dispatchBitmapLoad(BLOCK_SIZE);
+        dispatchBitmapLoad(BLOCK_SIZE, bitmaps.size());
     }
 
     @Override
@@ -58,10 +65,15 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
     }
 
     public void doLoadImages() {
+        this.bitmaps.clear();
         LoadImagesTask loadImagesTask = new LoadImagesTask(this);
         LoadImagesTask.LoadImagesTaskParam loadImagesTaskParam = new LoadImagesTask.LoadImagesTaskParam();
         loadImagesTaskParam.activity = this;
         loadImagesTask.execute(loadImagesTaskParam);
+    }
+
+    public void finishedLoading() {
+        Log.v("Bitmaps", "Finished loading!");
     }
 
 }
