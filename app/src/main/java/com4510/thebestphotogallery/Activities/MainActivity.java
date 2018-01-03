@@ -31,10 +31,9 @@ import com4510.thebestphotogallery.Util;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 
-public class MainActivity extends AppCompatActivity implements DatabaseResponseListener, LoadImagesResponseListener {
+public class MainActivity extends ImageLoadActivity {
     private RecyclerView.Adapter recyclerViewAdapter;
     private SwipeRefreshLayout swipeContainer;
-    private List<ImageMetadata> imageMetadataList = new ArrayList<>();
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
@@ -59,43 +58,6 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
                 return true;
         }
         return true;
-    }
-
-    @Override
-    public void imagesLoaded(List<ImageMetadata> imageMetadataList) {
-        this.imageMetadataList.clear();
-        this.imageMetadataList.addAll(imageMetadataList);
-
-        recyclerViewAdapter.notifyDataSetChanged();
-
-        Util.initEasyImage(this);
-        Log.v("Init image", "LOADED");
-        Log.v("Image Count", "" + imageMetadataList.size());
-    }
-
-
-    public void doLoadImages() {
-        LoadImagesTask loadImagesTask = new LoadImagesTask(this);
-        LoadImagesTask.LoadImagesTaskParam loadImagesTaskParam = new LoadImagesTask.LoadImagesTaskParam();
-        loadImagesTaskParam.activity = this;
-        loadImagesTask.execute(loadImagesTaskParam);
-    }
-
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (grantResults.length < 1 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                System.out.println("permissions not granted");
-        }
-        else {
-            doLoadImages();
-        }
-
-    }
-
-    @Override
-    public void onDatabaseRead(List<ImageMetadata> imageMetadataList) {
-        Log.v(getClass().getName(), "loaded image metadata database.");
     }
 
     @Override
@@ -144,13 +106,6 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
                 super.onScrollStateChanged(recyclerView, state);
             }
         });
-
-        Util.checkPermissions(getApplicationContext(), this);
-        ReadFromDatabaseTask readFromDatabaseTask = new ReadFromDatabaseTask(this);
-        readFromDatabaseTask.execute(AppDatabase.getInstance(this).imageMetadataDao());
-
-        Util.initEasyImage(this);
-        doLoadImages();
     }
 
 }
