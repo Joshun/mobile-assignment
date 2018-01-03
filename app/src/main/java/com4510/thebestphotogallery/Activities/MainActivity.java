@@ -53,6 +53,10 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
                     startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
                 }
                 return true;
+            case R.id.btn_map:
+                intent = new Intent(this, MapsActivity.class);
+                startActivity(intent);
+                return true;
         }
         return true;
     }
