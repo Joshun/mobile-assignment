@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.util.Log;
 import android.net.Uri;
 import android.support.v4.content.FileProvider;
+import android.widget.Toast;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
     private Activity activity;
 
     String mCurrentPhotoPath;
+
+    private boolean permissionsOk = false;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -137,19 +140,26 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
 
 
     public void doLoadImages() {
+        if (!permissionsOk) {
+            Log.e(getClass().getName(), "Permission request failed.");
+            return;
+        }
         LoadImagesTask loadImagesTask = new LoadImagesTask(this);
         LoadImagesTask.LoadImagesTaskParam loadImagesTaskParam = new LoadImagesTask.LoadImagesTaskParam();
         loadImagesTaskParam.activity = this;
         loadImagesTask.execute(loadImagesTaskParam);
     }
 
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (grantResults.length < 1 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                System.out.println("permissions not granted");
+            System.out.println("permissions not granted");
+            Toast.makeText(this, "View photo permission is required!", Toast.LENGTH_SHORT).show();
         }
         else {
+            permissionsOk = true;
             doLoadImages();
         }
 
@@ -208,12 +218,12 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
             }
         });
 
-        Util.checkPermissions(getApplicationContext(), this);
+        Util.checkPermissions(this);
         ReadFromDatabaseTask readFromDatabaseTask = new ReadFromDatabaseTask(this);
         readFromDatabaseTask.execute(AppDatabase.getInstance(this).imageMetadataDao());
 
         Util.initEasyImage(this);
-        doLoadImages();
+//        doLoadImages();
     }
 
     public Activity getActivity() {
