@@ -115,6 +115,10 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
                     }
                 }
                 return true;
+            case R.id.btn_map:
+                intent = new Intent(this, MapsActivity.class);
+                startActivity(intent);
+                return true;
         }
         return true;
     }
