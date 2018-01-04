@@ -59,6 +59,36 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         return true;
     }
 
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+
+//        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        //  File storageDir = new File("/storage/emulated/0/DCIM/Camera/");
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        // Above works but does not save, first and second lines camera won't load?
+
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+
+        return image;
+    }
+
+    private void galleryAddPic() {
+        File f = new File(mCurrentPhotoPath);
+        System.out.println(f);
+        Uri contentUri = Uri.fromFile(f);
+        System.out.println(contentUri);
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,contentUri);
+        mediaScanIntent.setData(contentUri);
+        System.out.println(mediaScanIntent);
+        this.sendBroadcast(mediaScanIntent);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -66,7 +96,27 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         Intent intent;
         switch (item.getItemId()) {
             case R.id.btn_camera:
-                EasyImage.openCamera(getActivity(), 0);
+//                EasyImage.openCamera(getActivity(), 0);
+                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                        mCurrentPhotoPath = photoFile.getAbsolutePath();
+                        galleryAddPic();
+                    } catch (IOException ex) {
+                        // Error occurred while creating the File
+
+                    }
+//                     Continue only if the File was successfully created
+                    if (photoFile != null) {
+                        Uri photoURI = FileProvider.getUriForFile(this,
+                                "com.example.android.fileprovider",
+                                photoFile);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                    }
+                }
                 break;
 
             case R.id.btn_map:
