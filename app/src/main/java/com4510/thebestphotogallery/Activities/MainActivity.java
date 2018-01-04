@@ -63,7 +63,7 @@ public class MainActivity extends ImageLoadActivity {
                 @Override
                 public void onBottomReached(int position) {
                     Log.v("RecyclerView", "Hit the bottom!");
-                    dispatchBitmapLoad(20);
+                    dispatchBitmapLoad(BLOCK_SIZE);
                 }
             });
             recyclerView.setAdapter(recyclerViewAdapter);
@@ -98,6 +98,9 @@ public class MainActivity extends ImageLoadActivity {
             recyclerViewAdapter.addBitmaps(bitmaps);
         }
 
+        if (moreToLoad()) {
+            dispatchBitmapLoad(20);
+        }
     }
 
     @Override

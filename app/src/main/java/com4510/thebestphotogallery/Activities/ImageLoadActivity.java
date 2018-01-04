@@ -24,7 +24,7 @@ import com4510.thebestphotogallery.Util;
 public abstract class ImageLoadActivity extends AppCompatActivity implements LoadImagesResponseListener, DatabaseResponseListener {
 
     private boolean loading = false;
-    private static final int BLOCK_SIZE = 40;
+    protected static final int BLOCK_SIZE = 40;
     protected List<ImageMetadata> imageMetadataList = new ArrayList<>();
     protected Util.BitmapList bitmaps = new Util.BitmapList();
 
@@ -48,6 +48,10 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
 
     public final boolean getLoading() {
         return loading;
+    }
+
+    public final boolean moreToLoad() {
+        return bitmaps.getList().size() < imageMetadataList.size();
     }
 
     @Override
