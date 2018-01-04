@@ -37,6 +37,7 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 
 public class MainActivity extends ImageLoadActivity {
     private boolean firstLoad;
+    private boolean queueRefresh;
     private View mainView;
     private View loadingView;
     private MyAdapter recyclerViewAdapter;
@@ -46,7 +47,10 @@ public class MainActivity extends ImageLoadActivity {
     @Override
     public void onFinishedBitmapLoad(List<Bitmap> bitmaps) {
         super.onFinishedBitmapLoad(bitmaps);
-        if (firstLoad) {
+        if (queueRefresh && this.bitmaps.loaded()) {
+            refresh();
+        }
+        else if (firstLoad) {
             firstLoad = false;
             mainView.setAlpha(0.0f);
             mainView.setVisibility(View.VISIBLE);
@@ -62,8 +66,10 @@ public class MainActivity extends ImageLoadActivity {
             recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
                 @Override
                 public void onBottomReached(int position) {
-                    Log.v("RecyclerView", "Hit the bottom!");
-                    dispatchBitmapLoad(16, true);
+                    if (!queueRefresh) {
+                        Log.v("RecyclerView", "Hit the bottom!");
+                        dispatchBitmapLoad(8, true);
+                    }
                 }
             });
             recyclerView.setAdapter(recyclerViewAdapter);
@@ -74,9 +80,10 @@ public class MainActivity extends ImageLoadActivity {
                 public void onRefresh() {
                     System.out.println("refreshing...");
                     if (!getLoading()) {
-                        recyclerViewAdapter.clear();
-                        doLoadImages();
-                        swipeContainer.setRefreshing(false);
+                        refresh();
+                    }
+                    else {
+                        queueRefresh = true;
                     }
                 }
             });
@@ -92,13 +99,14 @@ public class MainActivity extends ImageLoadActivity {
             });
         }
         else {
+            swipeContainer.setRefreshing(false);
             if (recyclerViewAdapter.isEmpty()) {
                 recyclerViewAdapter.setItems(imageMetadataList);
             }
             recyclerViewAdapter.addBitmaps(bitmaps);
         }
 
-        if (!atSoftCap() && moreToLoad()) {
+        if (!atSoftCap() && moreToLoad() && !queueRefresh) {
             dispatchBitmapLoad(16);
         }
     }
@@ -131,6 +139,7 @@ public class MainActivity extends ImageLoadActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firstLoad = true;
+        queueRefresh = false;
 
         setContentView(R.layout.activity_main);
 
@@ -143,6 +152,12 @@ public class MainActivity extends ImageLoadActivity {
         readFromDatabaseTask.execute(AppDatabase.getInstance(this).imageMetadataDao());
 
         doLoadImages();
+    }
+
+    public void refresh() {
+        queueRefresh = false;
+        recyclerViewAdapter.clear();
+        super.refresh();
     }
 
 }

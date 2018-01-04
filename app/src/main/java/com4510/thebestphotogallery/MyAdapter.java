@@ -93,9 +93,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
     }
 
     public void clear() {
-//        notifyItemRangeRemoved(0, this.bitmaps.size());
         this.bitmaps.clear();
         this.items.clear();
+        notifyDataSetChanged();
     }
 
     public final boolean isEmpty() {
@@ -104,6 +104,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
 
     public void setItems(List<ImageMetadata> items) {
         this.items = new CopyOnWriteArrayList<>(items);
+        notifyDataSetChanged();
     }
 
     public void addBitmaps(List<Bitmap> bitmaps) {

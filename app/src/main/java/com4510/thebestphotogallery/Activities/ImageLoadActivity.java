@@ -105,4 +105,12 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         loadImagesTask.execute(loadImagesTaskParam);
     }
 
+    public void refresh() {
+        loading = false;
+        softCap = 0;
+        imageMetadataList.clear();
+        bitmaps.clear();
+        doLoadImages();
+    }
+
 }

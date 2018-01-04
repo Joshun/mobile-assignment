@@ -55,6 +55,8 @@ public class Util {
             return loadedSize;
         }
 
+        public final boolean loaded() { return bitmaps.size() == loadedSize; }
+
         public void incLoadedSize(final int x) {
             loadedSize += x;
         }
