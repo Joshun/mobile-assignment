@@ -35,7 +35,7 @@ public class PreloadImageAsync extends ImageAsync {
         bitmaps.get().incLoadedSize(1);
         Log.v("Bitmaps", "Reserved size: " + bitmaps.get().getList().size() + ", Loaded size: " + bitmaps.get().getLoadedSize());
         if (bitmaps.get().getLoadedSize() >= filesToLoad) {
-            activity.get().finishedLoading();
+            activity.get().onFinishedBitmapLoad();
         }
     }
 

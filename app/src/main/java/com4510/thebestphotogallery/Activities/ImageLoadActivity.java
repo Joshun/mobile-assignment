@@ -28,10 +28,9 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
     protected Util.BitmapList bitmaps = new Util.BitmapList();
 
     public void dispatchBitmapLoad(final int numberToLoad, final int offset) {
-        //Also no checks for whether trying to load a file that doesn't exist!
-
         for (int i = 0; i < numberToLoad; ++i) {
-            if (i + bitmaps.getList().size() > imageMetadataList.size()) {
+            //Checking whether there is actually a file to load to prevent null pointer exceptions
+            if (i + bitmaps.getList().size() >= imageMetadataList.size()) {
                 break;
             }
             bitmaps.getList().add(null);
@@ -39,6 +38,10 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
             imageAsync.execute();
         }
         Log.v("Test", "Finished dispatching!");
+    }
+
+    public void onFinishedBitmapLoad() {
+        Log.v("Bitmaps", "Finished loading!");
     }
 
     @Override
@@ -76,10 +79,6 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         LoadImagesTask.LoadImagesTaskParam loadImagesTaskParam = new LoadImagesTask.LoadImagesTaskParam();
         loadImagesTaskParam.activity = this;
         loadImagesTask.execute(loadImagesTaskParam);
-    }
-
-    public void finishedLoading() {
-        Log.v("Bitmaps", "Finished loading!");
     }
 
 }

@@ -21,13 +21,12 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCtuUJzHnu663-yinUH2WTeE6wQ0Sh6jQM" />
 
-        <activity android:name=".Activities.LoadingActivity">
+        <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MainActivity" android:parentActivityName=".Activities.MainActivity"/>
         <activity android:name=".Activities.ShowImageActivity" android:parentActivityName=".Activities.MainActivity"/>
         <activity android:name=".Activities.EditDetailsActivity" android:parentActivityName=".Activities.ShowImageActivity"/>
         <activity android:name=".Activities.ViewDetailsActivity" android:parentActivityName=".Activities.ShowImageActivity"/>

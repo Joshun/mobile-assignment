@@ -1,5 +1,7 @@
 package com4510.thebestphotogallery.Activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.provider.MediaStore;
@@ -32,38 +34,19 @@ import com4510.thebestphotogallery.Util;
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 
 public class MainActivity extends ImageLoadActivity {
+    private View mainView;
+    private View loadingView;
     private RecyclerView.Adapter recyclerViewAdapter;
     private SwipeRefreshLayout swipeContainer;
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_view, menu);
-        return true;
-    }
+    public void onFinishedBitmapLoad() {
+        Log.v("Bitmaps", "Parent check!");
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-        switch (item.getItemId()) {
-            case R.id.btn_camera:
-                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-                }
-                return true;
-            case R.id.btn_map:
-                intent = new Intent(this, MapsActivity.class);
-                startActivity(intent);
-                return true;
-        }
-        return true;
-    }
+        mainView.setAlpha(0.0f);
+        mainView.setVisibility(View.VISIBLE);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 
@@ -106,6 +89,57 @@ public class MainActivity extends ImageLoadActivity {
                 super.onScrollStateChanged(recyclerView, state);
             }
         });
+
+        final int animDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        mainView.animate().alpha(1.0f).setDuration(animDuration).setListener(null);
+        loadingView.animate().alpha(0.0f).setDuration(animDuration).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                loadingView.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_view, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.btn_camera:
+                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                }
+                return true;
+            case R.id.btn_map:
+                intent = new Intent(this, MapsActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return true;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
+
+        mainView = findViewById(R.id.main_view);
+        loadingView = findViewById(R.id.loading_view);
+        mainView.setVisibility(View.GONE);
+
+        Util.checkPermissions(getApplicationContext(), this);
+        ReadFromDatabaseTask readFromDatabaseTask = new ReadFromDatabaseTask(this);
+        readFromDatabaseTask.execute(AppDatabase.getInstance(this).imageMetadataDao());
+
+        doLoadImages();
     }
 
 }

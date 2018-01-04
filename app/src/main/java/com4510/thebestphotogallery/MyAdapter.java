@@ -50,12 +50,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         //Use the provided View Holder on the onCreateViewHolder method to populate the
         // current row on the RecyclerView
 
-        if (holder!=null && items.get(position)!=null) {
-            holder.imageView.setImageBitmap(null);
-            MenuImageAsync imageAsync = new MenuImageAsync(holder, context, items.get(position).file, position);
-            currentTasks.add(imageAsync);
-            imageAsync.execute();
-        }
+//        if (holder!=null && items.get(position)!=null) {
+//            holder.imageView.setImageBitmap(null);
+//            MenuImageAsync imageAsync = new MenuImageAsync(holder, context, items.get(position).file, position);
+//            currentTasks.add(imageAsync);
+//            imageAsync.execute();
+//        }
         //animate(holder);
     }
 
