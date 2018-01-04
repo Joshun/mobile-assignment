@@ -67,13 +67,12 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         switch (item.getItemId()) {
             case R.id.btn_camera:
                 EasyImage.openCamera(getActivity(), 0);
-                activity= this;
-
+                break;
 
             case R.id.btn_map:
                 intent = new Intent(this, MapsActivity.class);
                 startActivity(intent);
-                return true;
+                break;
         }
         return true;
     }
