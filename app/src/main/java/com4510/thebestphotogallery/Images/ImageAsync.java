@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Process;
 import android.util.Log;
 import android.view.View;
 
@@ -18,14 +19,19 @@ import com4510.thebestphotogallery.Util;
 
 public class ImageAsync extends AsyncTask<Void, Void, Bitmap> {
 
-    protected File file = null;
-    protected int dimension = 0;
-    protected boolean square = false;
+    protected final File file;
+    protected final int dimension;
+    protected final boolean square;
+    private final boolean highPriority;
 
-    public ImageAsync(final File file, final int dimension, final boolean square) {
+    public ImageAsync(final File file, final int dimension, final boolean square, final boolean highPriority) {
         this.file = file;
         this.dimension = dimension;
         this.square = square;
+        this.highPriority = highPriority;
+    }
+    public ImageAsync(final File file, final int dimension, final boolean square) {
+        this(file, dimension, square, false);
     }
     public ImageAsync(final File file, final int dimension) {
         this(file, dimension, true);
@@ -39,6 +45,10 @@ public class ImageAsync extends AsyncTask<Void, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(Void... data) {
+        if (highPriority) {
+            android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_DISPLAY);
+        }
+
         Bitmap b = Util.loadBitmap(file, dimension, square);
 
         if (isCancelled()) {

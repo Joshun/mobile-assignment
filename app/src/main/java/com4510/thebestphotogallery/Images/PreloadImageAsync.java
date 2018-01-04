@@ -1,6 +1,7 @@
 package com4510.thebestphotogallery.Images;
 
 import android.graphics.Bitmap;
+import android.os.Process;
 import android.util.Log;
 
 import java.io.File;

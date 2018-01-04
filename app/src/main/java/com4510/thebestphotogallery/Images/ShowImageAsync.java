@@ -20,7 +20,7 @@ public class ShowImageAsync extends ImageAsync {
     protected WeakReference<View> loadingView;
 
     public ShowImageAsync(final ImageView imageView, final View loadingView, final File file) {
-        super(file, 2048, false);
+        super(file, 2048, false, true);
         this.imageView = new WeakReference<ImageView>(imageView);
         this.loadingView = new WeakReference<View>(loadingView);
     }
