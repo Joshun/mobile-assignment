@@ -5,6 +5,8 @@
 package com4510.thebestphotogallery;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,23 +17,24 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+import com4510.thebestphotogallery.Activities.ShowImageActivity;
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Images.MenuImageAsync;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
     private Context context;
     private static List<ImageMetadata> items;
-    private List<MenuImageAsync> currentTasks;
+    private static List<Bitmap> bitmaps;
 
-    public MyAdapter(Context cont, List<ImageMetadata> items) {
+    public MyAdapter(Context cont, List<ImageMetadata> items, List<Bitmap> bitmaps) {
         super();
         MyAdapter.items = items;
-        this.currentTasks = new ArrayList<>();
+        MyAdapter.bitmaps = bitmaps;
         context = cont;
     }
 
-    public MyAdapter(List<ImageMetadata> items) {
-        this(null, items);
+    public MyAdapter(List<ImageMetadata> items, List<Bitmap> bitmaps) {
+        this(null, items, bitmaps);
     }
 
     @Override
@@ -46,28 +49,28 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
 
     @Override
     public void onBindViewHolder(final View_Holder holder, final int position) {
-
-        //Use the provided View Holder on the onCreateViewHolder method to populate the
-        // current row on the RecyclerView
-
-//        if (holder!=null && items.get(position)!=null) {
-//            holder.imageView.setImageBitmap(null);
-//            MenuImageAsync imageAsync = new MenuImageAsync(holder, context, items.get(position).file, position);
-//            currentTasks.add(imageAsync);
-//            imageAsync.execute();
-//        }
-        //animate(holder);
+        if (position < bitmaps.size()) {
+            holder.imageView.setImageBitmap(bitmaps.get(position));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, ShowImageActivity.class);
+                    intent.putExtra("position", position);
+                    context.startActivity(intent);
+                }
+            });
+        }
     }
 
 
     // convenience method for getting data at click position
-    ImageMetadata getItem(int id) {
+    public static ImageMetadata getItem(int id) {
         return items.get(id);
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return bitmaps.size();
     }
 
     public class View_Holder extends RecyclerView.ViewHolder  {
@@ -78,45 +81,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
             imageView = (ImageView) itemView.findViewById(R.id.image_item);
 
         }
-    }
-
-    private void clearFinished() {
-        if (currentTasks != null && currentTasks.size() > 0) {
-            ArrayList<MenuImageAsync> toRemove = new ArrayList<>();
-            for (MenuImageAsync i : currentTasks) {
-                if (i.getStatus() == AsyncTask.Status.FINISHED) {
-                    toRemove.add(i);
-                }
-            }
-            currentTasks.removeAll(toRemove);
-        }
-    }
-
-    public void cancelLoading(int firstVisibleItem, int lastVisibleItem, boolean scrollingUp) {
-        clearFinished();
-        if (currentTasks != null && currentTasks.size() > 0) {
-            for (MenuImageAsync i : currentTasks) {
-                if (!scrollingUp && i.getPosition() < firstVisibleItem
-                        || scrollingUp && i.getPosition() > lastVisibleItem) {
-                    i.cancel(true);
-                }
-            }
-        }
-    }
-
-    public void cancelAll() {
-        clearFinished();
-        for (MenuImageAsync i : currentTasks) {
-            i.cancel(true);
-        }
-    }
-
-    public static List<ImageMetadata> getItems() {
-        return items;
-    }
-
-    public static void setItems(List<ImageMetadata> items) {
-        MyAdapter.items = items;
     }
 
 }

@@ -65,30 +65,8 @@ public class MainActivity extends ImageLoadActivity {
         int numberOfColumns = 4;
         final GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerViewAdapter = new MyAdapter(imageMetadataList);
+        recyclerViewAdapter = new MyAdapter(imageMetadataList, bitmaps.getList());
         recyclerView.setAdapter(recyclerViewAdapter);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            private boolean moving = false;
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                final int firstItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
-                final int lastItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
-                final boolean scrolledUp = dy < 0;
-
-                if (moving) {
-                    ((MyAdapter) recyclerViewAdapter).cancelLoading(firstItemPosition, lastItemPosition, scrolledUp);
-                }
-
-                super.onScrolled(recyclerView, dx, dy);
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int state) {
-                moving = state == SCROLL_STATE_DRAGGING;
-                super.onScrollStateChanged(recyclerView, state);
-            }
-        });
 
         final int animDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
         mainView.animate().alpha(1.0f).setDuration(animDuration).setListener(null);

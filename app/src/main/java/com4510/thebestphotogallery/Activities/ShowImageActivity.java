@@ -96,7 +96,7 @@ public class ShowImageActivity extends AppCompatActivity {
         }
 
         ImageView imageView = (ImageView) findViewById(R.id.image);
-        ImageMetadata element = MyAdapter.getItems().get(imageIndex);
+        ImageMetadata element = MyAdapter.getItem(imageIndex);
         Log.v("Name", "" + element.file.getName());
 
         currentImageFile = element.file.getAbsolutePath();

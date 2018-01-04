@@ -32,7 +32,7 @@ public class EditDetailsActivity extends DetailsActivity implements UpdateImageM
 
         Bundle b = getIntent().getExtras();
         int index = b.getInt("position");
-        currentImageMetadata = MyAdapter.getItems().get(index);
+        currentImageMetadata = MyAdapter.getItem(index);
 
         TextInputEditText nameInput = findViewById(R.id.edit_name);
         TextInputEditText descInput = findViewById(R.id.edit_description);

@@ -25,7 +25,7 @@ public class ViewDetailsActivity extends DetailsActivity {
 
         Bundle b = getIntent().getExtras();
         int index = b.getInt("position");
-        currentImageMetadata = MyAdapter.getItems().get(index);
+        currentImageMetadata = MyAdapter.getItem(index);
 
         TextView nameView = findViewById(R.id.view_name);
         TextView descView = findViewById(R.id.view_description);
