@@ -27,7 +27,7 @@ public class ShowImageAsync extends ImageAsync {
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-        if (bitmap != null) {
+        if (bitmap != null && loadingView != null && imageView != null) {
             loadingView.get().setVisibility(View.GONE);
             imageView.get().setImageBitmap(bitmap);
         }
