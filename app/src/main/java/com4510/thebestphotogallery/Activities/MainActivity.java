@@ -25,6 +25,7 @@ import com4510.thebestphotogallery.Database.AppDatabase;
 import com4510.thebestphotogallery.Database.DatabaseResponseListener;
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Images.LoadImagesResponseListener;
+import com4510.thebestphotogallery.OnBottomReachedListener;
 import com4510.thebestphotogallery.Tasks.LoadImagesTask;
 import com4510.thebestphotogallery.MyAdapter;
 import com4510.thebestphotogallery.R;
@@ -36,14 +37,12 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 public class MainActivity extends ImageLoadActivity {
     private View mainView;
     private View loadingView;
-    private RecyclerView.Adapter recyclerViewAdapter;
+    private MyAdapter recyclerViewAdapter;
     private SwipeRefreshLayout swipeContainer;
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
     public void onFinishedBitmapLoad() {
-        Log.v("Bitmaps", "Parent check!");
-
         mainView.setAlpha(0.0f);
         mainView.setVisibility(View.VISIBLE);
 
@@ -66,6 +65,12 @@ public class MainActivity extends ImageLoadActivity {
         final GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
         recyclerView.setLayoutManager(layoutManager);
         recyclerViewAdapter = new MyAdapter(imageMetadataList, bitmaps.getList());
+        recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
+            @Override
+            public void onBottomReached(int position) {
+                Log.v("RecyclerView", "Hit the bottom!");
+            }
+        });
         recyclerView.setAdapter(recyclerViewAdapter);
 
         final int animDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);

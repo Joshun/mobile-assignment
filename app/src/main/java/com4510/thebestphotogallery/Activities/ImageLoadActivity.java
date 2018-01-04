@@ -37,12 +37,9 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
             PreloadImageAsync imageAsync = new PreloadImageAsync(this, bitmaps, imageMetadataList.get(i).file, offset + i, offset + numberToLoad);
             imageAsync.execute();
         }
-        Log.v("Test", "Finished dispatching!");
     }
 
-    public void onFinishedBitmapLoad() {
-        Log.v("Bitmaps", "Finished loading!");
-    }
+    public abstract void onFinishedBitmapLoad();
 
     @Override
     public void imagesLoaded(List<ImageMetadata> imageMetadataList) {

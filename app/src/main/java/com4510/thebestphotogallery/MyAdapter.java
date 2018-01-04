@@ -23,13 +23,14 @@ import com4510.thebestphotogallery.Images.MenuImageAsync;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
     private Context context;
-    private static List<ImageMetadata> items;
-    private static List<Bitmap> bitmaps;
+    private List<ImageMetadata> items;
+    private List<Bitmap> bitmaps;
+    OnBottomReachedListener onBottomReachedListener;
 
     public MyAdapter(Context cont, List<ImageMetadata> items, List<Bitmap> bitmaps) {
         super();
-        MyAdapter.items = items;
-        MyAdapter.bitmaps = bitmaps;
+        this.items = items;
+        this.bitmaps = bitmaps;
         context = cont;
     }
 
@@ -50,12 +51,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
     @Override
     public void onBindViewHolder(final View_Holder holder, final int position) {
         if (position < bitmaps.size()) {
+
+            if (position == bitmaps.size() - 1) {
+                onBottomReachedListener.onBottomReached(position);
+            }
+
             holder.imageView.setImageBitmap(bitmaps.get(position));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, ShowImageActivity.class);
                     intent.putExtra("position", position);
+                    intent.putExtra("metadata", getItem(position));
                     context.startActivity(intent);
                 }
             });
@@ -64,8 +71,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
 
 
     // convenience method for getting data at click position
-    public static ImageMetadata getItem(int id) {
-        return items.get(id);
+    public ImageMetadata getItem(int position) {
+        return items.get(position);
     }
 
     @Override
@@ -81,6 +88,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
             imageView = (ImageView) itemView.findViewById(R.id.image_item);
 
         }
+    }
+
+    public void setOnBottomReachedListener(OnBottomReachedListener onBottomReachedListener) {
+        this.onBottomReachedListener = onBottomReachedListener;
     }
 
 }

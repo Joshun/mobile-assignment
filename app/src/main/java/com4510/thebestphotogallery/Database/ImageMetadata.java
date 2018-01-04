@@ -7,13 +7,14 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
  * Created by joshua on 27/12/17.
  */
 @Entity(tableName = "image_metadata", indices = {@Index(value="filePath", unique = true)})
 //@Entity(tableName = "image_metadata")
-public class ImageMetadata {
+public class ImageMetadata implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int uid;
 
