@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.io.IOException;
@@ -58,9 +59,22 @@ public class MainActivity extends ImageLoadActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Activity activity;
 
-    String mCurrentPhotoPath;
-
     private boolean permissionsOk = true;
+
+    private String mCurrentPhotoPath = null;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            if (mCurrentPhotoPath != null) {
+//                galleryAddPic(mCurrentPhotoPath);
+                notifyMediaStoreScanner(new File(mCurrentPhotoPath));
+                Log.v(getClass().getName(), "IMAGE SAVE SUCCESS");
+            }
+        }
+
+    }
 
     @Override
     public void onFinishedBitmapLoad(List<Bitmap> bitmaps) {
@@ -140,10 +154,13 @@ public class MainActivity extends ImageLoadActivity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
 
-//        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        //  File storageDir = new File("/storage/emulated/0/DCIM/Camera/");
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        // Above works but does not save, first and second lines camera won't load?
+//        File storageDir = new File(MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString());
+
+//        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+
+//        File image = new File(storageDir.getAbsolutePath() + "/" + imageFileName + ".jpg");
+
 
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -155,12 +172,28 @@ public class MainActivity extends ImageLoadActivity {
         return image;
     }
 
-    private void galleryAddPic() {
+    public final void notifyMediaStoreScanner(final File file) {
+        // this tries to save to sdcard
+        if (file == null) {
+            return;
+        }
+        try {
+            MediaStore.Images.Media.insertImage(this.getContentResolver(),
+                    file.getAbsolutePath(), file.getName(), null);
+            this.sendBroadcast(new Intent(
+                    Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void galleryAddPic(String photoPath) {
+        // this method doesn't actually save the photo to sdcard but notifies gallery
         File f = new File(mCurrentPhotoPath);
         System.out.println(f);
         Uri contentUri = Uri.fromFile(f);
         System.out.println(contentUri);
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,contentUri);
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         mediaScanIntent.setData(contentUri);
         System.out.println(mediaScanIntent);
         this.sendBroadcast(mediaScanIntent);
@@ -172,16 +205,16 @@ public class MainActivity extends ImageLoadActivity {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.btn_camera:
-//                EasyImage.openCamera(getActivity(), 0);
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (intent.resolveActivity(getPackageManager()) != null) {
                     File photoFile = null;
                     try {
                         photoFile = createImageFile();
                         mCurrentPhotoPath = photoFile.getAbsolutePath();
-                        galleryAddPic();
                     } catch (IOException ex) {
                         // Error occurred while creating the File
+                        System.err.println("err creating file");
+                        ex.printStackTrace(System.err);
 
                     }
 //                     Continue only if the File was successfully created
