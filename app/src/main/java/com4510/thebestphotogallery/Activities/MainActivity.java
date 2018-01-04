@@ -1,5 +1,6 @@
 package com4510.thebestphotogallery.Activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -9,6 +10,7 @@ import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -170,11 +172,15 @@ public class MainActivity extends ImageLoadActivity {
         loadingView = findViewById(R.id.loading_view);
         mainView.setVisibility(View.GONE);
 
-        Util.checkPermissions(this);
         ReadFromDatabaseTask readFromDatabaseTask = new ReadFromDatabaseTask(this);
         readFromDatabaseTask.execute(AppDatabase.getInstance(this).imageMetadataDao());
 
+
+        // try to load images (will fail silently if permission not already granted)
         doLoadImages();
+        // request permissions if they haven't already been granted
+        Util.requestPermissionsIfNecessary(this);
+
     }
 
     public Activity getActivity() {

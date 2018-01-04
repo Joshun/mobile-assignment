@@ -1,11 +1,16 @@
 package com4510.thebestphotogallery.Activities;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +94,7 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (grantResults.length < 1 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-            System.out.println("permissions not granted");
+            Toast.makeText(this, "App requires media read and write permissions to function correctly, please restart it and accept", Toast.LENGTH_LONG).show();
         }
         else {
             doLoadImages();
@@ -98,6 +103,11 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
     }
 
     public void doLoadImages() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            Log.v(getClass().getName(), "doLoadImages: read permission not granted");
+            return;
+        }
+
         this.bitmaps.clear();
         LoadImagesTask loadImagesTask = new LoadImagesTask(this);
         LoadImagesTask.LoadImagesTaskParam loadImagesTaskParam = new LoadImagesTask.LoadImagesTaskParam();
@@ -112,5 +122,6 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         bitmaps.clear();
         doLoadImages();
     }
+
 
 }
