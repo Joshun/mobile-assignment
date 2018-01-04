@@ -58,16 +58,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
                 onBottomReachedListener.onBottomReached(position);
             }
 
-            holder.imageView.setImageBitmap(bitmaps.get(position));
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, ShowImageActivity.class);
-                    intent.putExtra("position", position);
-                    intent.putExtra("metadata", getItem(position));
-                    context.startActivity(intent);
-                }
-            });
+            if (bitmaps.get(position) != null) {
+                holder.imageView.setImageBitmap(bitmaps.get(position));
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, ShowImageActivity.class);
+                        intent.putExtra("position", position);
+                        intent.putExtra("metadata", getItem(position));
+                        context.startActivity(intent);
+                    }
+                });
+            }
         }
     }
 

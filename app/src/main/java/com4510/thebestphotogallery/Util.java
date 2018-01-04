@@ -113,7 +113,7 @@ public class Util {
             int h = options.outHeight;
 
             //Resize image if width or height is less than dimension
-            if (options.outWidth < dimension || options.outHeight < dimension) {
+            if (bitmap != null && (options.outWidth < dimension || options.outHeight < dimension)) {
                 float r = options.outWidth < options.outHeight ? fdimension / (float)w : fdimension / (float)h;
                 w = (int)Math.ceil(r * w);
                 h = (int)Math.ceil(r * h);

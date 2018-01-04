@@ -33,7 +33,7 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         loading = true;
 
         if (force) {
-            softCap += BLOCK_SIZE * 4;
+            softCap += BLOCK_SIZE * 2;
         }
 
         final int offset = bitmaps.getList().size();
