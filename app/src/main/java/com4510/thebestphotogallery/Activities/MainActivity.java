@@ -1,8 +1,11 @@
 package com4510.thebestphotogallery.Activities;
 
 import android.app.Activity;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -33,6 +36,7 @@ import com4510.thebestphotogallery.Database.AppDatabase;
 import com4510.thebestphotogallery.Database.DatabaseResponseListener;
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Images.LoadImagesResponseListener;
+import com4510.thebestphotogallery.OnBottomReachedListener;
 import com4510.thebestphotogallery.Tasks.LoadImagesTask;
 import com4510.thebestphotogallery.MyAdapter;
 import com4510.thebestphotogallery.R;
@@ -42,16 +46,86 @@ import pl.aprilapps.easyphotopicker.EasyImage;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 
-public class MainActivity extends AppCompatActivity implements DatabaseResponseListener, LoadImagesResponseListener {
-    private RecyclerView.Adapter recyclerViewAdapter;
+public class MainActivity extends ImageLoadActivity {
+    private boolean firstLoad;
+    private boolean queueRefresh;
+    private View mainView;
+    private View loadingView;
+    private MyAdapter recyclerViewAdapter;
     private SwipeRefreshLayout swipeContainer;
-    private List<ImageMetadata> imageMetadataList = new ArrayList<>();
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Activity activity;
 
     String mCurrentPhotoPath;
 
     private boolean permissionsOk = true;
+
+    @Override
+    public void onFinishedBitmapLoad(List<Bitmap> bitmaps) {
+        super.onFinishedBitmapLoad(bitmaps);
+        if (queueRefresh && this.bitmaps.loaded()) {
+            refresh();
+        }
+        else if (firstLoad) {
+            firstLoad = false;
+            mainView.setAlpha(0.0f);
+            mainView.setVisibility(View.VISIBLE);
+
+            Toolbar toolbar = findViewById(R.id.main_toolbar);
+            setSupportActionBar(toolbar);
+
+            RecyclerView recyclerView = findViewById(R.id.grid_recycler_view);
+            int numberOfColumns = 4;
+            final GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerViewAdapter = new MyAdapter(imageMetadataList, bitmaps);
+            recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
+                @Override
+                public void onBottomReached(int position) {
+                    if (!queueRefresh) {
+                        Log.v("RecyclerView", "Hit the bottom!");
+                        dispatchBitmapLoad(8, true);
+                    }
+                }
+            });
+            recyclerView.setAdapter(recyclerViewAdapter);
+
+            swipeContainer = findViewById(R.id.swipe_refresh_layout);
+            swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    System.out.println("refreshing...");
+                    if (!getLoading()) {
+                        refresh();
+                    }
+                    else {
+                        queueRefresh = true;
+                    }
+                }
+            });
+
+            final int animDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+            mainView.animate().alpha(1.0f).setDuration(animDuration).setListener(null);
+            loadingView.animate().alpha(0.0f).setDuration(animDuration).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    loadingView.setVisibility(View.GONE);
+                }
+            });
+        }
+        else {
+            swipeContainer.setRefreshing(false);
+            if (recyclerViewAdapter.isEmpty()) {
+                recyclerViewAdapter.setItems(imageMetadataList);
+            }
+            recyclerViewAdapter.addBitmaps(bitmaps);
+        }
+
+        if (!atSoftCap() && moreToLoad() && !queueRefresh) {
+            dispatchBitmapLoad(16);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,117 +160,31 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
     }
 
     @Override
-    public void imagesLoaded(List<ImageMetadata> imageMetadataList) {
-        this.imageMetadataList.clear();
-        this.imageMetadataList.addAll(imageMetadataList);
-
-        recyclerViewAdapter.notifyDataSetChanged();
-
-        Util.initEasyImage(this);
-        Log.v("Init image", "LOADED");
-        Log.v("Image Count", "" + imageMetadataList.size());
-    }
-
-
-    public void doLoadImages() {
-        if (!permissionsOk) {
-            Log.e(getClass().getName(), "Permission request failed.");
-            return;
-        }
-        LoadImagesTask loadImagesTask = new LoadImagesTask(this);
-        LoadImagesTask.LoadImagesTaskParam loadImagesTaskParam = new LoadImagesTask.LoadImagesTaskParam();
-        loadImagesTaskParam.activity = this;
-        loadImagesTask.execute(loadImagesTaskParam);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (grantResults.length < 1 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-            permissionsOk = false;
-            System.out.println("permissions not granted");
-            Toast.makeText(this, "View photo permission is required!", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            doLoadImages();
-        }
-
-    }
-
-    @Override
-    public void onDatabaseRead(List<ImageMetadata> imageMetadataList) {
-        Log.v(getClass().getName(), "loaded image metadata database.");
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firstLoad = true;
+        queueRefresh = false;
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.main_toolbar);
-        setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_camera);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                EasyImage.openCamera(getActivity(), 0);
-//            }
-//        });
-
-
-        activity= this;
-
-        swipeContainer = findViewById(R.id.swipe_refresh_layout);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                System.out.println("refreshing...");
-                doLoadImages();
-                swipeContainer.setRefreshing(false);
-            }
-        });
-
-
-        RecyclerView recyclerView = findViewById(R.id.grid_recycler_view);
-        int numberOfColumns = 4;
-        final GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerViewAdapter = new MyAdapter(imageMetadataList);
-        recyclerView.setAdapter(recyclerViewAdapter);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            private boolean moving = false;
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                final int firstItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
-                final int lastItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
-                final boolean scrolledUp = dy < 0;
-
-                if (moving) {
-                    ((MyAdapter) recyclerViewAdapter).cancelLoading(firstItemPosition, lastItemPosition, scrolledUp);
-                }
-
-                super.onScrolled(recyclerView, dx, dy);
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int state) {
-                moving = state == SCROLL_STATE_DRAGGING;
-                super.onScrollStateChanged(recyclerView, state);
-            }
-        });
+        mainView = findViewById(R.id.main_view);
+        loadingView = findViewById(R.id.loading_view);
+        mainView.setVisibility(View.GONE);
 
         Util.checkPermissions(this);
         ReadFromDatabaseTask readFromDatabaseTask = new ReadFromDatabaseTask(this);
         readFromDatabaseTask.execute(AppDatabase.getInstance(this).imageMetadataDao());
 
-        Util.initEasyImage(this);
-//        doLoadImages();
+        doLoadImages();
     }
 
     public Activity getActivity() {
         return activity;
+    }
+
+    public void refresh() {
+        queueRefresh = false;
+        recyclerViewAdapter.clear();
+        super.refresh();
     }
 
 }

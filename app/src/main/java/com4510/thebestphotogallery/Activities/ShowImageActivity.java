@@ -32,6 +32,7 @@ public class ShowImageActivity extends AppCompatActivity {
     private ServerComm serverComm;
 
     Integer imageIndex = null;
+    private ImageMetadata element;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -50,13 +51,13 @@ public class ShowImageActivity extends AppCompatActivity {
             case R.id.view_image_details_menuentry:
                 Log.v(getClass().getName(), "view detail option selected");
                 intent = new Intent(this, ViewDetailsActivity.class);
-                intent.putExtra("position", imageIndex);
+                intent.putExtra("metadata", element);
                 startActivity(intent);
                 return true;
             case R.id.edit_image_details_menuentry:
                 Log.v(getClass().getName(), "edit detail option selected");
                 intent = new Intent(this, EditDetailsActivity.class);
-                intent.putExtra("position", imageIndex);
+                intent.putExtra("metadata", element);
                 startActivity(intent);
                 return true;
             case android.R.id.home:
@@ -83,6 +84,7 @@ public class ShowImageActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             Log.v(getClass().getName(), "loaded instance state");
             imageIndex = savedInstanceState.getInt("position");
+
         }
         else {
 
@@ -96,7 +98,7 @@ public class ShowImageActivity extends AppCompatActivity {
         }
 
         ImageView imageView = (ImageView) findViewById(R.id.image);
-        ImageMetadata element = MyAdapter.getItems().get(imageIndex);
+        element = (ImageMetadata) getIntent().getSerializableExtra("metadata");
         Log.v("Name", "" + element.file.getName());
 
         currentImageFile = element.file.getAbsolutePath();

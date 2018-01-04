@@ -5,8 +5,11 @@
 package com4510.thebestphotogallery;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,24 +17,27 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+import com4510.thebestphotogallery.Activities.ShowImageActivity;
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Images.MenuImageAsync;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
     private Context context;
-    private static List<ImageMetadata> items;
-    private List<MenuImageAsync> currentTasks;
+    private CopyOnWriteArrayList<ImageMetadata> items;
+    private CopyOnWriteArrayList<Bitmap> bitmaps;
+    private OnBottomReachedListener onBottomReachedListener;
 
-    public MyAdapter(Context cont, List<ImageMetadata> items) {
+    public MyAdapter(Context cont, List<ImageMetadata> items, List<Bitmap> bitmaps) {
         super();
-        MyAdapter.items = items;
-        this.currentTasks = new ArrayList<>();
+        this.items = new CopyOnWriteArrayList<>(items);
+        this.bitmaps = new CopyOnWriteArrayList<>(bitmaps);
         context = cont;
     }
 
-    public MyAdapter(List<ImageMetadata> items) {
-        this(null, items);
+    public MyAdapter(List<ImageMetadata> items, List<Bitmap> bitmaps) {
+        this(null, items, bitmaps);
     }
 
     @Override
@@ -46,28 +52,36 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
 
     @Override
     public void onBindViewHolder(final View_Holder holder, final int position) {
+        if (position < bitmaps.size()) {
 
-        //Use the provided View Holder on the onCreateViewHolder method to populate the
-        // current row on the RecyclerView
+            if (position == bitmaps.size() - 1) {
+                onBottomReachedListener.onBottomReached(position);
+            }
 
-        if (holder!=null && items.get(position)!=null) {
-            holder.imageView.setImageBitmap(null);
-            MenuImageAsync imageAsync = new MenuImageAsync(holder, context, items.get(position).file, position);
-            currentTasks.add(imageAsync);
-            imageAsync.execute();
+            if (bitmaps.get(position) != null) {
+                holder.imageView.setImageBitmap(bitmaps.get(position));
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, ShowImageActivity.class);
+                        intent.putExtra("position", position);
+                        intent.putExtra("metadata", getItem(position));
+                        context.startActivity(intent);
+                    }
+                });
+            }
         }
-        //animate(holder);
     }
 
 
     // convenience method for getting data at click position
-    ImageMetadata getItem(int id) {
-        return items.get(id);
+    public ImageMetadata getItem(int position) {
+        return items.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return bitmaps.size();
     }
 
     public class View_Holder extends RecyclerView.ViewHolder  {
@@ -80,43 +94,28 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         }
     }
 
-    private void clearFinished() {
-        if (currentTasks != null && currentTasks.size() > 0) {
-            ArrayList<MenuImageAsync> toRemove = new ArrayList<>();
-            for (MenuImageAsync i : currentTasks) {
-                if (i.getStatus() == AsyncTask.Status.FINISHED) {
-                    toRemove.add(i);
-                }
-            }
-            currentTasks.removeAll(toRemove);
-        }
+    public void clear() {
+        this.bitmaps.clear();
+        this.items.clear();
+        notifyDataSetChanged();
     }
 
-    public void cancelLoading(int firstVisibleItem, int lastVisibleItem, boolean scrollingUp) {
-        clearFinished();
-        if (currentTasks != null && currentTasks.size() > 0) {
-            for (MenuImageAsync i : currentTasks) {
-                if (!scrollingUp && i.getPosition() < firstVisibleItem
-                        || scrollingUp && i.getPosition() > lastVisibleItem) {
-                    i.cancel(true);
-                }
-            }
-        }
+    public final boolean isEmpty() {
+        return this.bitmaps.isEmpty() && this.items.isEmpty();
     }
 
-    public void cancelAll() {
-        clearFinished();
-        for (MenuImageAsync i : currentTasks) {
-            i.cancel(true);
-        }
+    public void setItems(List<ImageMetadata> items) {
+        this.items = new CopyOnWriteArrayList<>(items);
+        notifyDataSetChanged();
     }
 
-    public static List<ImageMetadata> getItems() {
-        return items;
+    public void addBitmaps(List<Bitmap> bitmaps) {
+        this.bitmaps.addAll(bitmaps);
+        notifyDataSetChanged();
     }
 
-    public static void setItems(List<ImageMetadata> items) {
-        MyAdapter.items = items;
+    public void setOnBottomReachedListener(OnBottomReachedListener onBottomReachedListener) {
+        this.onBottomReachedListener = onBottomReachedListener;
     }
 
 }

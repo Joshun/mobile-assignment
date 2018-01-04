@@ -37,6 +37,37 @@ public class Util {
     private static final int REQUEST_READ_EXTERNAL_STORAGE = 2987;
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 7829;
 
+    public static class BitmapList {
+
+        private List<Bitmap> bitmaps;
+        private int loadedSize;
+
+        public BitmapList() {
+            this.bitmaps = new ArrayList<>();
+            this.loadedSize = 0;
+        }
+
+        public final List<Bitmap> getList() {
+            return bitmaps;
+        }
+
+        public final int getLoadedSize() {
+            return loadedSize;
+        }
+
+        public final boolean loaded() { return bitmaps.size() == loadedSize; }
+
+        public void incLoadedSize(final int x) {
+            loadedSize += x;
+        }
+
+        public void clear() {
+            bitmaps.clear();
+            loadedSize = 0;
+        }
+
+    }
+
     /**
      * it initialises EasyImage
      */
@@ -82,17 +113,10 @@ public class Util {
             int h = options.outHeight;
 
             //Resize image if width or height is less than dimension
-            if (options.outWidth < dimension) {
-                float r = fdimension / (float)w;
+            if (bitmap != null && (options.outWidth < dimension || options.outHeight < dimension)) {
+                float r = options.outWidth < options.outHeight ? fdimension / (float)w : fdimension / (float)h;
                 w = (int)Math.ceil(r * w);
                 h = (int)Math.ceil(r * h);
-            }
-            if (options.outHeight < dimension) {
-                float r = fdimension / (float)h;
-                w = (int)Math.ceil(r * w);
-                h = (int)Math.ceil(r * h);
-            }
-            if (options.outWidth < dimension || options.outHeight < dimension) {
                 bitmap = Bitmap.createScaledBitmap(bitmap, w, h, true);
             }
 
@@ -101,6 +125,7 @@ public class Util {
                 int d = dimension;
                 int x = Math.max(0, (w - d) / 2);
                 int y = Math.max(0, (h - d) / 2);
+//                Log.v("ImageData", "" + x + ", " + y + ", " + d + ", " + w + ", " + h + ", " + options.outWidth + ", " + options.outHeight);
                 return Bitmap.createBitmap(bitmap, x, y, d, d);
             }
         }
