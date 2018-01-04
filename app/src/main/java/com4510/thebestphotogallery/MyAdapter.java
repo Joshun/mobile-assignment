@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com4510.thebestphotogallery.Activities.ShowImageActivity;
 import com4510.thebestphotogallery.Database.ImageMetadata;
@@ -23,14 +25,14 @@ import com4510.thebestphotogallery.Images.MenuImageAsync;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
     private Context context;
-    private List<ImageMetadata> items;
-    private List<Bitmap> bitmaps;
-    OnBottomReachedListener onBottomReachedListener;
+    private CopyOnWriteArrayList<ImageMetadata> items;
+    private CopyOnWriteArrayList<Bitmap> bitmaps;
+    private OnBottomReachedListener onBottomReachedListener;
 
     public MyAdapter(Context cont, List<ImageMetadata> items, List<Bitmap> bitmaps) {
         super();
-        this.items = items;
-        this.bitmaps = bitmaps;
+        this.items = new CopyOnWriteArrayList<>(items);
+        this.bitmaps = new CopyOnWriteArrayList<>(bitmaps);
         context = cont;
     }
 
@@ -88,6 +90,25 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
             imageView = (ImageView) itemView.findViewById(R.id.image_item);
 
         }
+    }
+
+    public void clear() {
+//        notifyItemRangeRemoved(0, this.bitmaps.size());
+        this.bitmaps.clear();
+        this.items.clear();
+    }
+
+    public final boolean isEmpty() {
+        return this.bitmaps.isEmpty() && this.items.isEmpty();
+    }
+
+    public void setItems(List<ImageMetadata> items) {
+        this.items = new CopyOnWriteArrayList<>(items);
+    }
+
+    public void addBitmaps(List<Bitmap> bitmaps) {
+        this.bitmaps.addAll(bitmaps);
+        notifyDataSetChanged();
     }
 
     public void setOnBottomReachedListener(OnBottomReachedListener onBottomReachedListener) {

@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -35,6 +36,7 @@ import com4510.thebestphotogallery.Util;
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 
 public class MainActivity extends ImageLoadActivity {
+    private boolean firstLoad;
     private View mainView;
     private View loadingView;
     private MyAdapter recyclerViewAdapter;
@@ -42,46 +44,60 @@ public class MainActivity extends ImageLoadActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
-    public void onFinishedBitmapLoad() {
-        mainView.setAlpha(0.0f);
-        mainView.setVisibility(View.VISIBLE);
+    public void onFinishedBitmapLoad(List<Bitmap> bitmaps) {
+        super.onFinishedBitmapLoad(bitmaps);
+        if (firstLoad) {
+            firstLoad = false;
+            mainView.setAlpha(0.0f);
+            mainView.setVisibility(View.VISIBLE);
 
-        Toolbar toolbar = findViewById(R.id.main_toolbar);
-        setSupportActionBar(toolbar);
+            Toolbar toolbar = findViewById(R.id.main_toolbar);
+            setSupportActionBar(toolbar);
 
-        swipeContainer = findViewById(R.id.swipe_refresh_layout);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                System.out.println("refreshing...");
-                doLoadImages();
-                swipeContainer.setRefreshing(false);
+            RecyclerView recyclerView = findViewById(R.id.grid_recycler_view);
+            int numberOfColumns = 4;
+            final GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerViewAdapter = new MyAdapter(imageMetadataList, bitmaps);
+            recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
+                @Override
+                public void onBottomReached(int position) {
+                    Log.v("RecyclerView", "Hit the bottom!");
+                    dispatchBitmapLoad(20);
+                }
+            });
+            recyclerView.setAdapter(recyclerViewAdapter);
+
+            swipeContainer = findViewById(R.id.swipe_refresh_layout);
+            swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    System.out.println("refreshing...");
+                    if (!getLoading()) {
+                        recyclerViewAdapter.clear();
+                        doLoadImages();
+                        swipeContainer.setRefreshing(false);
+                    }
+                }
+            });
+
+            final int animDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+            mainView.animate().alpha(1.0f).setDuration(animDuration).setListener(null);
+            loadingView.animate().alpha(0.0f).setDuration(animDuration).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    loadingView.setVisibility(View.GONE);
+                }
+            });
+        }
+        else {
+            if (recyclerViewAdapter.isEmpty()) {
+                recyclerViewAdapter.setItems(imageMetadataList);
             }
-        });
+            recyclerViewAdapter.addBitmaps(bitmaps);
+        }
 
-
-        RecyclerView recyclerView = findViewById(R.id.grid_recycler_view);
-        int numberOfColumns = 4;
-        final GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerViewAdapter = new MyAdapter(imageMetadataList, bitmaps.getList());
-        recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
-            @Override
-            public void onBottomReached(int position) {
-                Log.v("RecyclerView", "Hit the bottom!");
-            }
-        });
-        recyclerView.setAdapter(recyclerViewAdapter);
-
-        final int animDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
-        mainView.animate().alpha(1.0f).setDuration(animDuration).setListener(null);
-        loadingView.animate().alpha(0.0f).setDuration(animDuration).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                loadingView.setVisibility(View.GONE);
-            }
-        });
     }
 
     @Override
@@ -111,6 +127,7 @@ public class MainActivity extends ImageLoadActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firstLoad = true;
 
         setContentView(R.layout.activity_main);
 

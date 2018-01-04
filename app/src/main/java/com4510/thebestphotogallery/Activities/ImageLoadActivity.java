@@ -23,23 +23,32 @@ import com4510.thebestphotogallery.Util;
 
 public abstract class ImageLoadActivity extends AppCompatActivity implements LoadImagesResponseListener, DatabaseResponseListener {
 
+    private boolean loading = false;
     private static final int BLOCK_SIZE = 40;
     protected List<ImageMetadata> imageMetadataList = new ArrayList<>();
     protected Util.BitmapList bitmaps = new Util.BitmapList();
 
-    public void dispatchBitmapLoad(final int numberToLoad, final int offset) {
+    public void dispatchBitmapLoad(final int numberToLoad) {
+        loading = true;
+        final int offset = bitmaps.getList().size();
         for (int i = 0; i < numberToLoad; ++i) {
             //Checking whether there is actually a file to load to prevent null pointer exceptions
-            if (i + bitmaps.getList().size() >= imageMetadataList.size()) {
+            if (offset + i >= imageMetadataList.size()) {
                 break;
             }
             bitmaps.getList().add(null);
-            PreloadImageAsync imageAsync = new PreloadImageAsync(this, bitmaps, imageMetadataList.get(i).file, offset + i, offset + numberToLoad);
+            PreloadImageAsync imageAsync = new PreloadImageAsync(this, bitmaps, imageMetadataList.get(offset + i).file, offset, i, numberToLoad);
             imageAsync.execute();
         }
     }
 
-    public abstract void onFinishedBitmapLoad();
+    public void onFinishedBitmapLoad(List<Bitmap> bitmaps) {
+        loading = false;
+    }
+
+    public final boolean getLoading() {
+        return loading;
+    }
 
     @Override
     public void imagesLoaded(List<ImageMetadata> imageMetadataList) {
@@ -50,7 +59,7 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         Log.v("Init image", "LOADED");
         Log.v("Image Count", "" + imageMetadataList.size());
 
-        dispatchBitmapLoad(BLOCK_SIZE, bitmaps.getList().size());
+        dispatchBitmapLoad(BLOCK_SIZE);
     }
 
     @Override
