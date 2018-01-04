@@ -24,12 +24,18 @@ import com4510.thebestphotogallery.Util;
 public abstract class ImageLoadActivity extends AppCompatActivity implements LoadImagesResponseListener, DatabaseResponseListener {
 
     private boolean loading = false;
-    protected static final int BLOCK_SIZE = 40;
+    protected static final int BLOCK_SIZE = 32;
     protected List<ImageMetadata> imageMetadataList = new ArrayList<>();
     protected Util.BitmapList bitmaps = new Util.BitmapList();
+    private int softCap = 0;
 
-    public void dispatchBitmapLoad(final int numberToLoad) {
+    public void dispatchBitmapLoad(final int numberToLoad, final boolean force) {
         loading = true;
+
+        if (force) {
+            softCap += BLOCK_SIZE * 4;
+        }
+
         final int offset = bitmaps.getList().size();
         for (int i = 0; i < numberToLoad; ++i) {
             //Checking whether there is actually a file to load to prevent null pointer exceptions
@@ -42,12 +48,20 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         }
     }
 
+    public void dispatchBitmapLoad(final int numberToLoad) {
+        dispatchBitmapLoad(numberToLoad, false);
+    }
+
     public void onFinishedBitmapLoad(List<Bitmap> bitmaps) {
         loading = false;
     }
 
     public final boolean getLoading() {
         return loading;
+    }
+
+    public final boolean atSoftCap() {
+        return bitmaps.getList().size() >= softCap;
     }
 
     public final boolean moreToLoad() {
@@ -63,7 +77,7 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         Log.v("Init image", "LOADED");
         Log.v("Image Count", "" + imageMetadataList.size());
 
-        dispatchBitmapLoad(BLOCK_SIZE);
+        dispatchBitmapLoad(BLOCK_SIZE, true);
     }
 
     @Override
