@@ -62,16 +62,28 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        initEasyImage();
         Intent intent;
         switch (item.getItemId()) {
             case R.id.btn_camera:
                 EasyImage.openCamera(getActivity(), 0);
+                activity= this;
+
+
             case R.id.btn_map:
                 intent = new Intent(this, MapsActivity.class);
                 startActivity(intent);
                 return true;
         }
         return true;
+    }
+
+    private void initEasyImage() {
+        EasyImage.configuration(this)
+                .setImagesFolderName("EasyImage sample")
+                .setCopyTakenPhotosToPublicGalleryAppFolder(true)
+                .setCopyPickedImagesToPublicGalleryAppFolder(false)
+                .setAllowMultiplePickInGallery(true);
     }
 
     @Override
@@ -124,7 +136,17 @@ public class MainActivity extends AppCompatActivity implements DatabaseResponseL
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-        Util.initEasyImage(this);
+
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_camera);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                EasyImage.openCamera(getActivity(), 0);
+//            }
+//        });
+
+
+        activity= this;
 
         swipeContainer = findViewById(R.id.swipe_refresh_layout);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
