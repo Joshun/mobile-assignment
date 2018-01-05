@@ -79,7 +79,7 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         Log.v("Image Count", "" + imageMetadataList.size());
 
         incSoftCap();
-        dispatchBitmapLoad(BLOCK_SIZE);
+        dispatchBitmapLoad(Math.min(BLOCK_SIZE, imageMetadataList.size()));
     }
 
     @Override
