@@ -127,10 +127,13 @@ public class ShowImageActivity extends AppCompatActivity {
         final TextView geo = findViewById(R.id.view_geo_text);
         final TextView filesize = findViewById(R.id.view_filesize_text);
 
-        if (name != null) {
+        if (name != null && data.getTitle() != null && !data.getTitle().equals("")) {
             name.setText(data.getTitle());
         }
-        if (description != null) {
+        else if (name != null) {
+            name.setText(data.file.getName());
+        }
+        if (description != null && data.getDescription() != null && !data.getDescription().equals("")) {
             description.setText(data.getDescription());
         }
         if (dimensions != null) {
