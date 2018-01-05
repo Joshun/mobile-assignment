@@ -6,9 +6,9 @@
     <string name="details_description">Description</string>
     <string name="details_dimensions">Dimensions</string>
     <string name="details_filesize">File Size</string>
-    <string name="details_longitude">Longitude</string>
-    <string name="details_latitude">Latitude</string>
+    <string name="details_geo">Geographical Position</string>
     <string name="details_default">None</string>
+    <string name="details_join">and</string>
 
     <!--menu-->
     <string name="view_map_menuentry_title">View On Map</string>

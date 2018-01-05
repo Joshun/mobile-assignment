@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.R;
@@ -44,15 +45,6 @@ public class ShowImageActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.view_map_menuentry:
-                Log.v(getClass().getName(), "map option selected");
-                return true;
-            case R.id.view_image_details_menuentry:
-                Log.v(getClass().getName(), "view detail option selected");
-                intent = new Intent(this, ViewDetailsActivity.class);
-                intent.putExtra("metadata", element);
-                startActivity(intent);
-                return true;
             case R.id.edit_image_details_menuentry:
                 Log.v(getClass().getName(), "edit detail option selected");
                 intent = new Intent(this, EditDetailsActivity.class);
@@ -66,7 +58,6 @@ public class ShowImageActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +88,7 @@ public class ShowImageActivity extends AppCompatActivity {
 
         ImageView imageView = (ImageView) findViewById(R.id.image);
         element = (ImageMetadata) getIntent().getSerializableExtra("metadata");
-        Log.v("Name", "" + element.file.getName());
+        setDetails(element);
 
         currentImageFile = element.file.getAbsolutePath();
         ShowImageAsync imageAsync = new ShowImageAsync(imageView, loadingView, detailsView, element.file);
@@ -127,6 +118,34 @@ public class ShowImageActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    private void setDetails(final ImageMetadata data) {
+        final TextView name = findViewById(R.id.view_name_text);
+        final TextView description = findViewById(R.id.view_description_text);
+        final TextView dimensions = findViewById(R.id.view_dimensions_text);
+        final TextView geo = findViewById(R.id.view_geo_text);
+        final TextView filesize = findViewById(R.id.view_filesize_text);
+
+        if (name != null) {
+            name.setText(data.getTitle());
+        }
+        if (description != null) {
+            description.setText(data.getDescription());
+        }
+        if (dimensions != null) {
+            String s = data.getWidth() + "x" + data.getHeight() + "px";
+            dimensions.setText(s);
+        }
+        if (geo != null) {
+            String join = " " + getResources().getString(R.string.details_join) + " ";
+            String s = data.getLatitude() + join + data.getLongitude();
+            geo.setText(s);
+        }
+        if (filesize != null) {
+            String s = data.getFileSize() + "MB";
+            filesize.setText(s);
+        }
     }
 
 }
