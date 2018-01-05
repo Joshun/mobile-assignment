@@ -8,6 +8,7 @@
     <string name="details_filesize">File Size</string>
     <string name="details_longitude">Longitude</string>
     <string name="details_latitude">Latitude</string>
+    <string name="details_default">None</string>
 
     <!--menu-->
     <string name="view_map_menuentry_title">View On Map</string>
