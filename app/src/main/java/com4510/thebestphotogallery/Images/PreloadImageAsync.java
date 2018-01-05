@@ -34,7 +34,7 @@ public class PreloadImageAsync extends ImageAsync {
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-        if (bitmaps != null) {
+        if (bitmaps != null && bitmaps.get().getList().size() > offset + position) {
             bitmaps.get().getList().set(offset + position, bitmap);
             bitmaps.get().incLoadedSize(1);
 //            Log.v("Bitmaps", "Reserved size: " + bitmaps.get().getList().size() + ", Loaded size: " + bitmaps.get().getLoadedSize());

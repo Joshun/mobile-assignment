@@ -54,7 +54,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
     public void onBindViewHolder(final View_Holder holder, final int position) {
         if (position < bitmaps.size()) {
 
-            if (position == bitmaps.size() - 1) {
+            if (onBottomReachedListener != null &&  position == bitmaps.size() - 1) {
                 onBottomReachedListener.onBottomReached(position);
             }
 

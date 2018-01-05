@@ -34,12 +34,8 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
     protected Util.BitmapList bitmaps = new Util.BitmapList();
     private int softCap = 0;
 
-    public void dispatchBitmapLoad(final int numberToLoad, final boolean force) {
+    public void dispatchBitmapLoad(final int numberToLoad) {
         loading = true;
-
-        if (force) {
-            softCap += BLOCK_SIZE * 4;
-        }
 
         final int offset = bitmaps.getList().size();
         for (int i = 0; i < numberToLoad; ++i) {
@@ -53,10 +49,6 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         }
     }
 
-    public void dispatchBitmapLoad(final int numberToLoad) {
-        dispatchBitmapLoad(numberToLoad, false);
-    }
-
     public void onFinishedBitmapLoad(List<Bitmap> bitmaps) {
         loading = false;
     }
@@ -66,7 +58,11 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
     }
 
     public final boolean atSoftCap() {
-        return bitmaps.getList().size() >= softCap;
+        return bitmaps.getLoadedSize() >= softCap;
+    }
+
+    public void incSoftCap() {
+        softCap += BLOCK_SIZE * 4;
     }
 
     public final boolean moreToLoad() {
@@ -82,7 +78,8 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         Log.v("Init image", "LOADED");
         Log.v("Image Count", "" + imageMetadataList.size());
 
-        dispatchBitmapLoad(BLOCK_SIZE, true);
+        incSoftCap();
+        dispatchBitmapLoad(BLOCK_SIZE);
     }
 
     @Override

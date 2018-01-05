@@ -85,8 +85,15 @@ public class MainActivity extends ImageLoadActivity {
                 @Override
                 public void onBottomReached(int position) {
                     if (!queueRefresh) {
+                        if (atSoftCap()) {
+                            incSoftCap();
+                            dispatchBitmapLoad(8);
+                        }
+                        else {
+                            incSoftCap();
+                        }
                         Log.v("RecyclerView", "Hit the bottom!");
-                        dispatchBitmapLoad(8, true);
+
                     }
                 }
             });
@@ -125,7 +132,7 @@ public class MainActivity extends ImageLoadActivity {
         }
 
         if (!atSoftCap() && moreToLoad() && !queueRefresh) {
-            dispatchBitmapLoad(16);
+            dispatchBitmapLoad(8);
         }
     }
 
