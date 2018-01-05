@@ -45,7 +45,7 @@ public class ShowImageActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.edit_image_details_menuentry:
+            case R.id.edit_image_details:
                 Log.v(getClass().getName(), "edit detail option selected");
                 intent = new Intent(this, EditDetailsActivity.class);
                 intent.putExtra("metadata", element);
