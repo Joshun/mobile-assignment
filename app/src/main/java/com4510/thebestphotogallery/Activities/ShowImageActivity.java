@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
-import com4510.thebestphotogallery.MyAdapter;
 import com4510.thebestphotogallery.R;
 import com4510.thebestphotogallery.ServerComm;
 import com4510.thebestphotogallery.ServerData;
@@ -72,14 +71,12 @@ public class ShowImageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message2);
+        setContentView(R.layout.activity_showimage);
 
-        Toolbar toolbar = findViewById(R.id.showmessage_toolbar);
+        Toolbar toolbar = findViewById(R.id.show_toolbar);
         serverComm = new ServerComm(getCacheDir());
 
         View loadingView = findViewById(R.id.image_loading);
-
-        Log.v(getClass().getName(), "image index is null");
 
         if (savedInstanceState != null) {
             Log.v(getClass().getName(), "loaded instance state");
@@ -87,7 +84,6 @@ public class ShowImageActivity extends AppCompatActivity {
 
         }
         else {
-
             Bundle b = getIntent().getExtras();
             //            int position = -1;
             imageIndex = -1;
@@ -105,7 +101,7 @@ public class ShowImageActivity extends AppCompatActivity {
         ShowImageAsync imageAsync = new ShowImageAsync(imageView, loadingView, element.file);
         imageAsync.execute();
 
-        toolbar.setTitle(element.file.getName());
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
