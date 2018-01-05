@@ -10,6 +10,14 @@
     <style name="Transparent" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <item name="windowActionBarOverlay">true</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_transparent_back</item>
+        <item name="android:actionOverflowButtonStyle">@style/MenuButton</item>
+    </style>
+
+    <style name="MenuButton" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_transparent_menu</item>
+        <item name="android:background">?android:attr/actionBarItemBackground</item>
+        <item name="android:contentDescription">"Menu Button"</item>
     </style>
 
 </resources>
