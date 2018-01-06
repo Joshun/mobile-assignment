@@ -35,8 +35,11 @@ import com4510.thebestphotogallery.Util;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 public class MainActivity extends ImageLoadActivity {
+    private int ANIM_LOAD_DURATION;
+
     private boolean firstLoad;
     private boolean queueRefresh;
+    private RecyclerView recyclerView;
     private View mainView;
     private View loadingView;
     private MyAdapter recyclerViewAdapter;
@@ -75,7 +78,7 @@ public class MainActivity extends ImageLoadActivity {
             Toolbar toolbar = findViewById(R.id.main_toolbar);
             setSupportActionBar(toolbar);
 
-            RecyclerView recyclerView = findViewById(R.id.grid_recycler_view);
+            recyclerView = findViewById(R.id.grid_recycler_view);
             int numberOfColumns = 4;
             final GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
             recyclerView.setLayoutManager(layoutManager);
@@ -112,9 +115,9 @@ public class MainActivity extends ImageLoadActivity {
                 }
             });
 
-            final int animDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
-            mainView.animate().alpha(1.0f).setDuration(animDuration).setListener(null);
-            loadingView.animate().alpha(0.0f).setDuration(animDuration).setListener(new AnimatorListenerAdapter() {
+
+            mainView.animate().alpha(1.0f).setDuration(ANIM_LOAD_DURATION).setListener(null);
+            loadingView.animate().alpha(0.0f).setDuration(ANIM_LOAD_DURATION).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
@@ -131,6 +134,11 @@ public class MainActivity extends ImageLoadActivity {
         }
 
         if (!atSoftCap() && moreToLoad() && !queueRefresh) {
+            if (recyclerView.getAlpha() < 1.0f) {
+                recyclerView.setVisibility(View.VISIBLE);
+                recyclerView.animate().alpha(1.0f).setDuration(ANIM_LOAD_DURATION).setListener(null);
+            }
+
             dispatchBitmapLoad(8);
         }
     }
@@ -239,6 +247,7 @@ public class MainActivity extends ImageLoadActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ANIM_LOAD_DURATION = getResources().getInteger(android.R.integer.config_shortAnimTime);
         firstLoad = true;
         queueRefresh = false;
         setContentView(R.layout.activity_main);
@@ -263,6 +272,13 @@ public class MainActivity extends ImageLoadActivity {
     }
 
     public void refresh() {
+        recyclerView.animate().alpha(0.0f).setDuration(ANIM_LOAD_DURATION).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                recyclerView.setVisibility(View.GONE);
+            }
+        });
         queueRefresh = false;
         recyclerViewAdapter.clear();
         super.refresh();
