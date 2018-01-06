@@ -19,16 +19,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
+import com4510.thebestphotogallery.Listeners.OnScrollChangedListener;
 import com4510.thebestphotogallery.R;
 import com4510.thebestphotogallery.ServerComm;
 import com4510.thebestphotogallery.ServerData;
 import com4510.thebestphotogallery.Images.ShowImageAsync;
+import com4510.thebestphotogallery.ShowImageScrollView;
 
-public class ShowImageActivity extends AppCompatActivity {
+public class ShowImageActivity extends AppCompatActivity implements OnScrollChangedListener {
+
+    private final float PARALLAX_MULTIPLIER = 0.5f;
 
     private Bitmap currentImage = null;
     private String currentImageFile = "file.png";
 
+    private ShowImageScrollView detailsView;
+    private View imageContainer;
     private ServerComm serverComm;
 
     Integer imageIndex = null;
@@ -64,12 +70,18 @@ public class ShowImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showimage);
 
-        Toolbar toolbar = findViewById(R.id.show_toolbar);
-        serverComm = new ServerComm(getCacheDir());
+        final Toolbar toolbar = findViewById(R.id.show_toolbar);
+        final View loadingView = findViewById(R.id.image_loading);
+        detailsView = findViewById(R.id.details);
+        imageContainer = findViewById(R.id.image_container);
+        final ImageView imageView = findViewById(R.id.image);
 
-        View loadingView = findViewById(R.id.image_loading);
-        View detailsView = findViewById(R.id.details);
         detailsView.setVisibility(View.GONE);
+        element = (ImageMetadata) getIntent().getSerializableExtra("metadata");
+        detailsView.setOnScrollChangedListener(this);
+        setDetails(element);
+
+        serverComm = new ServerComm(getCacheDir());
 
         if (savedInstanceState != null) {
             Log.v(getClass().getName(), "loaded instance state");
@@ -86,18 +98,16 @@ public class ShowImageActivity extends AppCompatActivity {
             }
         }
 
-        ImageView imageView = (ImageView) findViewById(R.id.image);
-        element = (ImageMetadata) getIntent().getSerializableExtra("metadata");
-        setDetails(element);
-
         currentImageFile = element.file.getAbsolutePath();
         ShowImageAsync imageAsync = new ShowImageAsync(imageView, loadingView, detailsView, element.file);
         imageAsync.execute();
 
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        if (toolbar != null) {
+            toolbar.setTitle("");
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -118,6 +128,14 @@ public class ShowImageActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onScrollChanged(final int deltaX, final int deltaY) {
+        if (detailsView != null && imageContainer != null) {
+            final int scrollY = detailsView.getScrollY();
+            imageContainer.setTranslationY(scrollY * PARALLAX_MULTIPLIER);
+        }
     }
 
     private void setDetails(final ImageMetadata data) {

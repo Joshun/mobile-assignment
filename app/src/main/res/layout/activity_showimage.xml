@@ -8,7 +8,7 @@
     android:background="@color/colorOffWhite"
     >
 
-    <ScrollView
+    <com4510.thebestphotogallery.ShowImageScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -21,11 +21,16 @@
             android:orientation="vertical">
 
             <!--Photo-->
-            <ImageView
+            <FrameLayout
+                android:id="@+id/image_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:id="@+id/image"/>
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:id="@+id/image"/>
+            </FrameLayout>
 
             <!--Details-->
             <include
@@ -34,7 +39,7 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </com4510.thebestphotogallery.ShowImageScrollView>
 
     <RelativeLayout
         android:id="@+id/image_loading"
