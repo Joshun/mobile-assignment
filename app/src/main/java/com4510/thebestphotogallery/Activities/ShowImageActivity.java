@@ -18,6 +18,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Listeners.OnScrollChangedListener;
 import com4510.thebestphotogallery.R;
@@ -28,13 +31,13 @@ import com4510.thebestphotogallery.ShowImageScrollView;
 
 public class ShowImageActivity extends AppCompatActivity implements OnScrollChangedListener {
 
-    private final float PARALLAX_MULTIPLIER = 0.5f;
-
     private Bitmap currentImage = null;
     private String currentImageFile = "file.png";
+    private List<Bitmap> bitmapMipMaps;
 
     private ShowImageScrollView detailsView;
     private View imageContainer;
+    private ImageView imageView;
     private ServerComm serverComm;
 
     Integer imageIndex = null;
@@ -74,7 +77,8 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         final View loadingView = findViewById(R.id.image_loading);
         detailsView = findViewById(R.id.details);
         imageContainer = findViewById(R.id.image_container);
-        final ImageView imageView = findViewById(R.id.image);
+        imageView = findViewById(R.id.image);
+        bitmapMipMaps = new ArrayList<>();
 
         detailsView.setVisibility(View.GONE);
         element = (ImageMetadata) getIntent().getSerializableExtra("metadata");
@@ -99,7 +103,7 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         }
 
         currentImageFile = element.file.getAbsolutePath();
-        ShowImageAsync imageAsync = new ShowImageAsync(imageView, loadingView, detailsView, element.file);
+        ShowImageAsync imageAsync = new ShowImageAsync(imageView, loadingView, detailsView, bitmapMipMaps, element.file);
         imageAsync.execute();
 
         if (toolbar != null) {
@@ -132,9 +136,14 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
 
     @Override
     public void onScrollChanged(final int deltaX, final int deltaY) {
-        if (detailsView != null && imageContainer != null) {
+        if (detailsView != null && imageContainer != null && imageView != null) {
+            final float PARALLAX_MULTIPLIER = 0.25f;
+            final int PARALLAX_MIP_BOUNDARY = imageView.getHeight() / bitmapMipMaps.size();
             final int scrollY = detailsView.getScrollY();
+            final int mipLevel = Math.min(bitmapMipMaps.size() - 1, scrollY / PARALLAX_MIP_BOUNDARY);
+
             imageContainer.setTranslationY(scrollY * PARALLAX_MULTIPLIER);
+            imageView.setImageBitmap(bitmapMipMaps.get(mipLevel));
         }
     }
 
