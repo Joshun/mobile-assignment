@@ -1,10 +1,13 @@
 package com4510.thebestphotogallery.Activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
@@ -20,6 +23,7 @@ import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
 public class EditDetailsActivity extends DetailsActivity implements UpdateImageMetadataListener {
 
     private ImageMetadata currentImageMetadata = null;
+    private TextInputEditText nameInput;
 
     public EditDetailsActivity() {
         super("Edit Details", R.id.editimagedetails_toolbar);
@@ -32,10 +36,24 @@ public class EditDetailsActivity extends DetailsActivity implements UpdateImageM
 
         currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
 
-        TextInputEditText nameInput = findViewById(R.id.edit_name_text);
+        nameInput = findViewById(R.id.edit_name_text);
         TextInputEditText descInput = findViewById(R.id.edit_description_text);
         nameInput.setText(currentImageMetadata.getTitle());
         descInput.setText(currentImageMetadata.getDescription());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        nameInput.postDelayed(new Runnable() {
+            public void run() {
+                nameInput.setFocusableInTouchMode(true);
+                nameInput.requestFocusFromTouch();
+                nameInput.setSelection(nameInput.getText().length());
+                InputMethodManager lManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                lManager.showSoftInput(nameInput, 0);
+            }
+        }, 300);
     }
 
     @Override

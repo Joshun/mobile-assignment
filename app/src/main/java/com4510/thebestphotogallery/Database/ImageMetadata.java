@@ -71,10 +71,10 @@ public class ImageMetadata implements Serializable {
     }
 
     @ColumnInfo(name="title")
-    private String title = "";
+    private String title;
 
     @ColumnInfo(name="description")
-    private String description = "";
+    private String description;
 
     @ColumnInfo(name="width")
     private int width;
@@ -92,7 +92,7 @@ public class ImageMetadata implements Serializable {
     private int latitude;
 
     @ColumnInfo(name="filePath")
-    private String filePath ="";
+    private String filePath;
 
     @Ignore
     public File file;
