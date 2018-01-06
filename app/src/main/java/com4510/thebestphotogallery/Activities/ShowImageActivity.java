@@ -138,12 +138,12 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
     public void onScrollChanged(final int deltaX, final int deltaY) {
         if (detailsView != null && imageContainer != null && imageView != null) {
             final float PARALLAX_MULTIPLIER = 0.25f;
-            final int PARALLAX_MIP_BOUNDARY = imageView.getHeight() / bitmapMipMaps.size();
+//            final int PARALLAX_MIP_BOUNDARY = imageView.getHeight() / bitmapMipMaps.size();
             final int scrollY = detailsView.getScrollY();
-            final int mipLevel = Math.min(bitmapMipMaps.size() - 1, scrollY / PARALLAX_MIP_BOUNDARY);
+//            final int mipLevel = Math.min(bitmapMipMaps.size() - 1, scrollY / PARALLAX_MIP_BOUNDARY);
 
             imageContainer.setTranslationY(scrollY * PARALLAX_MULTIPLIER);
-            imageView.setImageBitmap(bitmapMipMaps.get(mipLevel));
+//            imageView.setImageBitmap(bitmapMipMaps.get(mipLevel));
         }
     }
 
@@ -164,7 +164,9 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
             description.setText(data.getDescription());
         }
         if (dimensions != null) {
-            String s = data.getWidth() + "x" + data.getHeight() + "px";
+            final int w = data.getWidth();
+            final int h = data.getHeight();
+            String s = w + "x" + h + "px";
             dimensions.setText(s);
         }
         if (geo != null) {
