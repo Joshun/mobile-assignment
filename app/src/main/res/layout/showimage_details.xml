@@ -29,7 +29,7 @@
             android:id="@+id/view_name_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/grey"
+            android:textColor="@color/colorGrey"
             android:text="@string/details_default" />
     </LinearLayout>
 
@@ -56,7 +56,7 @@
             android:id="@+id/view_description_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/grey"
+            android:textColor="@color/colorGrey"
             android:text="@string/details_default" />
     </LinearLayout>
 
@@ -83,7 +83,7 @@
             android:id="@+id/view_dimensions_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/grey"
+            android:textColor="@color/colorGrey"
             android:text="@string/details_default" />
     </LinearLayout>
 
@@ -110,7 +110,7 @@
             android:id="@+id/view_geo_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/grey"
+            android:textColor="@color/colorGrey"
             android:text="@string/details_default" />
     </LinearLayout>
 
@@ -137,7 +137,7 @@
             android:id="@+id/view_filesize_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/grey"
+            android:textColor="@color/colorGrey"
             android:text="@string/details_default" />
     </LinearLayout>
 

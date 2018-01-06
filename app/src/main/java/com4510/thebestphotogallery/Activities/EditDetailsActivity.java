@@ -32,8 +32,8 @@ public class EditDetailsActivity extends DetailsActivity implements UpdateImageM
 
         currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
 
-        TextInputEditText nameInput = findViewById(R.id.edit_name);
-        TextInputEditText descInput = findViewById(R.id.edit_description);
+        TextInputEditText nameInput = findViewById(R.id.edit_name_text);
+        TextInputEditText descInput = findViewById(R.id.edit_description_text);
         nameInput.setText(currentImageMetadata.getTitle());
         descInput.setText(currentImageMetadata.getDescription());
     }
@@ -55,8 +55,8 @@ public class EditDetailsActivity extends DetailsActivity implements UpdateImageM
     @Override
     public void onBackPressed() {
         if (currentImageMetadata != null) {
-            TextInputEditText nameInput = findViewById(R.id.edit_name);
-            TextInputEditText descInput = findViewById(R.id.edit_description);
+            TextInputEditText nameInput = findViewById(R.id.edit_name_text);
+            TextInputEditText descInput = findViewById(R.id.edit_description_text);
             currentImageMetadata.setTitle(nameInput.getText().toString());
             currentImageMetadata.setDescription(descInput.getText().toString());
 
