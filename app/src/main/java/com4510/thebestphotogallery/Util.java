@@ -10,6 +10,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.os.Parcelable;
+import android.os.Parcel;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -23,9 +25,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com4510.thebestphotogallery.Database.ImageMetadata;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
@@ -33,12 +37,12 @@ import pl.aprilapps.easyphotopicker.EasyImage;
  * Created by joshua on 22/11/17.
  */
 
-public class Util {
+public class Util{
 
     private static final int REQUEST_READ_EXTERNAL_STORAGE = 2987;
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 7829;
 
-    public static class BitmapList {
+    public static class BitmapList  {
 
         private List<Bitmap> bitmaps;
         private int loadedSize;
@@ -66,6 +70,20 @@ public class Util {
             bitmaps.clear();
             loadedSize = 0;
         }
+    }
+
+    public static class MetaDataList {
+        private ArrayList<ImageMetadata> metaDataList;
+
+        public MetaDataList() {
+            this.metaDataList = new ArrayList<>();
+        }
+
+        public final List<ImageMetadata> getList() {
+            return metaDataList;
+        }
+
+
 
     }
 

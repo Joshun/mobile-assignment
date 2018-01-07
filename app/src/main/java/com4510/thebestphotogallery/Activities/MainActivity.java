@@ -230,6 +230,15 @@ public class MainActivity extends ImageLoadActivity {
 
             case R.id.btn_map:
                 intent = new Intent(this, MapsActivity.class);
+                int i;
+                for (i = 0; i < imageMetadataList.size(); i++ ) {
+                    System.out.println("here");
+                    if (imageMetadataList.get(i) != null) {
+                        System.out.println(imageMetadataList.get(i));
+                        intent.putExtra("BitmapList" + i, imageMetadataList.get(i));
+                    }
+                }
+
                 startActivity(intent);
                 break;
         }
