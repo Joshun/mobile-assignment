@@ -36,8 +36,8 @@ public class EditDescActivity extends DetailsActivity implements UpdateImageMeta
 
         TextView oldName = findViewById(R.id.edit_description_text_old);
         descriptionInput = findViewById(R.id.edit_description_text);
-        oldName.setText(currentImageMetadata.getTitle());
-        descriptionInput.setText(currentImageMetadata.getTitle());
+        oldName.setText(currentImageMetadata.getDescription());
+        descriptionInput.setText(currentImageMetadata.getDescription());
     }
 
     @Override
