@@ -11,6 +11,7 @@
     <string name="details_dimensions">Dimensions</string>
     <string name="details_filesize">File Size</string>
     <string name="details_geo">Geographical Position</string>
+    <string name="details_altitude">Altitude</string>
     <string name="details_default">None</string>
     <string name="details_join">and</string>
 

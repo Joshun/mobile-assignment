@@ -60,6 +60,9 @@ public class LoadImagesTask extends AsyncTask<LoadImagesTask.LoadImagesTaskParam
                 imageMetadata.setLongitude(latLong[1]);
             }
 
+            double altitude = exifInterface.getAltitude(0);
+            imageMetadata.setAltitude(altitude);
+
             // extract dimensions
             int width = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, 0);
             int height = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, 0);

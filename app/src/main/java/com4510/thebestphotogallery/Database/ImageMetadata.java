@@ -44,6 +44,10 @@ public class ImageMetadata implements Serializable {
 
     public void setLatitude(double latitude) { this.latitude = latitude; }
 
+    public void setAltitude(double altitude) {
+        this.altitude = altitude;
+    }
+
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
@@ -70,6 +74,10 @@ public class ImageMetadata implements Serializable {
         return filePath;
     }
 
+    public double getAltitude() {
+        return altitude;
+    }
+
     @ColumnInfo(name="title")
     private String title;
 
@@ -90,6 +98,9 @@ public class ImageMetadata implements Serializable {
 
     @ColumnInfo(name="latitude")
     private double latitude;
+
+    @ColumnInfo(name="altitude")
+    private double altitude;
 
     @ColumnInfo(name="filePath")
     private String filePath;

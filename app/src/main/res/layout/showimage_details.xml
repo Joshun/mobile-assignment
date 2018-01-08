@@ -114,9 +114,36 @@
             android:text="@string/details_default" />
     </LinearLayout>
 
-    <!--File Size-->
+    <!--Altitude-->
     <LinearLayout
         app:layout_constraintTop_toBottomOf="@id/view_geo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:orientation="vertical"
+        android:background="@color/colorOffWhite"
+        android:id="@+id/view_altitude">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/colorOffBlack"
+            android:text="@string/details_altitude"/>
+
+        <TextView
+            android:id="@+id/view_altitude_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGrey"
+            android:text="@string/details_default" />
+    </LinearLayout>
+
+    <!--File Size-->
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/view_altitude"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
