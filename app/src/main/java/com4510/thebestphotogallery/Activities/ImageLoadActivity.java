@@ -17,6 +17,7 @@ import java.util.List;
 
 import com4510.thebestphotogallery.Database.DatabaseResponseListener;
 import com4510.thebestphotogallery.Database.ImageMetadata;
+import com4510.thebestphotogallery.ImageMetadataList;
 import com4510.thebestphotogallery.Images.LoadImagesResponseListener;
 import com4510.thebestphotogallery.Images.PreloadImageAsync;
 import com4510.thebestphotogallery.Tasks.LoadImagesTask;
@@ -71,8 +72,15 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
 
     @Override
     public void imagesLoaded(List<ImageMetadata> imageMetadataList) {
+
+        ImageMetadataList imInstance = ImageMetadataList.getInstance();
+        imInstance.clear();
+        imInstance.addAll(imageMetadataList);
+
+//        imageMetadataList = imInstance.getList();
+
         this.imageMetadataList.clear();
-        this.imageMetadataList.addAll(imageMetadataList);
+        this.imageMetadataList.addAll(imInstance.getList());
 
         Util.initEasyImage(this);
         Log.v("Init image", "LOADED");
