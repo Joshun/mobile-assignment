@@ -158,12 +158,6 @@ public class MainActivity extends ImageLoadActivity {
         String imageFileName = "JPEG_" + timeStamp + "_";
 
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File storageDir = new File(MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString());
-
-//        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-
-//        File image = new File(storageDir.getAbsolutePath() + "/" + imageFileName + ".jpg");
-
 
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -235,15 +229,6 @@ public class MainActivity extends ImageLoadActivity {
                 intent = new Intent(this, MapsActivity.class);
                 ImageMetadataList imInstance = ImageMetadataList.getInstance();
                 imInstance.addAll(imageMetadataList);
-
-//                int i;
-//                for (i = 0; i < imageMetadataList.size(); i++ ) {
-//
-//                    if (imageMetadataList.get(i) != null) {
-//                        System.out.println(imageMetadataList.get(i));
-//                        intent.putExtra("MetadataList" + i, imageMetadataList.get(i));
-//                    }
-//                }
 
                 intent.putExtra("FullList", imInstance);
 

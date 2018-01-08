@@ -47,17 +47,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         ImageMetadataList metadataList = (ImageMetadataList) getIntent().getSerializableExtra("FullList");
 
-//        Bundle b = getIntent().getExtras();
-//
-//        Set<String> keys = b.keySet();
-//
-//        for (String imkey : keys) {
-//            im = (ImageMetadata) getIntent().getSerializableExtra(imkey);
-//            imageList.add(im);
-//        }
-
-
-
         setContentView(R.layout.activity_maps);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -73,25 +62,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.clear();
 
 
-        int i = 0;
-//        for (ImageMetadata metadata : metadataList.getList()) {
         for (ImageMetadata metadata : metadataList.getList()) {
             System.out.println(metadataList.getList());
             if (metadata != null) {
                 System.out.println(metadata.getFilePath());
-                i += 5;
-                LatLng location = new LatLng(metadata.getLatitude() + i, metadata.getLongitude() + i);
-                Marker marker1 = mMap.addMarker(new MarkerOptions().position(location));
+
+                LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
+                Marker marker = mMap.addMarker(new MarkerOptions().position(location));
                 if (metadata.getTitle() != null) {
-                    marker1.setTitle(metadata.getTitle());
+                    marker.setTitle(metadata.getTitle());
                 } else {
-                    marker1.setTitle("Marker at location");
+                    marker.setTitle("Marker at location");
                 }
                 if (metadata.getDescription() != null) {
-                    marker1.setSnippet(metadata.getDescription());
+                    marker.setSnippet(metadata.getDescription());
                 }
-                markersList.add(marker1);
-                markersMap.put(marker1, metadata.getFilePath());
+                markersList.add(marker);
+                markersMap.put(marker, metadata.getFilePath());
 
             }
         }
@@ -137,11 +124,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             View view = context.getLayoutInflater().inflate(R.layout.custominfowindow, null);
 
             ImageView infoImage = (ImageView) view.findViewById(R.id.info_image);
-            TextView tvTitle = (TextView) view.findViewById(R.id.info_title);
-            TextView tvSubTitle = (TextView) view.findViewById(R.id.info_subtitle);
+            TextView infoTitle = (TextView) view.findViewById(R.id.info_title);
+            TextView infoDescription = (TextView) view.findViewById(R.id.info_description);
 
-            tvTitle.setText(marker.getTitle());
-            tvSubTitle.setText(marker.getSnippet());
+            infoTitle.setText(marker.getTitle());
+            infoDescription.setText(marker.getSnippet());
             String filepath = markersMap.get(marker);
 
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -149,9 +136,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Bitmap bitmap = BitmapFactory.decodeFile(filepath, options);
 
             infoImage.setImageBitmap(bitmap);
-
-            System.out.println(tvTitle.getText());
-
 
             return view;
         }
