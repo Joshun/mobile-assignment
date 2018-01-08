@@ -65,6 +65,7 @@ public class EditDetailsActivity extends DetailsActivity {
                 break;
             default:
                 intent = new Intent(this, EditNameActivity.class);
+                Log.v("Geo", "Geo button selected");
         }
         intent.putExtra("metadata", currentImageMetadata);
         startActivity(intent);

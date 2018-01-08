@@ -53,9 +53,10 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorLightGrey"
             android:singleLine="true"
-            android:inputType="textCapSentences"
             android:textSize="20sp"
-            android:editable="false"
+            android:inputType="none"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
             android:hint="@string/details_default"/>
     </LinearLayout>
 
