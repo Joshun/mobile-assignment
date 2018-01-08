@@ -5,16 +5,31 @@ package com4510.thebestphotogallery.Activities;
  */
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.graphics.Bitmap;
+import android.app.AlertDialog;
+
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import android.graphics.Bitmap;
-import java.lang.reflect.Method;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+
+
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+
+
+import android.view.View;
+import android.widget.TextView;
+
+
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.List;
+
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Util;
 
@@ -25,6 +40,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private ImageMetadata im;
     protected ArrayList<ImageMetadata> imageList = new ArrayList<ImageMetadata>();
+    private CameraUpdate cu;
 
 
     @Override
@@ -51,16 +67,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        List<Marker> markersList = new ArrayList<Marker>();
 
-        // Add a marker in Sydney, Australia, and move the camera.
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.clear();
 
+        int i = 0;
         for (ImageMetadata metadata : imageList) {
-            LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude() );
-            mMap.addMarker(new MarkerOptions().position(location).title("Marker at location"));
+            i += 5;
+            LatLng location = new LatLng(metadata.getLatitude() + i, metadata.getLongitude() + i);
+            Marker marker1 = mMap.addMarker(new MarkerOptions().position(location));
+            if (metadata.getTitle() != null) {
+                marker1.setTitle(metadata.getTitle());
+            } else {
+                marker1.setTitle("Marker at location");
+            }
+            if (metadata.getDescription() != null) {
+                marker1.setSnippet(metadata.getDescription());
+            }
+            markersList.add(marker1);
         }
+        for (Marker m : markersList) {
+            builder.include(m.getPosition());
+        }
+
+//        /**initialize the padding for map boundary*/
+//        int padding = 10;
+//        /**create the bounds from latlngBuilder to set into map camera*/
+//        LatLngBounds bounds = builder.build();
+//        /**create the camera with bounds and padding to set into map*/
+//        cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+//        /**call the map call back to know map is loaded or not*/
+//        mMap.animateCamera(cu);
+
+//        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+//            @Override
+//            public void onMapLoaded() {
+//                /**set animated zoom camera into map*/
+//                mMap.animateCamera(cu);
+//
+//            }
+//        });
+
+
+
     }
 
 }
