@@ -25,7 +25,6 @@ import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
 public class EditDetailsActivity extends DetailsActivity {
 
     private ImageMetadata currentImageMetadata = null;
-    private TextView nameInput;
 
     public EditDetailsActivity() {
         super("Edit Details", R.id.editimagedetails_toolbar);
@@ -38,10 +37,10 @@ public class EditDetailsActivity extends DetailsActivity {
 
         currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
 
-        nameInput = findViewById(R.id.btn_edit_name_text);
-//        TextInputEditText descInput = findViewById(R.id.edit_description_text);
-        nameInput.setText(currentImageMetadata.getTitle());
-//        descInput.setText(currentImageMetadata.getDescription());
+        TextView name = findViewById(R.id.btn_edit_name_text);
+        TextView desc = findViewById(R.id.btn_edit_description_text);
+        name.setText(currentImageMetadata.getTitle());
+        desc.setText(currentImageMetadata.getDescription());
     }
 
     @Override
@@ -60,6 +59,10 @@ public class EditDetailsActivity extends DetailsActivity {
         switch (view.getId()) {
             case R.id.btn_name:
                 intent = new Intent(this, EditNameActivity.class);
+                break;
+            case R.id.btn_description:
+                intent = new Intent(this, EditDescActivity.class);
+                break;
             default:
                 intent = new Intent(this, EditNameActivity.class);
         }
