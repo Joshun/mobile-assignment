@@ -6,6 +6,7 @@ import android.support.design.widget.TextInputEditText;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
@@ -33,7 +34,9 @@ public class EditNameActivity extends DetailsActivity implements UpdateImageMeta
 
         currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
 
+        TextView oldName = findViewById(R.id.edit_name_text_old);
         nameInput = findViewById(R.id.edit_name_text);
+        oldName.setText(currentImageMetadata.getTitle());
         nameInput.setText(currentImageMetadata.getTitle());
     }
 

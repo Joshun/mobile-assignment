@@ -3,7 +3,11 @@
 
     <!--data-->
     <string name="details_name">Name</string>
+    <string name="details_name_old">Old Name</string>
+    <string name="details_name_new">New Name</string>
     <string name="details_description">Description</string>
+    <string name="details_description_old">Old Description</string>
+    <string name="details_description_new">New Description</string>
     <string name="details_dimensions">Dimensions</string>
     <string name="details_filesize">File Size</string>
     <string name="details_geo">Geographical Position</string>
