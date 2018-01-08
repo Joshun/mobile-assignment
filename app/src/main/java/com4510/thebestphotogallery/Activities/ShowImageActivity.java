@@ -174,8 +174,9 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
 
         final float ZOOM = 16.0f;
         final LatLng POSITION = new LatLng(element.getLatitude(), element.getLongitude());
+        final String TITLE = "Location";
         CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(POSITION, ZOOM);
-        map.addMarker(new MarkerOptions().position(POSITION).title("Marker in Sydney"));
+        map.addMarker(new MarkerOptions().position(POSITION).title(TITLE));
         map.moveCamera(camera);
     }
 

@@ -9,7 +9,7 @@ import com4510.thebestphotogallery.ImageMetadataList;
  * Created by joshua on 27/12/17.
  */
 
-@android.arch.persistence.room.Database(entities = {ImageMetadata.class}, version = 3)
+@android.arch.persistence.room.Database(entities = {ImageMetadata.class}, version = 4)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase INSTANCE;
 
