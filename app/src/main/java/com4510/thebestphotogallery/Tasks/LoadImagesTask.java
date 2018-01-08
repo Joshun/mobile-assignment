@@ -1,9 +1,17 @@
 package com4510.thebestphotogallery.Tasks;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.media.ExifInterface;
+import android.util.Log;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +47,57 @@ public class LoadImagesTask extends AsyncTask<LoadImagesTask.LoadImagesTaskParam
         }
     }
 
+    protected static void loadExif(ImageMetadata imageMetadata, String filePath) {
+        InputStream in = null;
+        try {
+            in = new FileInputStream(filePath);
+            ExifInterface exifInterface = new ExifInterface(filePath);
+
+            // extract and set lat and long
+            double[] latLong = exifInterface.getLatLong();
+            if (latLong != null && latLong.length == 2) {
+                imageMetadata.setLatitude(latLong[0]);
+                imageMetadata.setLongitude(latLong[1]);
+            }
+
+            // extract dimensions
+            int width = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, 0);
+            int height = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, 0);
+            int fSize = (int)new File(filePath).length();
+            System.out.println("fSize " + fSize);
+
+            // dimensions not part of exif, we need to get them manually
+            if (width == 0 || height == 0) {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                System.out.println(new File(filePath).getAbsolutePath());
+                Bitmap b = BitmapFactory.decodeFile(new File(filePath).getAbsolutePath(), options);
+                width = options.outWidth;
+                height = options.outHeight;
+            }
+
+            Log.v("dimens", "width " + width + " height " + height);
+
+            imageMetadata.setWidth(width);
+            imageMetadata.setHeight(height);
+            imageMetadata.setFileSize(fSize);
+
+        }
+        catch (IOException e) {
+            e.printStackTrace(System.err);
+        }
+        finally {
+            if (in != null) {
+                try {
+                    in.close();
+                }
+                catch (IOException ignored) {
+
+                }
+            }
+        }
+    }
+
     @Override
     protected List<ImageMetadata> doInBackground(LoadImagesTaskParam... loadImagesTaskParams) {
         Activity activity = loadImagesTaskParams[0].activity;
@@ -47,6 +106,7 @@ public class LoadImagesTask extends AsyncTask<LoadImagesTask.LoadImagesTaskParam
 
         for (String p: imagePaths) {
             ImageMetadata imageMetadata = new ImageMetadata();
+            loadExif(imageMetadata, p);
             imageMetadata.setFilePath(p);
             imageMetadataList.add(imageMetadata);
         }

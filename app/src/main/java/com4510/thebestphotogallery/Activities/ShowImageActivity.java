@@ -207,9 +207,21 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
             geo.setText(s);
         }
         if (filesize != null) {
-            String s = data.getFileSize() + "MB";
+            int fSize = data.getFileSize();
+            String s;
+            if (fSize < 1000*1000f) {
+                s = round2DP(fSize / 1000f) + "KB";
+            }
+            else {
+                s = round2DP(fSize / (1000*1000f)) + "MB";
+            }
+
             filesize.setText(s);
         }
+    }
+
+    private static float round2DP(float x) {
+        return Math.round(x*100)/100f;
     }
 
 }

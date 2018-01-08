@@ -40,9 +40,9 @@ public class ImageMetadata implements Serializable {
 
     public void setFileSize(int fileSize) { this.fileSize = fileSize; }
 
-    public void setLongitude(int longitude) { this.longitude = longitude; }
+    public void setLongitude(double longitude) { this.longitude = longitude; }
 
-    public void setLatitude(int latitude) { this.latitude = latitude; }
+    public void setLatitude(double latitude) { this.latitude = latitude; }
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
@@ -62,9 +62,9 @@ public class ImageMetadata implements Serializable {
 
     public final int getFileSize() { return fileSize; }
 
-    public final int getLongitude() { return longitude; }
+    public final double getLongitude() { return longitude; }
 
-    public final int getLatitude() { return latitude; }
+    public final double getLatitude() { return latitude; }
 
     public String getFilePath() {
         return filePath;
@@ -86,10 +86,10 @@ public class ImageMetadata implements Serializable {
     private int fileSize;
 
     @ColumnInfo(name="longitude")
-    private int longitude;
+    private double longitude;
 
     @ColumnInfo(name="latitude")
-    private int latitude;
+    private double latitude;
 
     @ColumnInfo(name="filePath")
     private String filePath;
