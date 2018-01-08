@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
+import com4510.thebestphotogallery.ImageMetadataList;
 import com4510.thebestphotogallery.Listeners.OnScrollChangedListener;
 import com4510.thebestphotogallery.R;
 import com4510.thebestphotogallery.ServerComm;
@@ -67,6 +68,7 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
                 Log.v(getClass().getName(), "edit detail option selected");
                 intent = new Intent(this, EditDetailsActivity.class);
                 intent.putExtra("metadata", element);
+                intent.putExtra("position", imageIndex);
                 startActivity(intent);
                 return true;
             case android.R.id.home:
@@ -90,7 +92,9 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         bitmapMipMaps = new ArrayList<>();
 
         detailsView.setVisibility(View.GONE);
-        element = (ImageMetadata) getIntent().getSerializableExtra("metadata");
+        imageIndex  = getIntent().getExtras().getInt("position");
+//        element = (ImageMetadata) getIntent().getSerializableExtra("metadata");
+        element = ImageMetadataList.getInstance().get(imageIndex);
         detailsView.setOnScrollChangedListener(this);
         setDetails(element);
 

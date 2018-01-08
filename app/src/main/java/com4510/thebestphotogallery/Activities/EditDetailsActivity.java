@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Database.UpdateImageMetadataListener;
+import com4510.thebestphotogallery.ImageMetadataList;
 import com4510.thebestphotogallery.MyAdapter;
 import com4510.thebestphotogallery.R;
 import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
@@ -24,6 +25,7 @@ public class EditDetailsActivity extends DetailsActivity implements UpdateImageM
 
     private ImageMetadata currentImageMetadata = null;
     private TextInputEditText nameInput;
+    private Integer imageIndex = null;
 
     public EditDetailsActivity() {
         super("Edit Details", R.id.editimagedetails_toolbar);
@@ -34,7 +36,9 @@ public class EditDetailsActivity extends DetailsActivity implements UpdateImageM
         setContentView(R.layout.activity_editimagedetails);
         super.onCreate(savedInstanceState);
 
-        currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
+//        currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
+        imageIndex = getIntent().getExtras().getInt("position");
+        currentImageMetadata = ImageMetadataList.getInstance().get(imageIndex);
 
         nameInput = findViewById(R.id.edit_name_text);
         TextInputEditText descInput = findViewById(R.id.edit_description_text);

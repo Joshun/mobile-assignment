@@ -3,6 +3,8 @@ package com4510.thebestphotogallery.Database;
 import android.arch.persistence.room.*;
 import android.content.Context;
 
+import com4510.thebestphotogallery.ImageMetadataList;
+
 /**
  * Created by joshua on 27/12/17.
  */
