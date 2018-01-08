@@ -1,5 +1,6 @@
 package com4510.thebestphotogallery;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -10,7 +11,7 @@ import com4510.thebestphotogallery.Database.ImageMetadata;
  * Created by joshua on 08/01/18.
  */
 
-public class ImageMetadataList {
+public class ImageMetadataList implements Serializable{
     private static ImageMetadataList INSTANCE = null;
 
     public static ImageMetadataList getInstance() {

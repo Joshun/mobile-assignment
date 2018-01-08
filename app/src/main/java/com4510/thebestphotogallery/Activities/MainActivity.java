@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.support.v4.content.FileProvider;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.io.IOException;
@@ -27,6 +28,8 @@ import java.io.File;
 import java.util.List;
 
 import com4510.thebestphotogallery.Database.AppDatabase;
+import com4510.thebestphotogallery.Database.ImageMetadata;
+import com4510.thebestphotogallery.ImageMetadataList;
 import com4510.thebestphotogallery.Listeners.OnBottomReachedListener;
 import com4510.thebestphotogallery.MyAdapter;
 import com4510.thebestphotogallery.R;
@@ -230,14 +233,19 @@ public class MainActivity extends ImageLoadActivity {
 
             case R.id.btn_map:
                 intent = new Intent(this, MapsActivity.class);
-                int i;
-                for (i = 0; i < imageMetadataList.size(); i++ ) {
-                    System.out.println("here");
-                    if (imageMetadataList.get(i) != null) {
-                        System.out.println(imageMetadataList.get(i));
-                        intent.putExtra("BitmapList" + i, imageMetadataList.get(i));
-                    }
-                }
+                ImageMetadataList imInstance = ImageMetadataList.getInstance();
+                imInstance.addAll(imageMetadataList);
+
+//                int i;
+//                for (i = 0; i < imageMetadataList.size(); i++ ) {
+//
+//                    if (imageMetadataList.get(i) != null) {
+//                        System.out.println(imageMetadataList.get(i));
+//                        intent.putExtra("MetadataList" + i, imageMetadataList.get(i));
+//                    }
+//                }
+
+                intent.putExtra("FullList", imInstance);
 
                 startActivity(intent);
                 break;
