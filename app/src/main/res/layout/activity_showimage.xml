@@ -32,10 +32,25 @@
                     android:id="@+id/image"/>
             </FrameLayout>
 
+            <!--Map-->
+            <FrameLayout
+                app:layout_constraintTop_toBottomOf="@id/image_container"
+                android:paddingTop="2dp"
+                android:background="@color/colorOffWhite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/show_map_container">
+                <fragment
+                    android:layout_width="match_parent"
+                    android:layout_height="256dp"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:id="@+id/show_map" />
+            </FrameLayout>
+
             <!--Details-->
             <include
                 layout="@layout/showimage_details"
-                app:layout_constraintTop_toBottomOf="@id/image" />
+                app:layout_constraintTop_toBottomOf="@id/show_map_container" />
 
         </LinearLayout>
 

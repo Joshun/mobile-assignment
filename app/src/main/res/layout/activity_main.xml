@@ -23,10 +23,10 @@
                 android:id="@+id/main_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
-                android:background="@drawable/toolbar_gradient"
+                android:background="@drawable/toolbar_light_gradient"
                 android:elevation="4dp"
-                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                android:theme="@style/MainToolbar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
 
         </android.support.design.widget.AppBarLayout>
 

@@ -134,7 +134,7 @@ public class MainActivity extends ImageLoadActivity {
         }
 
         if (!atSoftCap() && moreToLoad() && !queueRefresh) {
-            if (recyclerView.getAlpha() < 1.0f) {
+            if (recyclerView.getVisibility() == View.GONE) {
                 recyclerView.setVisibility(View.VISIBLE);
                 recyclerView.animate().alpha(1.0f).setDuration(ANIM_LOAD_DURATION).setListener(null);
             }
