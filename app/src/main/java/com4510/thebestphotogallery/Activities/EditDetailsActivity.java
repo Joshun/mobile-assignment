@@ -37,10 +37,14 @@ public class EditDetailsActivity extends DetailsActivity {
         setContentView(R.layout.activity_editimagedetails);
         super.onCreate(savedInstanceState);
 
-//        currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
+        currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
         imageIndex = getIntent().getExtras().getInt("position");
         currentImageMetadata = ImageMetadataList.getInstance().get(imageIndex);
+        setDetails();
 
+    }
+
+    private void setDetails() {
         TextView name = findViewById(R.id.btn_edit_name_text);
         TextView desc = findViewById(R.id.btn_edit_description_text);
         name.setText(currentImageMetadata.getTitle());
@@ -58,17 +62,26 @@ public class EditDetailsActivity extends DetailsActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setDetails();
+    }
+
     public void btnSelected(View view) {
         Intent intent;
         switch (view.getId()) {
             case R.id.btn_name:
                 intent = new Intent(this, EditNameActivity.class);
+                intent.putExtra("position", imageIndex);
                 break;
             case R.id.btn_description:
                 intent = new Intent(this, EditDescActivity.class);
+                intent.putExtra("position", imageIndex);
                 break;
             default:
                 intent = new Intent(this, EditNameActivity.class);
+                intent.putExtra("position", imageIndex);
                 Log.v("Geo", "Geo button selected");
         }
         intent.putExtra("metadata", currentImageMetadata);

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Database.UpdateImageMetadataListener;
+import com4510.thebestphotogallery.ImageMetadataList;
 import com4510.thebestphotogallery.R;
 import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
 
@@ -20,6 +21,7 @@ import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
 
 public class EditDescActivity extends DetailsActivity implements UpdateImageMetadataListener {
 
+    private Integer imageIndex;
     private ImageMetadata currentImageMetadata = null;
     private TextInputEditText descriptionInput;
 
@@ -32,8 +34,10 @@ public class EditDescActivity extends DetailsActivity implements UpdateImageMeta
         setContentView(R.layout.activity_editdescription);
         super.onCreate(savedInstanceState);
 
-        currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
+//        currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
 
+        imageIndex = getIntent().getExtras().getInt("position");
+        currentImageMetadata = ImageMetadataList.getInstance().get(imageIndex);
         TextView oldName = findViewById(R.id.edit_description_text_old);
         descriptionInput = findViewById(R.id.edit_description_text);
         oldName.setText(currentImageMetadata.getDescription());
@@ -71,7 +75,7 @@ public class EditDescActivity extends DetailsActivity implements UpdateImageMeta
     @Override
     public void onBackPressed() {
         if (currentImageMetadata != null) {
-            currentImageMetadata.setTitle(descriptionInput.getText().toString());
+            currentImageMetadata.setDescription(descriptionInput.getText().toString());
 
             Log.v(getClass().getName(), "Updating metadata for image " + currentImageMetadata.getFilePath());
             UpdateImageMetadataTask updateImageMetadataTask = new UpdateImageMetadataTask(this);

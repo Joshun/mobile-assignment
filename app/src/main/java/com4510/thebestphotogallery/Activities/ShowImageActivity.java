@@ -179,6 +179,13 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         map.moveCamera(camera);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ImageMetadata im = ImageMetadataList.getInstance().get(imageIndex);
+        setDetails(im);
+    }
+
     private void setDetails(final ImageMetadata data) {
         final TextView name = findViewById(R.id.view_name_text);
         final TextView description = findViewById(R.id.view_description_text);
