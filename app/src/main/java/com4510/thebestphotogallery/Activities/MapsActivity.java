@@ -90,27 +90,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         for (Marker m : markersList) {
             builder.include(m.getPosition());
         }
+        LatLngBounds bounds = builder.build();
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
 
-//        /**initialize the padding for map boundary*/
-//        int padding = 10;
-//        /**create the bounds from latlngBuilder to set into map camera*/
-//        LatLngBounds bounds = builder.build();
-//        /**create the camera with bounds and padding to set into map*/
-//        cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-//        /**call the map call back to know map is loaded or not*/
-//        mMap.animateCamera(cu);
+        cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
 
-//        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-//            @Override
-//            public void onMapLoaded() {
-//                /**set animated zoom camera into map*/
-//                mMap.animateCamera(cu);
-//
-//            }
-//        });
+        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                /**set animated zoom camera into map*/
+                mMap.animateCamera(cu);
 
+            }
+        });
 
 
     }
+
 
 }
