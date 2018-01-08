@@ -47,6 +47,8 @@
         <activity android:name=".Activities.ShowImageActivity" android:parentActivityName=".Activities.MainActivity"/>
         <activity android:name=".Activities.EditDetailsActivity" android:parentActivityName=".Activities.ShowImageActivity"/>
         <activity android:name=".Activities.MapsActivity" android:parentActivityName=".Activities.ShowImageActivity"/>
+        <activity android:name=".Activities.EditNameActivity" android:parentActivityName=".Activities.EditDetailsActivity"/>
+        <!--<activity android:name=".Activities.EditDescActivity" android:parentActivityName=".Activities.EditDetailsActivity"/>-->
 
     </application>
 
