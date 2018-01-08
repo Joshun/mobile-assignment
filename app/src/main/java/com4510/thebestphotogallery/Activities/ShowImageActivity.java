@@ -18,6 +18,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +37,9 @@ import com4510.thebestphotogallery.ServerData;
 import com4510.thebestphotogallery.Images.ShowImageAsync;
 import com4510.thebestphotogallery.ShowImageScrollView;
 
-public class ShowImageActivity extends AppCompatActivity implements OnScrollChangedListener {
+public class ShowImageActivity extends AppCompatActivity implements OnScrollChangedListener, OnMapReadyCallback {
 
+    private GoogleMap map;
     private Bitmap currentImage = null;
     private String currentImageFile = "file.png";
     private List<Bitmap> bitmapMipMaps;
@@ -84,6 +93,10 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         element = (ImageMetadata) getIntent().getSerializableExtra("metadata");
         detailsView.setOnScrollChangedListener(this);
         setDetails(element);
+
+        //Map
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.show_map);
+        mapFragment.getMapAsync(this);
 
         serverComm = new ServerComm(getCacheDir());
 
@@ -145,6 +158,18 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
             imageContainer.setTranslationY(scrollY * PARALLAX_MULTIPLIER);
 //            imageView.setImageBitmap(bitmapMipMaps.get(mipLevel));
         }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.silver_map));
+        map.getUiSettings().setAllGesturesEnabled(false);
+
+        // Add a marker in Sydney, Australia, and move the camera.
+        LatLng sydney = new LatLng(-34, 151);
+        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     private void setDetails(final ImageMetadata data) {
