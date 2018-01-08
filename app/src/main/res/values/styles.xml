@@ -9,6 +9,12 @@
         <item name="android:textColorHint">@color/colorLightGrey</item>
     </style>
 
+    <!--Main Toolbar Theme-->
+    <style name="MainToolbar" parent="Theme.AppCompat">
+        <item name="android:textColorPrimary">@color/colorGrey</item>
+    </style>
+
+    <!--Show Image Theme-->
     <style name="Transparent" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <item name="windowActionBarOverlay">true</item>
