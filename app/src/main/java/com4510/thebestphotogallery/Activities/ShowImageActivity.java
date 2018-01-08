@@ -18,11 +18,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -166,10 +168,11 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.silver_map));
         map.getUiSettings().setAllGesturesEnabled(false);
 
-        // Add a marker in Sydney, Australia, and move the camera.
-        LatLng sydney = new LatLng(-34, 151);
-        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        final float ZOOM = 16.0f;
+        final LatLng POSITION = new LatLng(element.getLatitude(), element.getLongitude());
+        CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(POSITION, ZOOM);
+        map.addMarker(new MarkerOptions().position(POSITION).title("Marker in Sydney"));
+        map.moveCamera(camera);
     }
 
     private void setDetails(final ImageMetadata data) {
