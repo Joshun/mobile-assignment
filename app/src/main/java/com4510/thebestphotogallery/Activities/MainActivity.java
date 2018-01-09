@@ -227,10 +227,10 @@ public class MainActivity extends ImageLoadActivity {
 
             case R.id.btn_map:
                 intent = new Intent(this, MapsActivity.class);
-                ImageMetadataList imInstance = ImageMetadataList.getInstance();
-                imInstance.addAll(imageMetadataList);
+//                ImageMetadataList imInstance = ImageMetadataList.getInstance();
+//                imInstance.addAll(imageMetadataList);
 
-                intent.putExtra("FullList", imInstance);
+//                intent.putExtra("FullList", imInstance);
 
                 startActivity(intent);
                 break;
