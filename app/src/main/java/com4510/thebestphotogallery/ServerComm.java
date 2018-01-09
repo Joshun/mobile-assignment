@@ -25,6 +25,8 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import com4510.thebestphotogallery.Listeners.ServerResponseListener;
+
 /**
  * Created by joshua on 21/12/17.
  */
@@ -34,8 +36,14 @@ public class ServerComm {
     private Network network;
     private RequestQueue mRequestQueue;
     private static final String URL = "http://jmoey.com:8091/uploadpicture";
+    private ServerResponseListener responseListener;
 
     public ServerComm(File cacheDir) {
+        this(null, cacheDir);
+    }
+
+    public ServerComm(ServerResponseListener responseListener, File cacheDir) {
+        this.responseListener = responseListener;
         cache = new DiskBasedCache(cacheDir, 1024*1024);
         network = new BasicNetwork(new HurlStack());
         mRequestQueue = new RequestQueue(cache, network);
@@ -55,13 +63,18 @@ public class ServerComm {
                 @Override
                 public void onResponse(NetworkResponse response) {
                     Log.v(getClass().getName(), "response received");
-
+                    if (responseListener != null) {
+                        responseListener.onServerSuccess();
+                    }
                 }
         },
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.v(getClass().getName(), "server error");
+                    if (responseListener != null) {
+                        responseListener.onServerFailure();
+                    }
                 }
             }
         ) {

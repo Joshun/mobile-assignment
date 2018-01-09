@@ -6,6 +6,7 @@ package com4510.thebestphotogallery.Activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,13 +37,15 @@ import java.util.List;
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.ImageMetadataList;
 import com4510.thebestphotogallery.Listeners.OnScrollChangedListener;
+import com4510.thebestphotogallery.Listeners.ServerResponseListener;
 import com4510.thebestphotogallery.R;
 import com4510.thebestphotogallery.ServerComm;
 import com4510.thebestphotogallery.ServerData;
 import com4510.thebestphotogallery.Images.ShowImageAsync;
 import com4510.thebestphotogallery.ShowImageScrollView;
+import com4510.thebestphotogallery.VolleyMultipartRequest;
 
-public class ShowImageActivity extends AppCompatActivity implements OnScrollChangedListener, OnMapReadyCallback {
+public class ShowImageActivity extends AppCompatActivity implements OnScrollChangedListener, OnMapReadyCallback, ServerResponseListener {
 
     private GoogleMap map;
     private Bitmap currentImage = null;
@@ -56,11 +60,23 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
     Integer imageIndex = null;
     private ImageMetadata element;
 
+    private static final String SERVER_URI = "http://jmoey.com:8091";
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.image_view, menu);
         return true;
+    }
+
+    @Override
+    public void onServerSuccess() {
+        Toast.makeText(this, "Server upload successful", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onServerFailure() {
+        Toast.makeText(this, "Server upload failed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -73,6 +89,9 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
                 intent.putExtra("metadata", element);
                 intent.putExtra("position", imageIndex);
                 startActivity(intent);
+                return true;
+            case R.id.upload_image:
+                uploadToServer();
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -105,7 +124,7 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.show_map);
         mapFragment.getMapAsync(this);
 
-        serverComm = new ServerComm(getCacheDir());
+        serverComm = new ServerComm(this, getCacheDir());
 
         if (savedInstanceState != null) {
             Log.v(getClass().getName(), "loaded instance state");
@@ -148,10 +167,25 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
                     serverData.imageFilename = currentImageFile;
                     serverData.date = "1/1/1";
                     serverComm.sendData(serverData);
+
                 }
                 return false;
             }
         });
+    }
+
+    private void uploadToServer() {
+        Log.v(getClass().getName(), "upload to server option selected");
+        Toast.makeText(this, "Uploading...", Toast.LENGTH_LONG).show();
+        ImageMetadata imageMetadata = ImageMetadataList.getInstance().get(imageIndex);
+        ServerData serverData = new ServerData();
+        serverData.date = "01/01/1970";
+        serverData.imageFilename = imageMetadata.getFilePath();
+        serverData.description = imageMetadata.getDescription();
+        serverData.title = imageMetadata.getTitle();
+        serverData.latitude = String.valueOf(imageMetadata.getLatitude());
+        serverData.imageData = BitmapFactory.decodeFile(imageMetadata.getFilePath());
+        serverComm.sendData(serverData);
     }
 
     @Override
