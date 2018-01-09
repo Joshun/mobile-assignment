@@ -102,22 +102,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(MapsActivity.this);
                 mMap.setInfoWindowAdapter(adapter);
 
-//                LatLngBounds bounds = builder.build();
-//                int width = getResources().getDisplayMetrics().widthPixels;
-//                int height = getResources().getDisplayMetrics().heightPixels;
-//                int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
-//
-//                cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+                LatLngBounds bounds = builder.build();
+                int width = getResources().getDisplayMetrics().widthPixels;
+                int height = getResources().getDisplayMetrics().heightPixels;
+                int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
 
-                // When map is ready, camera zooms to fit all markers
-//                mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-//                    @Override
-//                    public void onMapLoaded() {
-//                        /**set animated zoom camera into map*/
-//                        mMap.animateCamera(cu);
-//
-//                    }
-//                });
+                cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+
+                 When map is ready, camera zooms to fit all markers
+                mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                    @Override
+                    public void onMapLoaded() {
+                        /**set animated zoom camera into map*/
+                        mMap.animateCamera(cu);
+
+                    }
+                });
             }
         });
 
