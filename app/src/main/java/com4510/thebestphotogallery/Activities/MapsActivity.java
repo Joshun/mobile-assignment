@@ -151,11 +151,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             infoDescription.setText(marker.getSnippet());
             String filepath = markersMap.get(marker);
 
-//            BitmapFactory.Options options = new BitmapFactory.Options();
-//            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//            Bitmap bitmap = BitmapFactory.decodeFile(filepath, options);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap bitmap = BitmapFactory.decodeFile(filepath, options);
 
-//            infoImage.setImageBitmap(bitmap);
+            infoImage.setImageBitmap(bitmap);
 
             return view;
         }
