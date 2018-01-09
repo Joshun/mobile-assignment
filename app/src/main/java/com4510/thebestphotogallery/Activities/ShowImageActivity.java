@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -212,7 +213,7 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         }
         if (geo != null) {
             String join = " " + getResources().getString(R.string.details_join) + " ";
-            String s = data.getLatitude() + join + data.getLongitude();
+            String s = roundDP(data.getLatitude(), 6) + join + roundDP(data.getLongitude(), 6);
             geo.setText(s);
         }
 
@@ -235,8 +236,19 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         }
     }
 
-    private static float round2DP(float x) {
-        return Math.round(x*100)/100f;
+    private static double roundDP(double x, int dp) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("#.");
+        for (int i=0; i<dp; i++) {
+            sb.append("#");
+        }
+        DecimalFormat df = new DecimalFormat(sb.toString());
+        return Double.valueOf(df.format(x));
+    }
+
+
+    private static double round2DP(float x) {
+        return roundDP(x, 2);
     }
 
 }
