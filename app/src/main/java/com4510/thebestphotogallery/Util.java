@@ -99,6 +99,11 @@ public class Util{
     }
 
     public static Bitmap loadBitmap(File file, int dimension, boolean square) {
+        // don't try to load nonexistent files
+        if (!file.exists()) {
+            return null;
+        }
+
         if (dimension > 4096) {
             Log.w("Dimension warning", "dimension set too large. Reducing to 4096");
             dimension = 4096;
