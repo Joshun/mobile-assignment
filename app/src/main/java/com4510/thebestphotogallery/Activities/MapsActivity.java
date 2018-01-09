@@ -80,9 +80,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 List<Marker> markersList = new ArrayList<Marker>();
 
                 for (ImageMetadata metadata : metadataList.getList()) {
-                    System.out.println(metadataList.getList());
                     if (metadata != null) {
-                        System.out.println(metadata.getFilePath());
                         LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
                         Marker marker = mMap.addMarker(new MarkerOptions().position(location));
                         if (metadata.getTitle() != null) {
