@@ -199,6 +199,7 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         final TextView geo = findViewById(R.id.view_geo_text);
         final TextView filesize = findViewById(R.id.view_filesize_text);
         final TextView altitude = findViewById(R.id.view_altitude_text);
+        final View map = findViewById(R.id.show_map_container);
 
         if (name != null && data.getTitle() != null && !data.getTitle().equals("")) {
             name.setText(data.getTitle());
@@ -215,10 +216,13 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
             String s = w + "x" + h + "px";
             dimensions.setText(s);
         }
-        if (geo != null) {
+        if (geo != null && (data.getLatitude() != 0.0 || data.getLongitude() != 0.0)) {
             String join = " " + getResources().getString(R.string.details_join) + " ";
             String s = roundDP(data.getLatitude(), 6) + join + roundDP(data.getLongitude(), 6);
             geo.setText(s);
+        }
+        else {
+            map.setVisibility(View.GONE);
         }
 
         if (altitude != null) {
