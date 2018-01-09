@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import android.os.Handler;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.ImageMetadataList;
@@ -40,6 +41,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private CameraUpdate cu;
     protected ImageMetadataList metadataList = ImageMetadataList.getInstance();
     Map<Marker, String> markersMap = new HashMap<Marker, String>();
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +55,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
     }
 
-
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -64,9 +64,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.clear();
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
                 List<Marker> markersList = new ArrayList<Marker>();
-
-
-
 
                 for (ImageMetadata metadata : metadataList.getList()) {
                     System.out.println(metadataList.getList());

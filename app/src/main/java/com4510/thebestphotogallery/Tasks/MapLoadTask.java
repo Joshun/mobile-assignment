@@ -19,12 +19,12 @@ import com4510.thebestphotogallery.ImageMetadataList;
  * Created by joshua on 09/01/18.
  */
 
-public class MapLoadTask extends AsyncTask<GoogleMap, Void, List<Marker>> {
+public class MapLoadTask extends AsyncTask<GoogleMap, Void, List<MarkerOptions>> {
     @Override
-    protected List<Marker> doInBackground(GoogleMap... googleMaps) {
+    protected List<MarkerOptions> doInBackground(GoogleMap... googleMaps) {
         GoogleMap mMap = googleMaps[0];
-        ArrayList<Marker> markersList = new ArrayList<>();
-        Map<Marker, String> markersMap = new HashMap<Marker, String>();
+        ArrayList<MarkerOptions> markersList = new ArrayList<>();
+//        Map<Marker, String> markersMap = new HashMap<Marker, String>();
 
         mMap.clear();
 
@@ -34,17 +34,17 @@ public class MapLoadTask extends AsyncTask<GoogleMap, Void, List<Marker>> {
             if (metadata != null) {
                 System.out.println(metadata.getFilePath());
                 LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
-                Marker marker = mMap.addMarker(new MarkerOptions().position(location));
-                if (metadata.getTitle() != null) {
-                    marker.setTitle(metadata.getTitle());
-                } else {
-                    marker.setTitle("Marker at location");
-                }
-                if (metadata.getDescription() != null) {
-                    marker.setSnippet(metadata.getDescription());
-                }
+                MarkerOptions marker = new MarkerOptions().position(location);
+//                if (metadata.getTitle() != null) {
+//                    marker.setTitle(metadata.getTitle());
+//                } else {
+//                    marker.setTitle("Marker at location");
+//                }
+//                if (metadata.getDescription() != null) {
+//                    marker.setSnippet(metadata.getDescription());
+//                }
                 markersList.add(marker);
-                markersMap.put(marker, metadata.getFilePath());
+//                markersMap.put(marker, metadata.getFilePath());
             }
         }
 
