@@ -22,8 +22,8 @@
     <string name="upload_image_details">Upload to Server</string>
 
     <!--Options-->
-    <string name="edit_details">Image Details</string>
-    <string name="edit_geo">Geolocation Details</string>
+    <string name="edit_details">Edit Image Details</string>
+    <string name="edit_geo">Edit Geolocation Details</string>
     <string name="edit_backup">Image Backup</string>
     <string name="details_map">Change Geolocation</string>
     <string name="details_backup">Send Image to Server</string>
