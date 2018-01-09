@@ -149,34 +149,3 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 }
-//class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-//
-//    private Activity context;
-//
-//    public CustomInfoWindowAdapter(Activity context) {
-//        this.context = context;
-//    }
-//
-//    @Override
-//    public View getInfoWindow(Marker marker) {
-//        return null;
-//    }
-//
-//    @Override
-//    public View getInfoContents(Marker marker) {
-//        View view = context.getLayoutInflater().inflate(R.layout.custominfowindow, null);
-//
-//        ImageView infoImage = (ImageView) view.findViewById(R.id.info_image);
-//        TextView tvTitle = (TextView) view.findViewById(R.id.info_title);
-//        TextView tvSubTitle = (TextView) view.findViewById(R.id.info_subtitle);
-//
-//        tvTitle.setText(marker.getTitle());
-//        tvSubTitle.setText(marker.getSnippet());
-//        markersMap.get(marker);
-//
-//        System.out.println(tvTitle.getText());
-//
-//
-//        return view;
-//    }
-//}

@@ -23,34 +23,24 @@ public class MapLoadTask extends AsyncTask<GoogleMap, Void, List<MarkerOptions>>
     @Override
     protected List<MarkerOptions> doInBackground(GoogleMap... googleMaps) {
         GoogleMap mMap = googleMaps[0];
-        ArrayList<MarkerOptions> markersList = new ArrayList<>();
-//        Map<Marker, String> markersMap = new HashMap<Marker, String>();
-
-        mMap.clear();
+        ArrayList<MarkerOptions> markerOptsList = new ArrayList<>();
 
         ImageMetadataList imageMetadataList = ImageMetadataList.getInstance();
+
         for (ImageMetadata metadata: imageMetadataList.getList()) {
             System.out.println(imageMetadataList.getList());
             if (metadata != null) {
                 System.out.println(metadata.getFilePath());
                 LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
                 MarkerOptions marker = new MarkerOptions().position(location);
-//                if (metadata.getTitle() != null) {
-//                    marker.setTitle(metadata.getTitle());
-//                } else {
-//                    marker.setTitle("Marker at location");
-//                }
-//                if (metadata.getDescription() != null) {
-//                    marker.setSnippet(metadata.getDescription());
-//                }
-                markersList.add(marker);
-//                markersMap.put(marker, metadata.getFilePath());
+
+                markerOptsList.add(marker);
             }
         }
 
         // created markers list
         // now we need to actually put it on the map
         // which might need to be done on ui thread? not sure
-        return markersList;
+        return markerOptsList;
     }
 }
