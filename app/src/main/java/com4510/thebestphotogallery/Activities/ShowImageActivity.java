@@ -45,7 +45,7 @@ import com4510.thebestphotogallery.Images.ShowImageAsync;
 import com4510.thebestphotogallery.ShowImageScrollView;
 import com4510.thebestphotogallery.VolleyMultipartRequest;
 
-public class ShowImageActivity extends AppCompatActivity implements OnScrollChangedListener, OnMapReadyCallback, ServerResponseListener {
+public class ShowImageActivity extends AppCompatActivity implements OnScrollChangedListener, OnMapReadyCallback {
 
     private GoogleMap map;
     private Bitmap currentImage = null;
@@ -55,7 +55,6 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
     private ShowImageScrollView detailsView;
     private View imageContainer;
     private ImageView imageView;
-    private ServerComm serverComm;
 
     Integer imageIndex = null;
     private ImageMetadata element;
@@ -70,16 +69,6 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
     }
 
     @Override
-    public void onServerSuccess() {
-        Toast.makeText(this, "Server upload successful", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onServerFailure() {
-        Toast.makeText(this, "Server upload failed", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
@@ -89,9 +78,6 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
                 intent.putExtra("metadata", element);
                 intent.putExtra("position", imageIndex);
                 startActivity(intent);
-                return true;
-            case R.id.upload_image:
-                uploadToServer();
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -124,8 +110,6 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.show_map);
         mapFragment.getMapAsync(this);
 
-        serverComm = new ServerComm(this, getCacheDir());
-
         if (savedInstanceState != null) {
             Log.v(getClass().getName(), "loaded instance state");
             imageIndex = savedInstanceState.getInt("position");
@@ -152,40 +136,26 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        imageView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Log.v(getClass().getName(), "touch event");
-                if (currentImage != null) {
-                    Log.v(getClass().getName(), "attempting to send to server...");
-                    ServerData serverData = new ServerData();
-                    serverData.imageData = v.getDrawingCache();
-                    serverData.title = "title";
-                    serverData.longitude = "0.0";
-                    serverData.latitude = "0.0";
-                    serverData.description = "description";
-                    serverData.imageFilename = currentImageFile;
-                    serverData.date = "1/1/1";
-                    serverComm.sendData(serverData);
-
-                }
-                return false;
-            }
-        });
-    }
-
-    private void uploadToServer() {
-        Log.v(getClass().getName(), "upload to server option selected");
-        Toast.makeText(this, "Uploading...", Toast.LENGTH_LONG).show();
-        ImageMetadata imageMetadata = ImageMetadataList.getInstance().get(imageIndex);
-        ServerData serverData = new ServerData();
-        serverData.date = "01/01/1970";
-        serverData.imageFilename = imageMetadata.getFilePath();
-        serverData.description = imageMetadata.getDescription();
-        serverData.title = imageMetadata.getTitle();
-        serverData.latitude = String.valueOf(imageMetadata.getLatitude());
-        serverData.imageData = BitmapFactory.decodeFile(imageMetadata.getFilePath());
-        serverComm.sendData(serverData);
+//        imageView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                Log.v(getClass().getName(), "touch event");
+//                if (currentImage != null) {
+//                    Log.v(getClass().getName(), "attempting to send to server...");
+//                    ServerData serverData = new ServerData();
+//                    serverData.imageData = v.getDrawingCache();
+//                    serverData.title = "title";
+//                    serverData.longitude = "0.0";
+//                    serverData.latitude = "0.0";
+//                    serverData.description = "description";
+//                    serverData.imageFilename = currentImageFile;
+//                    serverData.date = "1/1/1";
+//                    serverComm.sendData(serverData);
+//
+//                }
+//                return false;
+//            }
+//        });
     }
 
     @Override
