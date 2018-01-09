@@ -21,19 +21,22 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com4510.thebestphotogallery.Listeners.LoadMarkerOptsResponseListener;
 
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Random;
+
 import android.os.Handler;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.ImageMetadataList;
 import com4510.thebestphotogallery.R;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LoadMarkerOptsResponseListener {
 
     private GoogleMap mMap;
     private ImageMetadata im;
@@ -44,6 +47,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Handler handler = new Handler();
 
     @Override
+    public void markerOptsLoaded(List<MarkerOptions> markerOptionsList) {
+        mMap.clear();
+//        List<Marker> markersList = new ArrayList<Marker>();
+        for (MarkerOptions markerOpt : markerOptionsList) {
+            Marker marker = mMap.addMarker(markerOpt);
+
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -52,65 +65,66 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+
         mapFragment.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mMap.clear();
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                List<Marker> markersList = new ArrayList<Marker>();
-
-                for (ImageMetadata metadata : metadataList.getList()) {
-                    System.out.println(metadataList.getList());
-                    if (metadata != null) {
-                        System.out.println(metadata.getFilePath());
-                        LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
-                        Marker marker = mMap.addMarker(new MarkerOptions().position(location));
-                        if (metadata.getTitle() != null) {
-                            marker.setTitle(metadata.getTitle());
-                        } else {
-                            marker.setTitle("Marker at location");
-                        }
-                        if (metadata.getDescription() != null) {
-                            marker.setSnippet(metadata.getDescription());
-                        }
-                        markersList.add(marker);
-                        markersMap.put(marker, metadata.getFilePath());
-
-                    }
-                }
-                for (Marker m : markersList) {
-                    builder.include(m.getPosition());
-                }
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                mMap.clear();
+//                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//                List<Marker> markersList = new ArrayList<Marker>();
+//
+//                for (ImageMetadata metadata : metadataList.getList()) {
+//                    System.out.println(metadataList.getList());
+//                    if (metadata != null) {
+//                        System.out.println(metadata.getFilePath());
+//                        LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
+//                        Marker marker = mMap.addMarker(new MarkerOptions().position(location));
+//                        if (metadata.getTitle() != null) {
+//                            marker.setTitle(metadata.getTitle());
+//                        } else {
+//                            marker.setTitle("Marker at location");
+//                        }
+//                        if (metadata.getDescription() != null) {
+//                            marker.setSnippet(metadata.getDescription());
+//                        }
+//                        markersList.add(marker);
+//                        markersMap.put(marker, metadata.getFilePath());
+//
+//                    }
+//                }
+//                for (Marker m : markersList) {
+//                    builder.include(m.getPosition());
+//                }
                 CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(MapsActivity.this);
                 mMap.setInfoWindowAdapter(adapter);
 
-                LatLngBounds bounds = builder.build();
-                int width = getResources().getDisplayMetrics().widthPixels;
-                int height = getResources().getDisplayMetrics().heightPixels;
-                int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
-
-                cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+//                LatLngBounds bounds = builder.build();
+//                int width = getResources().getDisplayMetrics().widthPixels;
+//                int height = getResources().getDisplayMetrics().heightPixels;
+//                int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
+//
+//                cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
 
                 // When map is ready, camera zooms to fit all markers
-                mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                    @Override
-                    public void onMapLoaded() {
-                        /**set animated zoom camera into map*/
-                        mMap.animateCamera(cu);
-
-                    }
-                });
+//                mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+//                    @Override
+//                    public void onMapLoaded() {
+//                        /**set animated zoom camera into map*/
+//                        mMap.animateCamera(cu);
+//
+//                    }
+//                });
             }
-        });
+//        });
 
 
-    }
+//    }
 
     class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
@@ -139,9 +153,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(filepath, options);
+//            Bitmap bitmap = BitmapFactory.decodeFile(filepath, options);
 
-            infoImage.setImageBitmap(bitmap);
+//            infoImage.setImageBitmap(bitmap);
 
             return view;
         }
