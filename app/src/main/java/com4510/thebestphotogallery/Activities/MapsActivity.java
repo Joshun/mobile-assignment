@@ -109,7 +109,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
 
-                 When map is ready, camera zooms to fit all markers
+//                 When map is ready, camera zooms to fit all markers
                 mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                     @Override
                     public void onMapLoaded() {
