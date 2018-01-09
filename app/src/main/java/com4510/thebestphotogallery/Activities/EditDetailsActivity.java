@@ -14,6 +14,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Database.UpdateImageMetadataListener;
 import com4510.thebestphotogallery.ImageMetadataList;
@@ -30,6 +33,7 @@ import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
 
 public class EditDetailsActivity extends DetailsActivity implements ServerResponseListener {
 
+    private final int PICKER_REQUEST = 1;
     private ImageMetadata currentImageMetadata = null;
     private Integer imageIndex = null;
 
@@ -98,8 +102,26 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
                 uploadToServer();
                 break;
             default:
-                intent = new Intent(this, EditLocationActivity.class);
-                launchActivity(intent);
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    intent = builder.build(this);
+                    startActivityForResult(intent, PICKER_REQUEST);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+//                intent = new Intent(this, EditLocationActivity.class);
+//                launchActivity(intent);
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(this, data);
+                String toastMsg = String.format("Place: %s", place.getName());
+                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
