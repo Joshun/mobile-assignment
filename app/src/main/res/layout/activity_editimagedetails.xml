@@ -24,190 +24,203 @@
             />
     </android.support.design.widget.AppBarLayout>
 
-    <!--Title-->
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/imagedetails_appbar"
-        android:id="@+id/details_title"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textSize="18sp"
-        android:singleLine="true"
-        android:textColor="@color/colorOffBlack"
-        android:text="@string/edit_details"/>
-
-    <!--Name-->
-    <FrameLayout
-        app:layout_constraintTop_toBottomOf="@id/details_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_name"
-        android:onClick="btnSelected"
-        android:paddingStart="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:background="@drawable/edit_button_back">
+        app:layout_constraintTop_toBottomOf="@id/imagedetails_appbar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!--Title-->
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/details_title"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorOffBlack"
-                android:paddingStart="4dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:text="@string/details_name"/>
-
-            <TextView
-                android:id="@+id/btn_edit_name_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorGrey"
-                android:paddingStart="4dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
+                android:padding="16dp"
+                android:textSize="18sp"
                 android:singleLine="true"
-                android:hint="@string/details_default"/>
-
-        </LinearLayout>
-
-    </FrameLayout>
-
-    <!--Description-->
-    <FrameLayout
-        app:layout_constraintTop_toBottomOf="@id/btn_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_description"
-        android:onClick="btnSelected"
-        android:paddingStart="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:background="@drawable/edit_button_back">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:textColor="@color/colorOffBlack"
-                android:paddingStart="4dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:text="@string/details_description"/>
+                android:text="@string/edit_details"/>
 
-            <TextView
-                android:id="@+id/btn_edit_description_text"
-                android:layout_width="wrap_content"
+            <!--Name-->
+            <FrameLayout
+                app:layout_constraintTop_toBottomOf="@id/details_title"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorGrey"
-                android:paddingStart="4dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
+                android:id="@+id/btn_name"
+                android:onClick="btnSelected"
+                android:paddingStart="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:background="@drawable/edit_button_back">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorOffBlack"
+                        android:paddingStart="4dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="@string/details_name"/>
+
+                    <TextView
+                        android:id="@+id/btn_edit_name_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorGrey"
+                        android:paddingStart="4dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:singleLine="true"
+                        android:hint="@string/details_default"/>
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!--Description-->
+            <FrameLayout
+                app:layout_constraintTop_toBottomOf="@id/btn_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_description"
+                android:onClick="btnSelected"
+                android:paddingStart="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:background="@drawable/edit_button_back">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorOffBlack"
+                        android:paddingStart="4dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="@string/details_description"/>
+
+                    <TextView
+                        android:id="@+id/btn_edit_description_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorGrey"
+                        android:paddingStart="4dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:singleLine="true"
+                        android:hint="@string/details_default"/>
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!--Title-->
+            <TextView
+                app:layout_constraintTop_toBottomOf="@id/btn_description"
+                android:id="@+id/geo_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textSize="18sp"
                 android:singleLine="true"
-                android:hint="@string/details_default"/>
-
-        </LinearLayout>
-
-    </FrameLayout>
-
-    <!--Title-->
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/btn_description"
-        android:id="@+id/geo_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textSize="18sp"
-        android:singleLine="true"
-        android:textColor="@color/colorOffBlack"
-        android:text="@string/edit_geo"/>
-
-    <!--Geo-->
-    <FrameLayout
-        app:layout_constraintTop_toBottomOf="@id/geo_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_geo"
-        android:onClick="btnSelected"
-        android:paddingStart="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:background="@drawable/edit_button_back">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:textColor="@color/colorOffBlack"
-                android:paddingStart="4dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:text="@string/details_geo"/>
+                android:text="@string/edit_geo"/>
 
-        </LinearLayout>
-
-    </FrameLayout>
-
-    <!--Title-->
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/btn_geo"
-        android:id="@+id/backup_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textSize="18sp"
-        android:singleLine="true"
-        android:textColor="@color/colorOffBlack"
-        android:text="@string/edit_backup"/>
-
-    <!--Backup-->
-    <FrameLayout
-        app:layout_constraintTop_toBottomOf="@id/backup_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_backup"
-        android:onClick="btnSelected"
-        android:paddingStart="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:background="@drawable/edit_button_back">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
+            <!--Geo-->
+            <FrameLayout
+                app:layout_constraintTop_toBottomOf="@id/geo_title"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/btn_geo"
+                android:onClick="btnSelected"
+                android:paddingStart="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:background="@drawable/edit_button_back">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorOffBlack"
+                        android:paddingStart="4dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="@string/details_geo"/>
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!--Title-->
+            <TextView
+                app:layout_constraintTop_toBottomOf="@id/btn_geo"
+                android:id="@+id/backup_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textSize="18sp"
+                android:singleLine="true"
                 android:textColor="@color/colorOffBlack"
-                android:paddingStart="4dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:text="@string/details_backup"/>
+                android:text="@string/edit_backup"/>
+
+            <!--Backup-->
+            <FrameLayout
+                app:layout_constraintTop_toBottomOf="@id/backup_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_backup"
+                android:onClick="btnSelected"
+                android:paddingStart="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:background="@drawable/edit_button_back">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorOffBlack"
+                        android:paddingStart="4dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="@string/details_backup"/>
+
+                </LinearLayout>
+
+            </FrameLayout>
 
         </LinearLayout>
 
-    </FrameLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
