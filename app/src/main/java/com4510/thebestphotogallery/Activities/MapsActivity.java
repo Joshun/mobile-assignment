@@ -94,15 +94,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             marker.setSnippet(metadata.getDescription());
                         }
                         markersList.add(marker);
-//                        markersMap.put(marker, metadata.getFilePath());
+                        markersMap.put(marker, metadata.getFilePath());
 
                     }
                 }
                 for (Marker m : markersList) {
                     builder.include(m.getPosition());
                 }
-//                CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(MapsActivity.this);
-//                mMap.setInfoWindowAdapter(adapter);
+                CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(MapsActivity.this);
+                mMap.setInfoWindowAdapter(adapter);
 
 //                LatLngBounds bounds = builder.build();
 //                int width = getResources().getDisplayMetrics().widthPixels;
@@ -126,40 +126,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-//    class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-//
-//        private Activity context;
-//
-//        public CustomInfoWindowAdapter(Activity context) {
-//            this.context = context;
-//        }
-//
-//        @Override
-//        public View getInfoWindow(Marker marker) {
-//            return null;
-//        }
-//
-//        @Override
-//        public View getInfoContents(Marker marker) {
-//            View view = context.getLayoutInflater().inflate(R.layout.custominfowindow, null);
-//
-//            ImageView infoImage = (ImageView) view.findViewById(R.id.info_image);
-//            TextView infoTitle = (TextView) view.findViewById(R.id.info_title);
-//            TextView infoDescription = (TextView) view.findViewById(R.id.info_description);
-//
-//            infoTitle.setText(marker.getTitle());
-//            infoDescription.setText(marker.getSnippet());
-//            String filepath = markersMap.get(marker);
-//
-////            BitmapFactory.Options options = new BitmapFactory.Options();
-////            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-////            Bitmap bitmap = BitmapFactory.decodeFile(filepath, options);
-//
-////            infoImage.setImageBitmap(bitmap);
-//
-//            return view;
-//        }
-//    }
-//
+    class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+
+        private Activity context;
+
+        public CustomInfoWindowAdapter(Activity context) {
+            this.context = context;
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            return null;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            View view = context.getLayoutInflater().inflate(R.layout.custominfowindow, null);
+
+            ImageView infoImage = (ImageView) view.findViewById(R.id.info_image);
+            TextView infoTitle = (TextView) view.findViewById(R.id.info_title);
+            TextView infoDescription = (TextView) view.findViewById(R.id.info_description);
+
+            infoTitle.setText(marker.getTitle());
+            infoDescription.setText(marker.getSnippet());
+            String filepath = markersMap.get(marker);
+
+//            BitmapFactory.Options options = new BitmapFactory.Options();
+//            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//            Bitmap bitmap = BitmapFactory.decodeFile(filepath, options);
+
+//            infoImage.setImageBitmap(bitmap);
+
+            return view;
+        }
+    }
+
 
 }
