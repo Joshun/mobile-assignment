@@ -35,6 +35,7 @@ public class MapLoadTask extends AsyncTask<GoogleMap, Void, List<MarkerOptions>>
     protected void onPostExecute(List<MarkerOptions> markerOptList) {
         super.onPostExecute(markerOptList);
         if (LoadMarkerOptsResponseListenerListener != null) {
+            System.out.println("am i here");
             LoadMarkerOptsResponseListenerListener.markerOptsLoaded(markerOptList);
         }
     }
@@ -48,12 +49,13 @@ public class MapLoadTask extends AsyncTask<GoogleMap, Void, List<MarkerOptions>>
 
         for (ImageMetadata metadata: imageMetadataList.getList()) {
             if (metadata != null) {
+
                 LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
                 MarkerOptions marker = new MarkerOptions().position(location).title(metadata.getTitle()).snippet(metadata.getDescription());
                 markerOptsList.add(marker);
             }
         }
-
+        System.out.println(markerOptsList);
         return markerOptsList;
     }
 }

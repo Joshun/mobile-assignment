@@ -67,7 +67,7 @@ public class LoadImagesTask extends AsyncTask<LoadImagesTask.LoadImagesTaskParam
             int width = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, 0);
             int height = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, 0);
             int fSize = (int)new File(filePath).length();
-            System.out.println("fSize " + fSize);
+//            System.out.println("fSize " + fSize);
 
             // dimensions not part of exif, we need to get them manually
             if (width == 0 || height == 0) {

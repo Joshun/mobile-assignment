@@ -35,6 +35,7 @@ import android.os.Handler;
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.ImageMetadataList;
 import com4510.thebestphotogallery.R;
+import com4510.thebestphotogallery.Tasks.MapLoadTask;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LoadMarkerOptsResponseListener {
 
@@ -49,6 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void markerOptsLoaded(List<MarkerOptions> markerOptionsList) {
         mMap.clear();
+        System.out.println("in markerOptsLoaded");
 //        List<Marker> markersList = new ArrayList<Marker>();
         for (MarkerOptions markerOpt : markerOptionsList) {
             Marker marker = mMap.addMarker(markerOpt);
@@ -60,7 +62,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ImageMetadataList metadataList = (ImageMetadataList) getIntent().getSerializableExtra("FullList");
+//        ImageMetadataList metadataList = (ImageMetadataList) getIntent().getSerializableExtra("FullList");
 
         setContentView(R.layout.activity_maps);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -72,6 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        new MapLoadTask().execute(googleMap);
 //        runOnUiThread(new Runnable() {
 //            @Override
 //            public void run() {
