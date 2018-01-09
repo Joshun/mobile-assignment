@@ -14,12 +14,31 @@ import java.util.Map;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.ImageMetadataList;
-
+import com4510.thebestphotogallery.Listeners.LoadMarkerOptsResponseListener;
 /**
  * Created by joshua on 09/01/18.
  */
 
 public class MapLoadTask extends AsyncTask<GoogleMap, Void, List<MarkerOptions>> {
+
+    private LoadMarkerOptsResponseListener LoadMarkerOptsResponseListenerListener;
+
+    public MapLoadTask() {
+        LoadMarkerOptsResponseListenerListener = null;
+    }
+
+    public MapLoadTask(LoadMarkerOptsResponseListener l) {
+        LoadMarkerOptsResponseListenerListener = l;
+    }
+
+    @Override
+    protected void onPostExecute(List<MarkerOptions> markerOptList) {
+        super.onPostExecute(markerOptList);
+        if (LoadMarkerOptsResponseListenerListener != null) {
+            LoadMarkerOptsResponseListenerListener.markerOptsLoaded(markerOptList);
+        }
+    }
+
     @Override
     protected List<MarkerOptions> doInBackground(GoogleMap... googleMaps) {
         GoogleMap mMap = googleMaps[0];
