@@ -18,7 +18,7 @@
     <!--menu-->
     <string name="view_map_menuentry_title">View On Map</string>
     <string name="view_image_details_menuentry_title">View Details</string>
-    <string name="edit_image_details_menuentry_title">Edit Details</string>
+    <string name="edit_image_details_menuentry_title">Image Options</string>
     <string name="upload_image_details">Upload to Server</string>
 
     <!--Options-->
@@ -27,4 +27,5 @@
     <string name="edit_backup">Image Backup</string>
     <string name="details_map">Change Geolocation</string>
     <string name="details_backup">Send Image to Server</string>
+
 </resources>

@@ -34,7 +34,7 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
     private Integer imageIndex = null;
 
     public EditDetailsActivity() {
-        super("Edit Details", R.id.editimagedetails_toolbar);
+        super("Image Options", R.id.editimagedetails_toolbar);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
                 uploadToServer();
                 break;
             default:
-                intent = new Intent(this, EditNameActivity.class);
+                intent = new Intent(this, EditLocationActivity.class);
                 launchActivity(intent);
         }
     }
