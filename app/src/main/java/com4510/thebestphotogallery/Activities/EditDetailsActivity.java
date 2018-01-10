@@ -1,41 +1,28 @@
 package com4510.thebestphotogallery.Activities;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Database.UpdateImageMetadataListener;
-import com4510.thebestphotogallery.ImageMetadataList;
 import com4510.thebestphotogallery.Listeners.ServerResponseListener;
-import com4510.thebestphotogallery.MyAdapter;
 import com4510.thebestphotogallery.R;
-import com4510.thebestphotogallery.ServerComm;
-import com4510.thebestphotogallery.ServerData;
+import com4510.thebestphotogallery.Tasks.SendToServerTask;
 import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
 import com4510.thebestphotogallery.Util;
 
@@ -249,19 +236,12 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
     }
 
     private void uploadToServer() {
-        final ServerComm serverComm = new ServerComm(this, getCacheDir());
 
         Log.v(getClass().getName(), "upload to server option selected");
-        Toast.makeText(this, "Uploading...", Toast.LENGTH_LONG).show();
-        ImageMetadata imageMetadata = currentImageMetadata;
-        ServerData serverData = new ServerData();
-        serverData.date = "01/01/1970";
-        serverData.imageFilename = imageMetadata.getFilePath();
-        serverData.description = imageMetadata.getDescription();
-        serverData.title = imageMetadata.getTitle();
-        serverData.latitude = String.valueOf(imageMetadata.getLatitude());
-        serverData.imageData = BitmapFactory.decodeFile(imageMetadata.getFilePath());
-        serverComm.sendData(serverData);
+        Toast.makeText(this, "Uploading...", Toast.LENGTH_SHORT).show();
+        SendToServerTask sendToServerTask = new SendToServerTask(this);
+        sendToServerTask.execute(currentImageMetadata);
+
     }
 
 }
