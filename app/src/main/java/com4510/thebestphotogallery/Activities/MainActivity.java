@@ -234,11 +234,7 @@ public class MainActivity extends ImageLoadActivity {
                 intent = new Intent(this, MapsActivity.class);
                 ImageMetadataList imInstance = new ImageMetadataList();
                 imInstance.addAll(imageMetadataList);
-
-                // Changed from passing via intent to singleton class and pulling getInstance in MapsActivity
-//                ImageMetadataList imInstance = ImageMetadataList.getInstance();
-//                imInstance.addAll(imageMetadataList);
-//                intent.putExtra("FullList", imInstance);
+                intent.putExtra("FullList", imInstance);
 
                 startActivity(intent);
                 break;
