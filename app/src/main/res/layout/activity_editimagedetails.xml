@@ -171,6 +171,17 @@
                         android:paddingRight="4dp"
                         android:text="@string/details_geo"/>
 
+                    <TextView
+                        android:id="@+id/btn_edit_geo_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorGrey"
+                        android:paddingStart="4dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:singleLine="true"
+                        android:hint="@string/details_default"/>
+
                 </LinearLayout>
 
             </FrameLayout>

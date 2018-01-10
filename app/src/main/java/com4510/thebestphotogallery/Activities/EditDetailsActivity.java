@@ -37,6 +37,7 @@ import com4510.thebestphotogallery.R;
 import com4510.thebestphotogallery.ServerComm;
 import com4510.thebestphotogallery.ServerData;
 import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
+import com4510.thebestphotogallery.Util;
 
 /**
  * Created by George on 02-Jan-18.
@@ -83,8 +84,14 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
     private void setDetails() {
         TextView name = findViewById(R.id.btn_edit_name_text);
         TextView desc = findViewById(R.id.btn_edit_description_text);
+        TextView geo = findViewById(R.id.btn_edit_geo_text);
         name.setText(currentImageMetadata.getTitle());
         desc.setText(currentImageMetadata.getDescription());
+        if (currentImageMetadata.getLatitude() != 0.0 || currentImageMetadata.getLongitude() != 0.0) {
+            String join = " " + getResources().getString(R.string.details_join) + " ";
+            String s = Util.roundDP(currentImageMetadata.getLatitude(), 6) + join + Util.roundDP(currentImageMetadata.getLongitude(), 6);
+            geo.setText(s);
+        }
     }
 
     @Override
@@ -166,24 +173,23 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
             if (locationPermissionGranted) {
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
                 Intent intent = builder.build(this);
-                Task<PlaceLikelihoodBufferResponse> placeResult = placeDetectionClient.getCurrentPlace(null);
-                placeResult.addOnCompleteListener(new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
-                    @Override
-                    public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
-                        if (task.isSuccessful()) {
-                            PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
-                            for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                                Log.i("Likelihood", String.format("Place '%s' has likelihood: %g",
-                                        placeLikelihood.getPlace().getName(),
-                                        placeLikelihood.getLikelihood()));
-                            }
-                            likelyPlaces.release();
-                        }
-                        else {
-                            Log.e("Edit Location", "Task failed");
-                        }
-                    }
-                });
+//                Task<PlaceLikelihoodBufferResponse> placeResult = placeDetectionClient.getCurrentPlace(null);
+//                placeResult.addOnCompleteListener(new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
+//                        if (task.isSuccessful()) {
+//                            PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
+//                            float highest = 0.0f;
+//                            for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+//                                highest = Math.max(highest, placeLikelihood.getLikelihood());
+//                            }
+//                            likelyPlaces.release();
+//                        }
+//                        else {
+//                            Log.e("Edit Location", "Task failed");
+//                        }
+//                    }
+//                });
 
                 startActivityForResult(intent, PICKER_REQUEST);
             }

@@ -43,6 +43,7 @@ import com4510.thebestphotogallery.ServerComm;
 import com4510.thebestphotogallery.ServerData;
 import com4510.thebestphotogallery.Images.ShowImageAsync;
 import com4510.thebestphotogallery.ShowImageScrollView;
+import com4510.thebestphotogallery.Util;
 import com4510.thebestphotogallery.VolleyMultipartRequest;
 
 public class ShowImageActivity extends AppCompatActivity implements OnScrollChangedListener, OnMapReadyCallback {
@@ -216,7 +217,7 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         }
         if (geo != null && (data.getLatitude() != 0.0 || data.getLongitude() != 0.0)) {
             String join = " " + getResources().getString(R.string.details_join) + " ";
-            String s = roundDP(data.getLatitude(), 6) + join + roundDP(data.getLongitude(), 6);
+            String s = Util.roundDP(data.getLatitude(), 6) + join + Util.roundDP(data.getLongitude(), 6);
             geo.setText(s);
         }
         else {
@@ -232,29 +233,14 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
             int fSize = data.getFileSize();
             String s;
             if (fSize < 1000*1000f) {
-                s = round2DP(fSize / 1000f) + "KB";
+                s = Util.round2DP(fSize / 1000f) + "KB";
             }
             else {
-                s = round2DP(fSize / (1000*1000f)) + "MB";
+                s = Util.round2DP(fSize / (1000*1000f)) + "MB";
             }
 
             filesize.setText(s);
         }
-    }
-
-    private static double roundDP(double x, int dp) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("#.");
-        for (int i=0; i<dp; i++) {
-            sb.append("#");
-        }
-        DecimalFormat df = new DecimalFormat(sb.toString());
-        return Double.valueOf(df.format(x));
-    }
-
-
-    private static double round2DP(float x) {
-        return roundDP(x, 2);
     }
 
 }

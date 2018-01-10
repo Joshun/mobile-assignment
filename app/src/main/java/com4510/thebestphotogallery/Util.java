@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -177,6 +178,21 @@ public class Util{
                 ActivityCompat.requestPermissions((Activity) activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_EXTERNAL_STORAGE);
             }
         }
+    }
+
+    public static double roundDP(double x, int dp) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("#.");
+        for (int i=0; i<dp; i++) {
+            sb.append("#");
+        }
+        DecimalFormat df = new DecimalFormat(sb.toString());
+        return Double.valueOf(df.format(x));
+    }
+
+
+    public static double round2DP(float x) {
+        return roundDP(x, 2);
     }
 
 }
