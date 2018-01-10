@@ -22,13 +22,15 @@ import com4510.thebestphotogallery.Listeners.LoadMarkerOptsResponseListener;
 public class MapLoadTask extends AsyncTask<GoogleMap, Void, List<MarkerOptions>> {
 
     private LoadMarkerOptsResponseListener LoadMarkerOptsResponseListenerListener;
+    private ImageMetadataList data;
 
-    public MapLoadTask() {
-        LoadMarkerOptsResponseListenerListener = null;
+    public MapLoadTask(final ImageMetadataList data, LoadMarkerOptsResponseListener l) {
+        LoadMarkerOptsResponseListenerListener = l;
+        this.data = data;
     }
 
-    public MapLoadTask(LoadMarkerOptsResponseListener l) {
-        LoadMarkerOptsResponseListenerListener = l;
+    public MapLoadTask(final ImageMetadataList data) {
+        this(data, null);
     }
 
     @Override
@@ -44,10 +46,8 @@ public class MapLoadTask extends AsyncTask<GoogleMap, Void, List<MarkerOptions>>
         GoogleMap mMap = googleMaps[0];
         ArrayList<MarkerOptions> markerOptsList = new ArrayList<>();
 
-        ImageMetadataList imageMetadataList = ImageMetadataList.getInstance();
-
-        for (ImageMetadata metadata: imageMetadataList.getList()) {
-            System.out.println(imageMetadataList.getList());
+        for (ImageMetadata metadata: data.getList()) {
+            System.out.println(data.getList());
             if (metadata != null) {
                 System.out.println(metadata.getFilePath());
                 LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());

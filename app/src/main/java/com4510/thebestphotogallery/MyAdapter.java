@@ -4,6 +4,7 @@
 
 package com4510.thebestphotogallery;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,25 +17,22 @@ import android.widget.ImageView;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com4510.thebestphotogallery.Activities.MainActivity;
 import com4510.thebestphotogallery.Activities.ShowImageActivity;
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Listeners.OnBottomReachedListener;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
-    private Context context;
+    private MainActivity activity;
     private CopyOnWriteArrayList<ImageMetadata> items;
     private CopyOnWriteArrayList<Bitmap> bitmaps;
     private OnBottomReachedListener onBottomReachedListener;
 
-    public MyAdapter(Context cont, List<ImageMetadata> items, List<Bitmap> bitmaps) {
+    public MyAdapter(final MainActivity activity, List<ImageMetadata> items, List<Bitmap> bitmaps) {
         super();
         this.items = new CopyOnWriteArrayList<>(items);
         this.bitmaps = new CopyOnWriteArrayList<>(bitmaps);
-        context = cont;
-    }
-
-    public MyAdapter(List<ImageMetadata> items, List<Bitmap> bitmaps) {
-        this(null, items, bitmaps);
+        this.activity = activity;
     }
 
     @Override
@@ -43,7 +41,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_image,
                 parent, false);
         View_Holder holder = new View_Holder(v);
-        context= parent.getContext();
         return holder;
     }
 
@@ -60,16 +57,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(context, ShowImageActivity.class);
+                        Intent intent = new Intent(activity.getBaseContext(), ShowImageActivity.class);
                         intent.putExtra("position", position);
                         intent.putExtra("metadata", getItem(position));
-                        context.startActivity(intent);
+                        activity.startActivityForResult(intent, 2);
                     }
                 });
             }
         }
     }
-
 
     // convenience method for getting data at click position
     public ImageMetadata getItem(int position) {
@@ -103,6 +99,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
 
     public void setItems(List<ImageMetadata> items) {
         this.items = new CopyOnWriteArrayList<>(items);
+        notifyDataSetChanged();
+    }
+
+    public void setItem(int position, ImageMetadata data) {
+        items.set(position, data);
         notifyDataSetChanged();
     }
 

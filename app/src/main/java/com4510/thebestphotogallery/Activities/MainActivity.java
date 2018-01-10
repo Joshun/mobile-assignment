@@ -64,7 +64,12 @@ public class MainActivity extends ImageLoadActivity {
                 Log.v(getClass().getName(), "IMAGE SAVE SUCCESS");
             }
         }
-
+        else if (requestCode == UPDATE_DATA) {
+            final int position = data.getIntExtra("position", 0);
+            final ImageMetadata metadata = (ImageMetadata) data.getSerializableExtra("metadata");
+            Log.v("Here", "" + position + ", " + metadata.getTitle());
+            recyclerViewAdapter.setItem(position, metadata);
+        }
     }
 
     @Override
@@ -85,7 +90,7 @@ public class MainActivity extends ImageLoadActivity {
             int numberOfColumns = 4;
             final GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
             recyclerView.setLayoutManager(layoutManager);
-            recyclerViewAdapter = new MyAdapter(imageMetadataList, bitmaps);
+            recyclerViewAdapter = new MyAdapter(this, imageMetadataList, bitmaps);
             recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
                 @Override
                 public void onBottomReached(int position) {
@@ -227,7 +232,7 @@ public class MainActivity extends ImageLoadActivity {
 
             case R.id.btn_map:
                 intent = new Intent(this, MapsActivity.class);
-                ImageMetadataList imInstance = ImageMetadataList.getInstance();
+                ImageMetadataList imInstance = new ImageMetadataList();
                 imInstance.addAll(imageMetadataList);
 
                 intent.putExtra("FullList", imInstance);

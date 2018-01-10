@@ -3,9 +3,13 @@ package com4510.thebestphotogallery.Activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +19,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceDetectionClient;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Database.UpdateImageMetadataListener;
@@ -31,11 +42,16 @@ import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
  * Created by George on 02-Jan-18.
  */
 
-public class EditDetailsActivity extends DetailsActivity implements ServerResponseListener {
+public class EditDetailsActivity extends DetailsActivity implements ServerResponseListener, UpdateImageMetadataListener {
 
     private final int PICKER_REQUEST = 1;
+    private final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2;
+    private final int UPDATE_DATA = 3;
+
     private ImageMetadata currentImageMetadata = null;
     private Integer imageIndex = null;
+    private PlaceDetectionClient placeDetectionClient;
+    private boolean locationPermissionGranted = false;
 
     public EditDetailsActivity() {
         super("Image Options", R.id.editimagedetails_toolbar);
@@ -56,9 +72,10 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
         setContentView(R.layout.activity_editimagedetails);
         super.onCreate(savedInstanceState);
 
+        placeDetectionClient = Places.getPlaceDetectionClient(this, null);
+
         currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
         imageIndex = getIntent().getExtras().getInt("position");
-        currentImageMetadata = ImageMetadataList.getInstance().get(imageIndex);
         setDetails();
 
     }
@@ -82,9 +99,12 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        setDetails();
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("metadata", currentImageMetadata);
+        setResult(RESULT_OK, intent);
+        finish();
+        super.onBackPressed();
     }
 
     public void btnSelected(View view) {
@@ -102,33 +122,124 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
                 uploadToServer();
                 break;
             default:
-                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                try {
-                    intent = builder.build(this);
-                    startActivityForResult(intent, PICKER_REQUEST);
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-//                intent = new Intent(this, EditLocationActivity.class);
-//                launchActivity(intent);
+                getLocationPermission();
         }
     }
 
+    private void getLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            Log.v("Permissions", "Already have permissions");
+            locationPermissionGranted = true;
+            openMap();
+        } else {
+            Log.v("Permissions", "Requesting permissions...");
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+
+        Log.v("sdhjkfgdsf", "HEre");
+        locationPermissionGranted = false;
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    locationPermissionGranted = true;
+                }
+            }
+        }
+
+        openMap();
+    }
+
+    private void openMap() {
+        try {
+            if (locationPermissionGranted) {
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                Intent intent = builder.build(this);
+                Task<PlaceLikelihoodBufferResponse> placeResult = placeDetectionClient.getCurrentPlace(null);
+                placeResult.addOnCompleteListener(new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
+                    @Override
+                    public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
+                        if (task.isSuccessful()) {
+                            PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
+                            for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+                                Log.i("Likelihood", String.format("Place '%s' has likelihood: %g",
+                                        placeLikelihood.getPlace().getName(),
+                                        placeLikelihood.getLikelihood()));
+                            }
+                            likelyPlaces.release();
+                        }
+                        else {
+                            Log.e("Edit Location", "Task failed");
+                        }
+                    }
+                });
+
+                startActivityForResult(intent, PICKER_REQUEST);
+            }
+        }
+        catch (SecurityException e) {
+            e.printStackTrace();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
-                String toastMsg = String.format("Place: %s", place.getName());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+                LatLng l = place.getLatLng();
+
+                if (currentImageMetadata != null) {
+                    currentImageMetadata.setLatitude(l.latitude);
+                    currentImageMetadata.setLongitude(l.longitude);
+
+                    Log.v(getClass().getName(), "Updating metadata for image " + currentImageMetadata.getFilePath());
+                    UpdateImageMetadataTask updateImageMetadataTask = new UpdateImageMetadataTask(this);
+                    UpdateImageMetadataTask.UpdateMetadataParam updateMetadataParam = new UpdateImageMetadataTask.UpdateMetadataParam();
+                    updateMetadataParam.activity = this;
+                    updateMetadataParam.imageMetadata = currentImageMetadata;
+                    updateImageMetadataTask.execute(updateMetadataParam);
+                }
+
             }
         }
+        else if (requestCode == UPDATE_DATA) {
+            currentImageMetadata = (ImageMetadata) data.getSerializableExtra("metadata");
+            setDetails();
+        }
+    }
+
+    @Override
+    public void imageUpdated(ImageMetadata imageMetadata) {
+        Log.v(getClass().getName(), "Image " + imageMetadata.getFilePath() + " metadata update successful");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), "Location Updated", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void launchActivity(final Intent intent) {
         intent.putExtra("position", imageIndex);
         intent.putExtra("metadata", currentImageMetadata);
-        startActivity(intent);
+        startActivityForResult(intent, UPDATE_DATA);
     }
 
     private void uploadToServer() {
@@ -136,7 +247,7 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
 
         Log.v(getClass().getName(), "upload to server option selected");
         Toast.makeText(this, "Uploading...", Toast.LENGTH_LONG).show();
-        ImageMetadata imageMetadata = ImageMetadataList.getInstance().get(imageIndex);
+        ImageMetadata imageMetadata = currentImageMetadata;
         ServerData serverData = new ServerData();
         serverData.date = "01/01/1970";
         serverData.imageFilename = imageMetadata.getFilePath();

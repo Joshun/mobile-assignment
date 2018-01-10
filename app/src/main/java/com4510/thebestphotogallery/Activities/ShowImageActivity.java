@@ -46,6 +46,7 @@ import com4510.thebestphotogallery.ShowImageScrollView;
 import com4510.thebestphotogallery.VolleyMultipartRequest;
 
 public class ShowImageActivity extends AppCompatActivity implements OnScrollChangedListener, OnMapReadyCallback {
+    private final int UPDATE_DATA = 1;
 
     private GoogleMap map;
     private Bitmap currentImage = null;
@@ -69,6 +70,16 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
     }
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("position", imageIndex);
+        intent.putExtra("metadata", element);
+        setResult(RESULT_OK, intent);
+        finish();
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
@@ -77,7 +88,7 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
                 intent = new Intent(this, EditDetailsActivity.class);
                 intent.putExtra("metadata", element);
                 intent.putExtra("position", imageIndex);
-                startActivity(intent);
+                startActivityForResult(intent, UPDATE_DATA);
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -101,8 +112,8 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
 
         detailsView.setVisibility(View.GONE);
         imageIndex  = getIntent().getExtras().getInt("position");
-//        element = (ImageMetadata) getIntent().getSerializableExtra("metadata");
-        element = ImageMetadataList.getInstance().get(imageIndex);
+        element = (ImageMetadata) getIntent().getSerializableExtra("metadata");
+//        element = ImageMetadataList.getInstance().get(imageIndex);
         detailsView.setOnScrollChangedListener(this);
         setDetails(element);
 
@@ -135,27 +146,6 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
-//        imageView.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                Log.v(getClass().getName(), "touch event");
-//                if (currentImage != null) {
-//                    Log.v(getClass().getName(), "attempting to send to server...");
-//                    ServerData serverData = new ServerData();
-//                    serverData.imageData = v.getDrawingCache();
-//                    serverData.title = "title";
-//                    serverData.longitude = "0.0";
-//                    serverData.latitude = "0.0";
-//                    serverData.description = "description";
-//                    serverData.imageFilename = currentImageFile;
-//                    serverData.date = "1/1/1";
-//                    serverComm.sendData(serverData);
-//
-//                }
-//                return false;
-//            }
-//        });
     }
 
     @Override
@@ -176,20 +166,28 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         map = googleMap;
         map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.silver_map));
         map.getUiSettings().setAllGesturesEnabled(false);
+        updateMap();
+    }
 
-        final float ZOOM = 16.0f;
-        final LatLng POSITION = new LatLng(element.getLatitude(), element.getLongitude());
-        final String TITLE = "Location";
-        CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(POSITION, ZOOM);
-        map.addMarker(new MarkerOptions().position(POSITION).title(TITLE));
-        map.moveCamera(camera);
+    private void updateMap() {
+        if (map != null) {
+            final float ZOOM = 16.0f;
+            final LatLng POSITION = new LatLng(element.getLatitude(), element.getLongitude());
+            final String TITLE = "Location";
+            CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(POSITION, ZOOM);
+            map.addMarker(new MarkerOptions().position(POSITION).title(TITLE));
+            map.moveCamera(camera);
+        }
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        ImageMetadata im = ImageMetadataList.getInstance().get(imageIndex);
-        setDetails(im);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == UPDATE_DATA) {
+            element = (ImageMetadata) data.getSerializableExtra("metadata");
+            setDetails(element);
+            updateMap();
+        }
     }
 
     private void setDetails(final ImageMetadata data) {

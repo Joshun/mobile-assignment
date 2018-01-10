@@ -1,6 +1,7 @@
 package com4510.thebestphotogallery.Activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.util.Log;
@@ -35,8 +36,7 @@ public class EditNameActivity extends DetailsActivity implements UpdateImageMeta
         super.onCreate(savedInstanceState);
 
         imageIndex = getIntent().getExtras().getInt("position");
-//        currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
-        currentImageMetadata = ImageMetadataList.getInstance().get(imageIndex);
+        currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
 
         TextView oldName = findViewById(R.id.edit_name_text_old);
         nameInput = findViewById(R.id.edit_name_text);
@@ -83,6 +83,11 @@ public class EditNameActivity extends DetailsActivity implements UpdateImageMeta
             updateMetadataParam.activity = this;
             updateMetadataParam.imageMetadata = currentImageMetadata;
             updateImageMetadataTask.execute(updateMetadataParam);
+
+            Intent intent = new Intent();
+            intent.putExtra("metadata", currentImageMetadata);
+            setResult(RESULT_OK, intent);
+            finish();
         }
         super.onBackPressed();
     }

@@ -2,6 +2,7 @@ package com4510.thebestphotogallery.Activities;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com4510.thebestphotogallery.Util;
  */
 
 public abstract class ImageLoadActivity extends AppCompatActivity implements LoadImagesResponseListener, DatabaseResponseListener {
+    protected final int UPDATE_DATA = 2;
 
     private boolean loading = false;
     protected static final int BLOCK_SIZE = 32;
@@ -72,15 +74,8 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
 
     @Override
     public void imagesLoaded(List<ImageMetadata> imageMetadataList) {
-
-        ImageMetadataList imInstance = ImageMetadataList.getInstance();
-        imInstance.clear();
-        imInstance.addAll(imageMetadataList);
-
-//        imageMetadataList = imInstance.getList();
-
         this.imageMetadataList.clear();
-        this.imageMetadataList.addAll(imInstance.getList());
+        this.imageMetadataList.addAll(imageMetadataList);
 
         Util.initEasyImage(this);
         Log.v("Init image", "LOADED");

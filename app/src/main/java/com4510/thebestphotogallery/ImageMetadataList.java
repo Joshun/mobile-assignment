@@ -12,18 +12,10 @@ import com4510.thebestphotogallery.Database.ImageMetadata;
  */
 
 public class ImageMetadataList implements Serializable{
-    private static ImageMetadataList INSTANCE = null;
-
-    public static ImageMetadataList getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ImageMetadataList();
-        }
-        return INSTANCE;
-    }
 
     private ArrayList<ImageMetadata> imageMetadataArrayList;
 
-    private ImageMetadataList() {
+    public ImageMetadataList() {
         this.imageMetadataArrayList = new ArrayList<>();
     }
 

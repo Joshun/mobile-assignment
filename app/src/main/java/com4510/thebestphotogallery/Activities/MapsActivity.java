@@ -39,7 +39,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ImageMetadata im;
     protected ArrayList<ImageMetadata> imageList = new ArrayList<ImageMetadata>();
     private CameraUpdate cu;
-    protected ImageMetadataList metadataList = ImageMetadataList.getInstance();
+    protected ImageMetadataList metadataList;
     Map<Marker, String> markersMap = new HashMap<Marker, String>();
     private Handler handler = new Handler();
 
@@ -47,7 +47,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ImageMetadataList metadataList = (ImageMetadataList) getIntent().getSerializableExtra("FullList");
+        metadataList = (ImageMetadataList) getIntent().getSerializableExtra("FullList");
 
         setContentView(R.layout.activity_maps);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

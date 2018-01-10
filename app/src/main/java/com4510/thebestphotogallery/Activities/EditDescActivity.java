@@ -1,6 +1,7 @@
 package com4510.thebestphotogallery.Activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.util.Log;
@@ -34,10 +35,8 @@ public class EditDescActivity extends DetailsActivity implements UpdateImageMeta
         setContentView(R.layout.activity_editdescription);
         super.onCreate(savedInstanceState);
 
-//        currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
-
         imageIndex = getIntent().getExtras().getInt("position");
-        currentImageMetadata = ImageMetadataList.getInstance().get(imageIndex);
+        currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
         TextView oldName = findViewById(R.id.edit_description_text_old);
         descriptionInput = findViewById(R.id.edit_description_text);
         oldName.setText(currentImageMetadata.getDescription());
@@ -61,7 +60,6 @@ public class EditDescActivity extends DetailsActivity implements UpdateImageMeta
     @Override
     public void imageUpdated(ImageMetadata imageMetadata) {
         Log.v(getClass().getName(), "Image " + imageMetadata.getFilePath() + " metadata update successful");
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -83,6 +81,11 @@ public class EditDescActivity extends DetailsActivity implements UpdateImageMeta
             updateMetadataParam.activity = this;
             updateMetadataParam.imageMetadata = currentImageMetadata;
             updateImageMetadataTask.execute(updateMetadataParam);
+
+            Intent intent = new Intent();
+            intent.putExtra("metadata", currentImageMetadata);
+            setResult(RESULT_OK, intent);
+            finish();
         }
         super.onBackPressed();
     }
