@@ -10,6 +10,8 @@ import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created by joshua on 23/11/17.
@@ -31,7 +33,17 @@ public class ImageLoader {
 //                new String[]{},
 //                null,
 //                null);
-        Cursor cursor = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{}, "", new String[]{}, "");
+        String selection = MediaStore.MediaColumns.DATE_ADDED + ">?";
+        Date d1 = new Date();
+        d1.setTime(0);
+
+
+        Cursor cursor = activity.getContentResolver().query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null,
+                selection,
+                new String[]{"" + d1},
+                "");
         ArrayList<String> imgPaths = new ArrayList<>();
         cursor.moveToFirst();
 
