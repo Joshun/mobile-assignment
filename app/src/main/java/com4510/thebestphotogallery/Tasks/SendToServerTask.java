@@ -3,57 +3,104 @@ package com4510.thebestphotogallery.Tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import com4510.thebestphotogallery.ServerData;
+import com4510.thebestphotogallery.Database.ImageMetadata;
+import com4510.thebestphotogallery.Listeners.ServerResponseListener;
+import com4510.thebestphotogallery.OkHttpMultipartRequest;
+import okhttp3.OkHttpClient;
 
 /**
- * Created by joshua on 19/12/17.
+ * Created by joshua on 10/01/18.
  */
 
-public class SendToServerTask extends AsyncTask<ServerData, Void, Void> {
-    @Override
-    protected Void doInBackground(ServerData... serverData) {
-        HttpURLConnection urlConnection = null;
-        try {
-            Log.v("SendToServerTask", "connecting to server...");
-            URL url = new URL("http://jmoey.com:8091/uploadpicture");
-            urlConnection = (HttpURLConnection) url.openConnection();
-            Log.v("SendToServerTask", "connected.");
+public class SendToServerTask extends AsyncTask<ImageMetadata, Void, Void> {
+    private ServerResponseListener serverResponseListener;
+    private boolean uploadSucceeded = false;
 
-            Log.v("SendToServerTask", "sending...");
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setDoOutput(true);
-            urlConnection.setChunkedStreamingMode(0);
-            OutputStream outputPost = new BufferedOutputStream(urlConnection.getOutputStream());
-            writeStream(null, outputPost);
-            Log.v("SendToServerTask", "sent.");
+    private enum SERVER_RESPONSE_TYPE { SUCCESS, FAILURE }
 
-        }
-        catch (java.net.MalformedURLException e) {
-            Log.e("SendToServerTask", "sending to server failed (malformed URL)...");
-            Log.e("SendToServerTask", e.getMessage());
-        }
-        catch (java.io.IOException e) {
-            Log.e("SendToServerTask", "sending to server failed (IO error)...");
-            Log.e("SendToServerTask", e.getMessage());
-        }
-        finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-        }
-
-        return null;
+    public SendToServerTask(ServerResponseListener responseListener) {
+        serverResponseListener = responseListener;
     }
 
-    private void writeStream(ServerData serverData, OutputStream out) throws IOException {
-        String output = "test";
-        out.write(output.getBytes());
-        out.flush();
+    public SendToServerTask() {
+        this(null);
+    }
+
+    public void handleCallback(SERVER_RESPONSE_TYPE responseType) {
+        if (serverResponseListener == null) {
+            return;
+        }
+
+        switch (responseType) {
+            case SUCCESS:
+                serverResponseListener.onServerSuccess();
+                break;
+            case FAILURE:
+                serverResponseListener.onServerFailure();
+                break;
+            default:
+                Log.e(getClass().getName(), "handleCallback: invalid responseType value " + responseType.toString());
+        }
+
+    }
+
+    public String extractFilenameFromPath(String f) {
+        return f.substring(f.lastIndexOf("/")+1);
+    }
+
+    public void sendServerData(ImageMetadata imageMetadata) {
+        OkHttpMultipartRequest multipartRequest = new OkHttpMultipartRequest();
+
+        String title = (imageMetadata.getTitle() != null) ? imageMetadata.getTitle() : "";
+        String description = (imageMetadata.getDescription()) != null ? imageMetadata.getDescription() : "";
+        String latitude = String.valueOf(imageMetadata.getLatitude());
+        String longitude = String.valueOf(imageMetadata.getLongitude());
+
+        multipartRequest.addValue("title", title);
+        multipartRequest.addValue("description", description);
+        multipartRequest.addValue("latitude", latitude);
+        multipartRequest.addValue("longitude", longitude);
+
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        multipartRequest.addValue("date", dateFormat.format(date));
+
+        multipartRequest.addFile("image",
+                "image/jpeg",
+                extractFilenameFromPath(imageMetadata.getFilePath()),
+                imageMetadata.getFilePath());
+
+
+        try {
+            multipartRequest.execute("http://jmoey.com:8091/uploadpicture");
+            uploadSucceeded = true;
+        }
+        catch (IOException e) {
+            e.printStackTrace(System.err);
+        }
+
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        if (serverResponseListener != null) {
+            if (uploadSucceeded) {
+                serverResponseListener.onServerSuccess();
+            } else {
+                serverResponseListener.onServerFailure();
+            }
+        }
+    }
+
+    @Override
+    protected Void doInBackground(ImageMetadata... imageMetadata) {
+        sendServerData(imageMetadata[0]);
+        return null;
     }
 }
