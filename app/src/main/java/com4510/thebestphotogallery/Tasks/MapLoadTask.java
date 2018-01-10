@@ -49,17 +49,12 @@ public class MapLoadTask extends AsyncTask<GoogleMap, Void, List<MarkerOptions>>
         for (ImageMetadata metadata: data.getList()) {
             System.out.println(data.getList());
             if (metadata != null) {
-                System.out.println(metadata.getFilePath());
                 LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
-                MarkerOptions marker = new MarkerOptions().position(location);
-
+                MarkerOptions marker = new MarkerOptions().position(location).title(metadata.getTitle()).snippet(metadata.getDescription());
                 markerOptsList.add(marker);
             }
         }
 
-        // created markers list
-        // now we need to actually put it on the map
-        // which might need to be done on ui thread? not sure
         return markerOptsList;
     }
 }
