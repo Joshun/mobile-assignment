@@ -138,7 +138,6 @@ public class LoadImagesTask extends AsyncTask<LoadImagesTask.LoadImagesTaskParam
         }
 
         System.out.println(allImageMetadata);
-        System.out.println(allImageMetadata.get(0));
 
         for (ImageMetadata imageMetadata: allImageMetadata) {
             imageMetadata.file = new File(imageMetadata.getFilePath());
