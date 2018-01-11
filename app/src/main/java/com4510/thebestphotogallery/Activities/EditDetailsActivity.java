@@ -18,10 +18,18 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.HttpURLConnection;
+
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Database.UpdateImageMetadataListener;
+import com4510.thebestphotogallery.Listeners.ElevationResponseListener;
 import com4510.thebestphotogallery.Listeners.ServerResponseListener;
 import com4510.thebestphotogallery.R;
+import com4510.thebestphotogallery.Tasks.ElevationTask;
 import com4510.thebestphotogallery.Tasks.SendToServerTask;
 import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
 import com4510.thebestphotogallery.Util;
@@ -30,7 +38,7 @@ import com4510.thebestphotogallery.Util;
  * Created by George on 02-Jan-18.
  */
 
-public class EditDetailsActivity extends DetailsActivity implements ServerResponseListener, UpdateImageMetadataListener {
+public class EditDetailsActivity extends DetailsActivity implements ServerResponseListener, UpdateImageMetadataListener, ElevationResponseListener {
 
     private final int PICKER_REQUEST = 1;
     private final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2;
@@ -201,6 +209,11 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
                 if (currentImageMetadata != null) {
                     currentImageMetadata.setLatitude(l.latitude);
                     currentImageMetadata.setLongitude(l.longitude);
+
+                    //Altitude
+                    ElevationTask task = new ElevationTask(l.latitude, l.longitude, getString(R.string.google_maps_key), this);
+                    task.execute();
+
                     setDetails();
 
                     Log.v(getClass().getName(), "Updating metadata for image " + currentImageMetadata.getFilePath());
@@ -237,12 +250,17 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
     }
 
     private void uploadToServer() {
-
         Log.v(getClass().getName(), "upload to server option selected");
         Toast.makeText(this, "Uploading...", Toast.LENGTH_SHORT).show();
         SendToServerTask sendToServerTask = new SendToServerTask(this);
         sendToServerTask.execute(currentImageMetadata);
 
+    }
+
+    @Override
+    public void elevationResponse(double elevation) {
+        currentImageMetadata.setAltitude(Util.round2DP(elevation));
+        setDetails();
     }
 
 }
