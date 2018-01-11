@@ -10,6 +10,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -19,6 +20,10 @@ import java.util.GregorianCalendar;
 
 public class ImageLoader {
     public static ArrayList<String> loadImages(Activity activity) {
+        return loadImages(activity, null, null);
+    }
+
+    public static ArrayList<String> loadImages(Activity activity, Calendar startDate, Calendar endDate) {
 //        String externalStorageDirP = Environment.getExternalStorageDirectory().getAbsolutePath();
 //        File externalStorageDirF = new File(externalStorageDirP);
 //        System.out.println(externalStorageDirP);
@@ -33,18 +38,31 @@ public class ImageLoader {
 //                new String[]{},
 //                null,
 //                null);
-        String selection = MediaStore.MediaColumns.DATE_ADDED + ">?";
-        Date d1 = new Date();
-        d1.setTime(0);
 
+        Cursor cursor;
+        if (startDate != null && endDate != null ){
+            String selection =
+                    MediaStore.MediaColumns.DATE_ADDED+ ">=?"
+                    + " AND "
+                    + MediaStore.MediaColumns.DATE_ADDED+ "<?";
+            cursor = activity.getContentResolver().query(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    null,
+                    selection,
+                    new String[]{"" + startDate.getTime()},
+                    "");
+        }
+        else {
+            cursor = activity.getContentResolver().query(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    new String[]{},
+                    "",
+                    new String[]{},
+                    "");
+        }
 
-        Cursor cursor = activity.getContentResolver().query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                null,
-                selection,
-                new String[]{"" + d1},
-                "");
         ArrayList<String> imgPaths = new ArrayList<>();
+
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
