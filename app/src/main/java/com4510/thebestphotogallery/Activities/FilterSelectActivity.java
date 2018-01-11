@@ -6,8 +6,6 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,14 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.Filter;
-import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import com4510.thebestphotogallery.R;
 
@@ -51,6 +45,7 @@ public class FilterSelectActivity extends AppCompatActivity {
         TextInputEditText endDateEntry = findViewById(R.id.enddate_entry);
         Button filterActionBtn = findViewById(R.id.filter_action_btn);
 
+        // disable keyboard input since we only want input from the datepickers
         startDateEntry.setKeyListener(null);
         endDateEntry.setKeyListener(null);
 
@@ -75,9 +70,11 @@ public class FilterSelectActivity extends AppCompatActivity {
 
         final Activity activity = this;
 
+        // when filter button is clicked, validate dates and return to MainActivity if vailid
         filterActionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // if date is not valid, show dialog,
                 if (endDate.before(startDate)) {
                     AlertDialog dialog = new AlertDialog.Builder(activity)
                             .setTitle("Cannot have end before start!")
@@ -90,6 +87,7 @@ public class FilterSelectActivity extends AppCompatActivity {
                             .create();
                     dialog.show();
                 }
+                // if valid, return back to MainActivity with filtering options
                 else {
                     Intent intent = new Intent();
                     intent.putExtra("startDate", startDate);
@@ -103,14 +101,15 @@ public class FilterSelectActivity extends AppCompatActivity {
 
 
     private void setupDatePicker(final TextInputEditText textInput, final Calendar date) {
-        final Activity that = this;
+        final Activity activity = this;
+        // converts Date object to formatted date string
         final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
 
         textInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(that, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(activity, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         date.set(year, month, dayOfMonth);
@@ -121,6 +120,7 @@ public class FilterSelectActivity extends AppCompatActivity {
             }
         });
 
+        // override onFocusChangeListener - we want entering focus event to behave as a click instead
         textInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -129,11 +129,13 @@ public class FilterSelectActivity extends AppCompatActivity {
         });
 
 
+        // set the TextInput to the provided date
         textInput.setText(dateFormat.format(date.getTime()));
     }
 
     @Override
     public void onBackPressed() {
+        // if back is pressed, we want filtering to be cancelled
         Intent intent = new Intent();
         setResult(RESULT_CANCELED, intent);
         finish();
