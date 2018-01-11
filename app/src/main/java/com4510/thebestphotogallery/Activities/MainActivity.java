@@ -58,15 +58,9 @@ public class MainActivity extends ImageLoadActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_FILTER_IMAGE = 4;
 
-    private Activity activity;
-
-    private boolean permissionsOk = true;
+    private Activity activity = this;
 
     private String mCurrentPhotoPath = null;
-
-    int filterYear = 0;
-    int filterMonth = 0;
-    int filterDay = 0;
 
     private Calendar filterStartDate = null;
     private Calendar filterEndDate = null;
@@ -143,6 +137,15 @@ public class MainActivity extends ImageLoadActivity {
                 @Override
                 public void onRefresh() {
                     System.out.println("refreshing...");
+                    // If a date filter was applied, we want to clear it since the user would expect refreshing
+                    // to clear the filter
+                    if (filterStartDate != null && filterEndDate != null) {
+                        Toast.makeText(getActivity(), "Filter cleared", Toast.LENGTH_SHORT).show();
+                        // Setting filter dates to null disables the filtering
+                        filterStartDate = null;
+                        filterEndDate = null;
+                    }
+
                     if (!getLoading()) {
                         refresh();
                     }
@@ -321,12 +324,6 @@ public class MainActivity extends ImageLoadActivity {
         queueRefresh = false;
         recyclerViewAdapter.clear();
         super.refresh(filterStartDate, filterEndDate);
-    }
-
-    private void setFilterDate(int year, int month, int day) {
-        filterYear = year;
-        filterMonth = month;
-        filterDay = day;
     }
 
 }
