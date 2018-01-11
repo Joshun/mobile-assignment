@@ -109,7 +109,7 @@ public class LoadImagesTask extends AsyncTask<LoadImagesTask.LoadImagesTaskParam
         Activity activity = loadImagesTaskParams[0].activity;
         Calendar filterStartDate = loadImagesTaskParams[0].filterStartDate;
         Calendar filterEndDate = loadImagesTaskParams[0].filterEndDate;
-        List<String> imagePaths = ImageLoader.loadImages(activity, filterStartDate, filterEndDate);
+        List<String> imagePaths = ImageLoader.loadImages(activity);
         List<ImageMetadata> imageMetadataList = new ArrayList<>();
 
         for (String p: imagePaths) {

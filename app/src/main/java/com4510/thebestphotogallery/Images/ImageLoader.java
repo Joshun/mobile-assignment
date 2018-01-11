@@ -19,66 +19,26 @@ import java.util.GregorianCalendar;
  */
 
 public class ImageLoader {
+
+
     public static ArrayList<String> loadImages(Activity activity) {
-        return loadImages(activity, null, null);
-    }
 
-    public static ArrayList<String> loadImages(Activity activity, Calendar startDate, Calendar endDate) {
-//        String externalStorageDirP = Environment.getExternalStorageDirectory().getAbsolutePath();
-//        File externalStorageDirF = new File(externalStorageDirP);
-//        System.out.println(externalStorageDirP);
-//        File[] files = externalStorageDirF.listFiles();
-//        for (File f: files) {
-//            System.out.println(f.getAbsolutePath());
-//        }
-
-        ArrayList<Integer> imgIds = new ArrayList<>();
-//        Cursor cursor = activity.getContentResolver().query(
-//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                new String[]{},
-//                null,
-//                null);
-
-        Cursor cursor;
-        if (startDate != null && endDate != null ){
-            String selection =
-                    MediaStore.MediaColumns.DATE_ADDED+ ">=?"
-                    + " AND "
-                    + MediaStore.MediaColumns.DATE_ADDED+ "<?";
-            cursor = activity.getContentResolver().query(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    null,
-                    selection,
-                    new String[]{"" + startDate.getTime()},
-                    "");
-        }
-        else {
-            cursor = activity.getContentResolver().query(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    new String[]{},
-                    "",
-                    new String[]{},
-                    "");
-        }
+         Cursor cursor = activity.getContentResolver().query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[]{},
+                "",
+                new String[]{},
+                "");
 
         ArrayList<String> imgPaths = new ArrayList<>();
 
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
-            imgIds.add(cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
-//            Uri imageUri = ContentUris.withAppendedId(
-//                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                    cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID))
-//            );
-//            imgPaths.add(imageUri);
             imgPaths.add(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)));
-//            cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.EXTERNAL_CONTENT_URI))
-//                System.out.println(cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
             cursor.moveToNext();
         }
         cursor.close();
-//        return imgIds;
         return imgPaths;
     }
 }
