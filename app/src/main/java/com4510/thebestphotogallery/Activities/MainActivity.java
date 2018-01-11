@@ -262,61 +262,6 @@ public class MainActivity extends ImageLoadActivity {
                 intent = new Intent(this, FilterSelectActivity.class);
                 startActivityForResult(intent, REQUEST_FILTER_IMAGE);
 
-//                DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-//                    @Override
-//                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//                        setFilterDate(year, month, dayOfMonth);
-//                    }
-//                };
-
-//                Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-//
-
-//                DatePickerDialog dialog = new DatePickerDialog(this, dateSetListener,
-//                        calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-//
-//                DatePicker dp1 = new DatePicker(this);
-//                DatePicker dp2 = new DatePicker(this);
-//
-//                final AlertDialog date2Dialog = new AlertDialog.Builder(this)
-//                        .setTitle("End date")
-//                        .setView(dp2)
-//                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//
-//                            }
-//                        })
-//                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                finish();
-//                            }
-//                        })
-//                        .create();
-//
-//
-//                final AlertDialog date1Dialog = new AlertDialog.Builder(this)
-//                        .setTitle("Start date")
-//                        .setView(dp1)
-//                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                date2Dialog.show();
-//                                finish();
-//
-//                            }
-//                        })
-//                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                finish();
-//                            }
-//                        })
-//                        .create();
-//
-//                date1Dialog.show();
-
         }
         return true;
     }
