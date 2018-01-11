@@ -23,6 +23,7 @@ import android.util.Log;
 import android.net.Uri;
 import android.support.v4.content.FileProvider;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -86,10 +87,10 @@ public class MainActivity extends ImageLoadActivity {
             recyclerViewAdapter.setItem(position, metadata);
         }
         else if (requestCode == REQUEST_FILTER_IMAGE && resultCode == RESULT_OK) {
+            Toast.makeText(this, "Applying filter...", Toast.LENGTH_LONG).show();
             Log.v(getClass().getName(), "IMAGE FILTER APPLIED");
             filterStartDate = (Calendar) data.getExtras().get("startDate");
             filterEndDate = (Calendar) data.getExtras().get("endDate");
-//            doLoadImages(filterStartDate, filterEndDate);
             refresh();
         }
     }
