@@ -82,7 +82,7 @@ public class MainActivity extends ImageLoadActivity {
             final ImageMetadata metadata = (ImageMetadata) data.getSerializableExtra("metadata");
             recyclerViewAdapter.setItem(position, metadata);
         }
-        else if (requestCode == REQUEST_FILTER_IMAGE) {
+        else if (requestCode == REQUEST_FILTER_IMAGE && resultCode == RESULT_OK) {
             Log.v(getClass().getName(), "IMAGE FILTER APPLIED");
             Calendar filterStartDate = (Calendar) data.getExtras().get("startDate");
             Calendar filterEndDate = (Calendar) data.getExtras().get("endDate");

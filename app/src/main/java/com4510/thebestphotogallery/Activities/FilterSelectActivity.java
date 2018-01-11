@@ -12,6 +12,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -31,6 +32,7 @@ public class FilterSelectActivity extends AppCompatActivity {
     private Calendar startDate = Calendar.getInstance();
     private Calendar endDate = Calendar.getInstance();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,7 @@ public class FilterSelectActivity extends AppCompatActivity {
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setTitle("Filter by Date");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         else {
             Log.w(getClass().getName(), "toolbar is null");
@@ -86,6 +89,7 @@ public class FilterSelectActivity extends AppCompatActivity {
         });
     }
 
+
     private void setupDatePicker(final TextInputEditText textInput, final Calendar date) {
         final Activity that = this;
         final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -116,5 +120,21 @@ public class FilterSelectActivity extends AppCompatActivity {
         textInput.setText(dateFormat.format(date.getTime()));
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        setResult(RESULT_CANCELED, intent);
+        finish();
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
