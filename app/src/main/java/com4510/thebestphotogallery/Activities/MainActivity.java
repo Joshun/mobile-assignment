@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -187,6 +188,14 @@ public class MainActivity extends ImageLoadActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_view, menu);
+
+        if (!cameraPresent()) {
+            Log.w(getClass().getName(), "No camera found, disabling camera button");
+            MenuItem cameraItem = menu.findItem(R.id.btn_camera);
+            cameraItem.setVisible(false);
+            Toast.makeText(this, "No camera found, camera functionality disabled.", Toast.LENGTH_SHORT).show();
+        }
+
         return true;
     }
 
@@ -328,6 +337,11 @@ public class MainActivity extends ImageLoadActivity {
         queueRefresh = false;
         recyclerViewAdapter.clear();
         super.refresh(filterStartDate, filterEndDate);
+    }
+
+    private boolean cameraPresent() {
+        PackageManager pm = getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
 }
