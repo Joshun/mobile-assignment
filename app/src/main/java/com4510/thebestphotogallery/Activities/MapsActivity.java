@@ -53,12 +53,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private LatLngBounds.Builder builder;
     private String currentFilePath = ""; //This is gross but I couldn't think how else to do it
+    private int numMarkersLoaded = 0;
+    private int numToLoad = 0;
     private ClusterManager<ClusterMarker> manager;
 
     @Override
     public void markerLoaded(ImageMetadata metadata, ClusterMarker marker) {
         manager.addItem(marker);
         builder.include(marker.getPosition());
+        ++numMarkersLoaded;
+        if (numMarkersLoaded == numToLoad / 4 || numMarkersLoaded == numToLoad) {
+            markerBatchLoaded();
+        }
+    }
+
+    public void markerBatchLoaded() {
+        LatLngBounds bounds = builder.build();
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        int padding = (int) (width * 0.15); // offset from edges of the map 10% of screen
+
+        cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+        mMap.animateCamera(cu);
     }
 
     public void searchAddresses(String query) {
@@ -136,6 +152,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         for (ImageMetadata metadata : metadataList.getList()) {
             if (metadata != null && (metadata.getLatitude() != 0.0 || metadata.getLongitude() != 0.0)) {
+                ++numToLoad;
                 MapLoadTask task = new MapLoadTask(metadata, this);
                 task.execute();
             }
