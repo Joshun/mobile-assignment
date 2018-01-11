@@ -26,7 +26,7 @@
                 android:background="@drawable/toolbar_light_gradient"
                 android:elevation="4dp"
                 android:theme="@style/MainToolbar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         </android.support.design.widget.AppBarLayout>
 
