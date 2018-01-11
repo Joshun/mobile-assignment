@@ -55,6 +55,8 @@ public class MainActivity extends ImageLoadActivity {
     private MyAdapter recyclerViewAdapter;
     private SwipeRefreshLayout swipeContainer;
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_FILTER_IMAGE = 4;
+
     private Activity activity;
 
     private boolean permissionsOk = true;
@@ -79,6 +81,12 @@ public class MainActivity extends ImageLoadActivity {
             final int position = data.getIntExtra("position", 0);
             final ImageMetadata metadata = (ImageMetadata) data.getSerializableExtra("metadata");
             recyclerViewAdapter.setItem(position, metadata);
+        }
+        else if (requestCode == REQUEST_FILTER_IMAGE) {
+            Log.v(getClass().getName(), "IMAGE FILTER APPLIED");
+            Calendar filterStartDate = (Calendar) data.getExtras().get("startDate");
+            Calendar filterEndDate = (Calendar) data.getExtras().get("endDate");
+            doLoadImages(filterStartDate, filterEndDate);
         }
     }
 
@@ -248,7 +256,7 @@ public class MainActivity extends ImageLoadActivity {
                 break;
             case R.id.btn_filter_date:
                 intent = new Intent(this, FilterSelectActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_FILTER_IMAGE);
 
 //                DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
 //                    @Override

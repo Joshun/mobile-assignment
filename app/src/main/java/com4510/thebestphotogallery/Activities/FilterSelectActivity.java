@@ -79,7 +79,7 @@ public class FilterSelectActivity extends AppCompatActivity {
                     Intent intent = new Intent();
                     intent.putExtra("startDate", startDate);
                     intent.putExtra("endDate", endDate);
-                    setResult(RESULT_OK);
+                    setResult(RESULT_OK, intent);
                     finish();
                 }
             }

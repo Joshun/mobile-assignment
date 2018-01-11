@@ -14,6 +14,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import com4510.thebestphotogallery.Database.DatabaseResponseListener;
@@ -102,7 +103,12 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
 
     }
 
-    public void doLoadImages() {
+
+    public void doLoadImages(){
+        doLoadImages(null,null);
+    }
+
+    public void doLoadImages(Calendar filterStartDate, Calendar filterEndDate) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Log.v(getClass().getName(), "doLoadImages: read permission not granted");
             return;
@@ -112,6 +118,8 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         LoadImagesTask loadImagesTask = new LoadImagesTask(this);
         LoadImagesTask.LoadImagesTaskParam loadImagesTaskParam = new LoadImagesTask.LoadImagesTaskParam();
         loadImagesTaskParam.activity = this;
+        loadImagesTaskParam.filterStartDate = filterStartDate;
+        loadImagesTaskParam.filterEndDate = filterEndDate;
         loadImagesTask.execute(loadImagesTaskParam);
     }
 

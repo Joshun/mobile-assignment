@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import com4510.thebestphotogallery.Database.AppDatabase;
@@ -27,6 +28,8 @@ import com4510.thebestphotogallery.Images.LoadImagesResponseListener;
 public class LoadImagesTask extends AsyncTask<LoadImagesTask.LoadImagesTaskParam, Void, List<ImageMetadata>> {
     public static class LoadImagesTaskParam {
         public Activity activity;
+        public Calendar filterStartDate = null;
+        public Calendar filterEndDate = null;
     }
 
     private LoadImagesResponseListener loadImagesResponseListenerListener;
@@ -104,7 +107,9 @@ public class LoadImagesTask extends AsyncTask<LoadImagesTask.LoadImagesTaskParam
     @Override
     protected List<ImageMetadata> doInBackground(LoadImagesTaskParam... loadImagesTaskParams) {
         Activity activity = loadImagesTaskParams[0].activity;
-        List<String> imagePaths = ImageLoader.loadImages(activity);
+        Calendar filterStartDate = loadImagesTaskParams[0].filterStartDate;
+        Calendar filterEndDate = loadImagesTaskParams[0].filterEndDate;
+        List<String> imagePaths = ImageLoader.loadImages(activity, filterStartDate, filterEndDate);
         List<ImageMetadata> imageMetadataList = new ArrayList<>();
 
         for (String p: imagePaths) {
