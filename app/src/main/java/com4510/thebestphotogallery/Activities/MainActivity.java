@@ -92,6 +92,7 @@ public class MainActivity extends ImageLoadActivity {
         else if (requestCode == UPDATE_DATA) {
             final int position = data.getIntExtra("position", 0);
             final ImageMetadata metadata = (ImageMetadata) data.getSerializableExtra("metadata");
+            imageMetadataList.set(position, metadata);
             recyclerViewAdapter.setItem(position, metadata);
         }
         else if (requestCode == REQUEST_FILTER_IMAGE && resultCode == RESULT_OK) {

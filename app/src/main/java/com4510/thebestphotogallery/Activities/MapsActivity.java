@@ -199,7 +199,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             infoTitle.setText(marker.getTitle());
             infoDescription.setText(marker.getSnippet());
-            
+
             if (currentFilePath != "") {
                 // Only run when marker is tapped on
                 Bitmap bitmap = Util.loadBitmap(new File(currentFilePath), 512);
