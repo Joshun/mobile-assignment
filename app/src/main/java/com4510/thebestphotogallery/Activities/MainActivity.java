@@ -272,6 +272,9 @@ public class MainActivity extends ImageLoadActivity {
                 break;
             case R.id.btn_filter_date:
                 intent = new Intent(this, FilterSelectActivity.class);
+                intent.putExtra("startDate", filterStartDate);
+                intent.putExtra("endDate", filterEndDate);
+
                 startActivityForResult(intent, REQUEST_FILTER_IMAGE);
 
         }

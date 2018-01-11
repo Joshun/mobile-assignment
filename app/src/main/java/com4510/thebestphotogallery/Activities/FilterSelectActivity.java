@@ -29,8 +29,8 @@ import com4510.thebestphotogallery.R;
 
 public class FilterSelectActivity extends AppCompatActivity {
 
-    private Calendar startDate = Calendar.getInstance();
-    private Calendar endDate = Calendar.getInstance();
+    private Calendar startDate;
+    private Calendar endDate;
 
 
     @Override
@@ -54,9 +54,21 @@ public class FilterSelectActivity extends AppCompatActivity {
         startDateEntry.setKeyListener(null);
         endDateEntry.setKeyListener(null);
 
+        Calendar currentStartDate = (Calendar) getIntent().getExtras().get("startDate");
+        Calendar currentEndDate = (Calendar) getIntent().getExtras().get("endDate");
 
-        // set start date to yesterday's date
-        startDate.add(Calendar.DATE, -1);
+        // if the filters were not previously set, set them to be over the last day
+        if (currentStartDate == null || currentEndDate == null) {
+            startDate = Calendar.getInstance();
+            endDate = Calendar.getInstance();
+            // set start date to yesterday's date
+            startDate.add(Calendar.DATE, -1);
+        }
+        // otherwise, set them to the previous values
+        else {
+            startDate = currentStartDate;
+            endDate = currentEndDate;
+        }
 
         setupDatePicker(startDateEntry, startDate);
         setupDatePicker(endDateEntry, endDate);
