@@ -134,7 +134,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (metadata.getTitle() != null) {
                             marker.setTitle(metadata.getTitle());
                         } else {
-                            marker.setTitle("Marker at location");
+                            marker.setTitle(metadata.file.getName());
                         }
                         if (metadata.getDescription() != null) {
                             marker.setSnippet(metadata.getDescription());
@@ -211,7 +211,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String filepath = markersMap.get(marker);
 
             // Only run when marker is tapped on
-            Bitmap bitmap = Util.loadBitmap(new File(filepath), 512, false);
+            Bitmap bitmap = Util.loadBitmap(new File(filepath), 512);
             infoImage.setImageBitmap(bitmap);
 
             return view;

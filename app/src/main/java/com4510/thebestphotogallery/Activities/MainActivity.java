@@ -67,7 +67,6 @@ public class MainActivity extends ImageLoadActivity {
         else if (requestCode == UPDATE_DATA) {
             final int position = data.getIntExtra("position", 0);
             final ImageMetadata metadata = (ImageMetadata) data.getSerializableExtra("metadata");
-            Log.v("Here", "" + position + ", " + metadata.getTitle());
             recyclerViewAdapter.setItem(position, metadata);
         }
     }
@@ -102,8 +101,6 @@ public class MainActivity extends ImageLoadActivity {
                         else {
                             incSoftCap();
                         }
-                        Log.v("RecyclerView", "Hit the bottom!");
-
                     }
                 }
             });
