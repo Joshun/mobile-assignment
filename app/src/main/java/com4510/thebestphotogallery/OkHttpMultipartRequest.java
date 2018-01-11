@@ -44,7 +44,6 @@ public class OkHttpMultipartRequest {
         RequestBody requestBody = null;
         Request request = null;
         Response response = null;
-        int code = 200;
         String strResponse = null;
 
         requestBody = multipartBody.build();
@@ -58,8 +57,11 @@ public class OkHttpMultipartRequest {
         }
         else {
             strResponse = response.body().string();
-            // TODO - handle code?
-            code = response.networkResponse().code();
+            // Check for 200 OK HTTP code
+            int code = response.networkResponse().code();
+            if (code != 200) {
+                throw new IOException();
+            }
         }
 
         return strResponse;
