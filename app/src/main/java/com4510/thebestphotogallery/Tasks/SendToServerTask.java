@@ -23,6 +23,8 @@ public class SendToServerTask extends AsyncTask<ImageMetadata, Void, Void> {
 
     private enum SERVER_RESPONSE_TYPE { SUCCESS, FAILURE }
 
+    private static final String SERVER_URI = "http://wesenseit-vm1.shef.ac.uk:8091/uploadImages ";
+
     public SendToServerTask(ServerResponseListener responseListener) {
         serverResponseListener = responseListener;
     }
@@ -77,7 +79,7 @@ public class SendToServerTask extends AsyncTask<ImageMetadata, Void, Void> {
 
 
         try {
-            multipartRequest.execute("http://jmoey.com:8091/uploadpicture");
+            multipartRequest.execute(SERVER_URI);
             uploadSucceeded = true;
         }
         catch (IOException e) {
