@@ -201,6 +201,7 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
                 if (currentImageMetadata != null) {
                     currentImageMetadata.setLatitude(l.latitude);
                     currentImageMetadata.setLongitude(l.longitude);
+                    setDetails();
 
                     Log.v(getClass().getName(), "Updating metadata for image " + currentImageMetadata.getFilePath());
                     UpdateImageMetadataTask updateImageMetadataTask = new UpdateImageMetadataTask(this);

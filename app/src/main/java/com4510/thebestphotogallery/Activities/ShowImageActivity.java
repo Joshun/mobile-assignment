@@ -161,6 +161,7 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
     }
 
     private void updateMap() {
+
         if (map != null) {
             final float ZOOM = 16.0f;
             final LatLng POSITION = new LatLng(element.getLatitude(), element.getLongitude());
@@ -206,6 +207,7 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
             dimensions.setText(s);
         }
         if (geo != null && (data.getLatitude() != 0.0 || data.getLongitude() != 0.0)) {
+            map.setVisibility(View.VISIBLE);
             String join = " " + getResources().getString(R.string.details_join) + " ";
             String s = Util.roundDP(data.getLatitude(), 6) + join + Util.roundDP(data.getLongitude(), 6);
             geo.setText(s);

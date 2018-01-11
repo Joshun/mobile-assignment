@@ -62,7 +62,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         manager.addItem(marker);
         builder.include(marker.getPosition());
         ++numMarkersLoaded;
-        if (numMarkersLoaded == numToLoad / 4 || numMarkersLoaded == numToLoad) {
+        if (numToLoad < 10 && numMarkersLoaded == numToLoad || numMarkersLoaded == numToLoad / 4) {
             markerBatchLoaded();
         }
     }
@@ -99,10 +99,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         metadataList = (ImageMetadataList) getIntent().getSerializableExtra("FullList");
         final SearchView searchView = findViewById(R.id.search);
-//        int searchId = getResources().getIdentifier("android:id/search_button", null, null);
-//        ImageView searchButton = (ImageView) searchView.findViewById(searchId);
-//        searchButton.setImageResource(R.drawable.ic_search);
-
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,21 +153,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 task.execute();
             }
         }
-
-//        if (markersList.size() > 0) {
-//            mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-//                @Override
-//                public void onMapLoaded() {
-//                LatLngBounds bounds = builder.build();
-//                int width = getResources().getDisplayMetrics().widthPixels;
-//                int height = getResources().getDisplayMetrics().heightPixels;
-//                int padding = (int) (width * 0.15); // offset from edges of the map 10% of screen
-//
-//                cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
-//                mMap.animateCamera(cu);
-//                }
-//            });
-//        }
     }
 
 
