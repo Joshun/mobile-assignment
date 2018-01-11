@@ -39,27 +39,6 @@ public class FilterSelectActivity extends AppCompatActivity {
         startDateEntry.setKeyListener(null);
         endDateEntry.setKeyListener(null);
 
-//        final Activity that = this;
-//
-//        startDateEntry.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                DatePickerDialog datePickerDialog = new DatePickerDialog(that, new DatePickerDialog.OnDateSetListener() {
-//                    @Override
-//                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//
-//                    }
-//                }, 0,0, 0);
-//                datePickerDialog.show();
-//            }
-//        });
-//
-//        startDateEntry.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus) startDateEntry.performClick();
-//            }
-//        });
 
         // set start date to yesterday's date
         startDate.add(Calendar.DATE, -1);
@@ -67,10 +46,6 @@ public class FilterSelectActivity extends AppCompatActivity {
         setupDatePicker(startDateEntry, startDate);
         setupDatePicker(endDateEntry, endDate);
 
-//        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-//
-//        startDateEntry.setText(dateFormat.format(yesterday.getTime()));
-//        endDateEntry.setText(dateFormat.format(today.getTime()));
     }
 
     private void setupDatePicker(final TextInputEditText textInput, final Calendar date) {
