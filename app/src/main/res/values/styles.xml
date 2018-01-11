@@ -12,6 +12,7 @@
     <!--Main Toolbar Theme-->
     <style name="MainToolbar" parent="Theme.AppCompat">
         <item name="android:textColorPrimary">@color/colorGrey</item>
+        <item name="android:textColorSecondary">@color/colorGrey</item>
     </style>
 
     <!--Search Bar Theme-->

@@ -72,6 +72,14 @@ public class MainActivity extends ImageLoadActivity {
     private Calendar filterEndDate = null;
 
     @Override
+    public void dispatchBitmapLoad(final int numberToLoad) {
+        if (numberToLoad == 0) {
+            swipeContainer.setRefreshing(false);
+        }
+        super.dispatchBitmapLoad(numberToLoad);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {

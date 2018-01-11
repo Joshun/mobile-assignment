@@ -39,17 +39,19 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
     private int softCap = 0;
 
     public void dispatchBitmapLoad(final int numberToLoad) {
-        loading = true;
+        if (numberToLoad > 0) {
+            loading = true;
 
-        final int offset = bitmaps.getList().size();
-        for (int i = 0; i < numberToLoad; ++i) {
-            //Checking whether there is actually a file to load to prevent null pointer exceptions
-            if (offset + i >= imageMetadataList.size()) {
-                break;
+            final int offset = bitmaps.getList().size();
+            for (int i = 0; i < numberToLoad; ++i) {
+                //Checking whether there is actually a file to load to prevent null pointer exceptions
+                if (offset + i >= imageMetadataList.size()) {
+                    break;
+                }
+                bitmaps.getList().add(null);
+                PreloadImageAsync imageAsync = new PreloadImageAsync(this, bitmaps, imageMetadataList.get(offset + i).file, offset, i, numberToLoad);
+                imageAsync.execute();
             }
-            bitmaps.getList().add(null);
-            PreloadImageAsync imageAsync = new PreloadImageAsync(this, bitmaps, imageMetadataList.get(offset + i).file, offset, i, numberToLoad);
-            imageAsync.execute();
         }
     }
 
@@ -124,13 +126,8 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
     }
 
     public void refresh() {
-        loading = false;
-        softCap = 0;
-        imageMetadataList.clear();
-        bitmaps.clear();
-        doLoadImages();
+        refresh(null, null);
     }
-
 
     public void refresh(Calendar filterStartDate, Calendar filterEndDate) {
         loading = false;
