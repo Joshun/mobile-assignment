@@ -5,8 +5,10 @@ package com4510.thebestphotogallery.Activities;
  */
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.app.Activity;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.graphics.Bitmap;
@@ -60,32 +62,53 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-        public void searchAddresses(View v) {
-            EditText searchView = findViewById(R.id.searchText);
-            String g = searchView.getText().toString();
+    public void searchAddresses(String query) {
+        Geocoder geocoder = new Geocoder(getBaseContext());
 
-            Geocoder geocoder = new Geocoder(getBaseContext());
+        try {
+            // Getting 3 address to match input using geocoder
+            List<Address> addressList = geocoder.getFromLocationName(query, 1);
+            if (addressList != null && !addressList.equals(""))
+                search(addressList);
 
-            try {
-                // Getting 3 address to match input using geocoder
-                List<Address> addressList = geocoder.getFromLocationName(g, 1);
-                if (addressList != null && !addressList.equals(""))
-                    search(addressList);
-
-            } catch (Exception e) {
-
-            }
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_maps);
 
         metadataList = (ImageMetadataList) getIntent().getSerializableExtra("FullList");
+        final SearchView searchView = findViewById(R.id.search);
+//        int searchId = getResources().getIdentifier("android:id/search_button", null, null);
+//        ImageView searchButton = (ImageView) searchView.findViewById(searchId);
+//        searchButton.setImageResource(R.drawable.ic_search);
 
-        setContentView(R.layout.activity_maps);
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchAddresses(searchView.getQuery().toString());
+                searchView.clearFocus();
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                searchAddresses(searchView.getQuery().toString());
+                searchView.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 

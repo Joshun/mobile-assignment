@@ -14,6 +14,13 @@
         <item name="android:textColorPrimary">@color/colorGrey</item>
     </style>
 
+    <!--Search Bar Theme-->
+    <style name="searchBar" parent="Theme.AppCompat">
+        <item name="android:textColorSecondary">@color/colorLightGrey</item>
+        <item name="android:editTextColor">@color/colorOffBlack</item>
+        <item name="android:searchIcon">@drawable/ic_search</item>
+    </style>
+
     <!--Show Image Theme-->
     <style name="Transparent" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
