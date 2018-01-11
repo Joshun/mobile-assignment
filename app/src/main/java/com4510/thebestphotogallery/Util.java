@@ -24,11 +24,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.NoRouteToHostException;
+import java.net.SocketTimeoutException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.SSLException;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
@@ -191,8 +201,44 @@ public class Util{
     }
 
 
-    public static double round2DP(float x) {
+    public static double round2DP(double x) {
         return roundDP(x, 2);
+    }
+
+    public static int getHttpToServer(String urlLink, StringBuffer response) {
+        try {
+            URL obj = new URL(urlLink);
+            HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+            conn.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream()));
+            String inputLine;
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+        } catch (MalformedURLException ex) {
+            Log.e("GetHttp", Log.getStackTraceString(ex));
+            return 2;
+        } catch (NoRouteToHostException ex) {
+            Log.e("GetHttp", Log.getStackTraceString(ex));
+            return 3;
+        } catch (SocketTimeoutException ex){
+            Log.e("GetHttp", Log.getStackTraceString(ex));
+            return 4;
+        } catch (SSLException ex){
+            Log.e("GetHttp", Log.getStackTraceString(ex));
+            return 5;
+        } catch (IOException ex) {
+            Log.e("GetHttp", Log.getStackTraceString(ex));
+            return 6;
+        } catch (Exception e){
+            Log.e("GetHttp", Log.getStackTraceString(e));
+            return 7;
+        }
+        return 0;
     }
 
 }

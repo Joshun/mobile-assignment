@@ -18,10 +18,18 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.HttpURLConnection;
+
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Database.UpdateImageMetadataListener;
+import com4510.thebestphotogallery.Listeners.ElevationResponseListener;
 import com4510.thebestphotogallery.Listeners.ServerResponseListener;
 import com4510.thebestphotogallery.R;
+import com4510.thebestphotogallery.Tasks.ElevationTask;
 import com4510.thebestphotogallery.Tasks.SendToServerTask;
 import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
 import com4510.thebestphotogallery.Util;
@@ -30,7 +38,7 @@ import com4510.thebestphotogallery.Util;
  * Created by George on 02-Jan-18.
  */
 
-public class EditDetailsActivity extends DetailsActivity implements ServerResponseListener, UpdateImageMetadataListener {
+public class EditDetailsActivity extends DetailsActivity implements ServerResponseListener, UpdateImageMetadataListener, ElevationResponseListener {
 
     private final int PICKER_REQUEST = 1;
     private final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2;
@@ -40,6 +48,7 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
     private Integer imageIndex = null;
     private PlaceDetectionClient placeDetectionClient;
     private boolean locationPermissionGranted = false;
+    private boolean gettingElevation = false;
 
     public EditDetailsActivity() {
         super("Image Options", R.id.editimagedetails_toolbar);
@@ -94,11 +103,16 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.putExtra("metadata", currentImageMetadata);
-        setResult(RESULT_OK, intent);
-        finish();
-        super.onBackPressed();
+        if (!gettingElevation) {
+            Intent intent = new Intent();
+            intent.putExtra("metadata", currentImageMetadata);
+            setResult(RESULT_OK, intent);
+            finish();
+            super.onBackPressed();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Please wait, updating altitude...", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void btnSelected(View view) {
@@ -139,8 +153,6 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-
-        Log.v("sdhjkfgdsf", "HEre");
         locationPermissionGranted = false;
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
@@ -201,6 +213,12 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
                 if (currentImageMetadata != null) {
                     currentImageMetadata.setLatitude(l.latitude);
                     currentImageMetadata.setLongitude(l.longitude);
+
+                    //Altitude
+                    ElevationTask task = new ElevationTask(l.latitude, l.longitude, getString(R.string.google_maps_key), this);
+                    task.execute();
+                    gettingElevation = true;
+
                     setDetails();
 
                     Log.v(getClass().getName(), "Updating metadata for image " + currentImageMetadata.getFilePath());
@@ -237,12 +255,18 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
     }
 
     private void uploadToServer() {
-
         Log.v(getClass().getName(), "upload to server option selected");
         Toast.makeText(this, "Uploading...", Toast.LENGTH_SHORT).show();
         SendToServerTask sendToServerTask = new SendToServerTask(this);
         sendToServerTask.execute(currentImageMetadata);
 
+    }
+
+    @Override
+    public void elevationResponse(double elevation) {
+        gettingElevation = false;
+        currentImageMetadata.setAltitude(Util.round2DP(elevation));
+        setDetails();
     }
 
 }

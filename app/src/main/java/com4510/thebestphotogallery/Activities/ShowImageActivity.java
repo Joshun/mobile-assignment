@@ -216,7 +216,7 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
             map.setVisibility(View.GONE);
         }
 
-        if (altitude != null) {
+        if (altitude != null && data.getAltitude() != 0.0) {
             String s = data.getAltitude() + "m";
             altitude.setText(s);
         }
