@@ -5,16 +5,13 @@ package com4510.thebestphotogallery.Activities;
  */
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.app.Activity;
 import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
-import android.widget.EditText;
 import android.location.Geocoder;
 
 
@@ -27,20 +24,21 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+
 import com4510.thebestphotogallery.Listeners.LoadMarkerOptsResponseListener;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Random;
 
 import android.os.Handler;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.ImageMetadataList;
 import com4510.thebestphotogallery.R;
+import com4510.thebestphotogallery.Util;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LoadMarkerOptsResponseListener {
 
@@ -130,7 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 // Have to add markers in UI thread
                 for (ImageMetadata metadata : metadataList.getList()) {
-                    if (metadata != null) {
+                    if (metadata != null && (metadata.getLatitude() != 0.0 || metadata.getLongitude() != 0.0)) {
                         LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
                         Marker marker = mMap.addMarker(new MarkerOptions().position(location));
                         if (metadata.getTitle() != null) {
@@ -213,10 +211,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String filepath = markersMap.get(marker);
 
             // Only run when marker is tapped on
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(filepath, options);
-
+            Bitmap bitmap = Util.loadBitmap(new File(filepath), 512, false);
             infoImage.setImageBitmap(bitmap);
 
             return view;
