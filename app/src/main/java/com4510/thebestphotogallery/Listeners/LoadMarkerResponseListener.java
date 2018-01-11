@@ -3,6 +3,7 @@ package com4510.thebestphotogallery.Listeners;
 import com.google.android.gms.maps.model.Marker;
 
 import com4510.thebestphotogallery.ClusterMarker;
+import com4510.thebestphotogallery.Database.ImageMetadata;
 
 /**
  * Created by George on 04-Jan-18.
@@ -10,6 +11,6 @@ import com4510.thebestphotogallery.ClusterMarker;
 
 public interface LoadMarkerResponseListener {
 
-    void markerLoaded(ClusterMarker marker);
+    void markerLoaded(ImageMetadata metadata, ClusterMarker marker);
 
 }

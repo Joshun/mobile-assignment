@@ -9,18 +9,20 @@ import com.google.maps.android.clustering.ClusterItem;
 
 public class ClusterMarker implements ClusterItem {
 
+    private final String filepath;
     private final LatLng position;
     private final String title;
     private final String snippet;
 
-    public ClusterMarker(final double lat, final double lng, final String title, final String snippet) {
+    public ClusterMarker(final String filepath, final double lat, final double lng, final String title, final String snippet) {
+        this.filepath = filepath;
         this.position = new LatLng(lat, lng);
         this.title = title;
         this.snippet = snippet;
     }
 
-    public ClusterMarker(final double lat, final double lng) {
-        this(lat, lng, "", "");
+    public ClusterMarker(final String filepath, final double lat, final double lng) {
+        this(filepath, lat, lng, "", "");
     }
 
     @Override
@@ -36,6 +38,10 @@ public class ClusterMarker implements ClusterItem {
     @Override
     public final String getSnippet() {
         return snippet;
+    }
+
+    public final String getFilepath() {
+        return filepath;
     }
 
 }

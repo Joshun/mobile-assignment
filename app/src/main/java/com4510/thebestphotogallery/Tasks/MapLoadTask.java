@@ -38,55 +38,15 @@ public class MapLoadTask extends AsyncTask<Void, Void, ClusterMarker> {
     protected void onPostExecute(ClusterMarker marker) {
         super.onPostExecute(marker);
         if (loadMarkerResponseListenerListener != null) {
-            loadMarkerResponseListenerListener.markerLoaded(marker);
+            loadMarkerResponseListenerListener.markerLoaded(metadata, marker);
         }
     }
 
     @Override
     protected ClusterMarker doInBackground(Void... data) {
         final String title = metadata.getTitle() != null ? metadata.getTitle() : metadata.file.getName();
-        final ClusterMarker marker = new ClusterMarker(metadata.getLatitude(), metadata.getLongitude(), title, "");
+        final String desc = metadata.getDescription();
+        final ClusterMarker marker = new ClusterMarker(metadata.getFilePath(), metadata.getLatitude(), metadata.getLongitude(), title, desc);
         return marker;
-
-//        Marker marker = mMap.addMarker(new MarkerOptions().position(location));
-//        if (metadata.getTitle() != null) {
-//            marker.setTitle(metadata.getTitle());
-//        } else {
-//            marker.setTitle(metadata.file.getName());
-//        }
-//        if (metadata.getDescription() != null) {
-//            marker.setSnippet(metadata.getDescription());
-//        }
-//        markersList.add(marker);
-//        markersMap.put(marker, metadata.getFilePath());
-//
-//
-//        GoogleMap mMap = googleMaps[0];
-//        ArrayList<MarkerOptions> markerOptsList = new ArrayList<>();
-//
-//        LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
-//        Marker marker = mMap.addMarker(new MarkerOptions().position(location));
-//        if (metadata.getTitle() != null) {
-//            marker.setTitle(metadata.getTitle());
-//        } else {
-//            marker.setTitle(metadata.file.getName());
-//        }
-//        if (metadata.getDescription() != null) {
-//            marker.setSnippet(metadata.getDescription());
-//        }
-//        markersList.add(marker);
-//        markersMap.put(marker, metadata.getFilePath());
-//
-//
-//        for (ImageMetadata metadata: data.getList()) {
-//            System.out.println(data.getList());
-//            if (metadata != null) {
-//                LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
-//                MarkerOptions marker = new MarkerOptions().position(location).title(metadata.getTitle()).snippet(metadata.getDescription());
-//                markerOptsList.add(marker);
-//            }
-//        }
-//
-//        return markerOptsList;
     }
 }
