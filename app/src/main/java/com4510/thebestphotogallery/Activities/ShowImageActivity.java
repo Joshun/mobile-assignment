@@ -26,6 +26,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,8 +42,6 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
     private final int UPDATE_DATA = 1;
 
     private GoogleMap map;
-    private Bitmap currentImage = null;
-    private String currentImageFile = "file.png";
     private List<Bitmap> bitmapMipMaps;
 
     private ShowImageScrollView detailsView;
@@ -127,7 +127,6 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
             }
         }
 
-        currentImageFile = element.file.getAbsolutePath();
         ShowImageAsync imageAsync = new ShowImageAsync(imageView, loadingView, detailsView, bitmapMipMaps, element.file);
         imageAsync.execute();
 
@@ -189,6 +188,7 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         final TextView geo = findViewById(R.id.view_geo_text);
         final TextView filesize = findViewById(R.id.view_filesize_text);
         final TextView altitude = findViewById(R.id.view_altitude_text);
+        final TextView date = findViewById(R.id.view_date_text);
         final View map = findViewById(R.id.show_map_container);
 
         if (name != null && data.getTitle() != null && !data.getTitle().equals("")) {
@@ -232,6 +232,12 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
             }
 
             filesize.setText(s);
+        }
+
+        if (date != null) {
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            String dateText = dateFormat.format(data.getDateAdded());
+            date.setText(dateText);
         }
     }
 

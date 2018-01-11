@@ -131,9 +131,34 @@
             android:text="@string/details_default" />
     </LinearLayout>
 
+    <!--Date created -->
+    <LinearLayout
+        android:id="@+id/view_date"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/view_altitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorOffWhite">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/colorOffBlack"
+            android:text="@string/details_date" />
+        <TextView
+            android:id="@+id/view_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGrey"
+            android:text="@string/details_default" />
+
+    </LinearLayout>
+
     <!--File Size-->
     <LinearLayout
-        app:layout_constraintTop_toBottomOf="@id/view_altitude"
+        app:layout_constraintTop_toBottomOf="@id/view_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
