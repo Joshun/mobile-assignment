@@ -8,6 +8,7 @@ import android.arch.persistence.room.PrimaryKey;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by joshua on 27/12/17.
@@ -52,6 +53,10 @@ public class ImageMetadata implements Serializable {
         this.filePath = filePath;
     }
 
+    public void setDateAdded(Date dateAdded) {
+        this.dateAdded = dateAdded;
+    }
+
     public final String getTitle() {
         return title;
     }
@@ -76,6 +81,11 @@ public class ImageMetadata implements Serializable {
 
     public double getAltitude() {
         return altitude;
+    }
+
+
+    public Date getDateAdded() {
+        return dateAdded;
     }
 
     @ColumnInfo(name="title")
@@ -104,6 +114,9 @@ public class ImageMetadata implements Serializable {
 
     @ColumnInfo(name="filePath")
     private String filePath;
+
+    @ColumnInfo(name="dateAdded")
+    private Date dateAdded;
 
     @Ignore
     public File file;

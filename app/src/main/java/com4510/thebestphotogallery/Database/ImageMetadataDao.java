@@ -7,6 +7,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,6 +18,9 @@ import java.util.List;
 public interface ImageMetadataDao {
     @Query("SELECT * FROM image_metadata")
     List<ImageMetadata> getAll();
+
+    @Query("SELECT * FROM image_metadata WHERE dateAdded >= :start AND dateAdded < :end")
+    List<ImageMetadata> getByDates(Date start, Date end);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(ImageMetadata... imageMetadatas);

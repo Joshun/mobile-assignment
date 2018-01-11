@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com4510.thebestphotogallery.Database.AppDatabase;
@@ -88,6 +89,11 @@ public class LoadImagesTask extends AsyncTask<LoadImagesTask.LoadImagesTaskParam
             imageMetadata.setHeight(height);
             imageMetadata.setFileSize(fSize);
 
+            Date lastModified = new Date(new File(filePath).lastModified());
+            Log.v("last modified", lastModified.toString());
+
+            imageMetadata.setDateAdded(lastModified);
+
         }
         catch (IOException e) {
             e.printStackTrace(System.err);
@@ -120,16 +126,17 @@ public class LoadImagesTask extends AsyncTask<LoadImagesTask.LoadImagesTaskParam
         }
 
         System.out.println(imagePaths);
-//        System.out.println(imageMetadataList.toArray());
-//        AppDatabase.getInstance(activity).imageMetadataDao().insertAll((ImageMetadata[])imageMetadataList.toArray());
         AppDatabase.getInstance(activity).imageMetadataDao().insertAll((imageMetadataList.toArray(new ImageMetadata[imageMetadataList.size()])));
 
-//        for (ImageMetadata imageMetadata: imageMetadataList) {
-//            AppDatabase.getInstance(activity).imageMetadataDao().insert(imageMetadata);
-//        }
+        List<ImageMetadata> allImageMetadata;
 
+        if (filterStartDate != null && filterEndDate != null) {
+            allImageMetadata = AppDatabase.getInstance(activity).imageMetadataDao().getByDates(filterStartDate.getTime(), filterEndDate.getTime());
+        }
+        else {
+            allImageMetadata = AppDatabase.getInstance(activity).imageMetadataDao().getAll();
+        }
 
-        List<ImageMetadata> allImageMetadata = AppDatabase.getInstance(activity).imageMetadataDao().getAll();
         System.out.println(allImageMetadata);
         System.out.println(allImageMetadata.get(0));
 
