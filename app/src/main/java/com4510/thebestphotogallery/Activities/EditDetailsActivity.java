@@ -48,6 +48,7 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
     private Integer imageIndex = null;
     private PlaceDetectionClient placeDetectionClient;
     private boolean locationPermissionGranted = false;
+    private boolean gettingElevation = false;
 
     public EditDetailsActivity() {
         super("Image Options", R.id.editimagedetails_toolbar);
@@ -102,11 +103,16 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.putExtra("metadata", currentImageMetadata);
-        setResult(RESULT_OK, intent);
-        finish();
-        super.onBackPressed();
+        if (!gettingElevation) {
+            Intent intent = new Intent();
+            intent.putExtra("metadata", currentImageMetadata);
+            setResult(RESULT_OK, intent);
+            finish();
+            super.onBackPressed();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Please wait, updating altitude...", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void btnSelected(View view) {
@@ -147,8 +153,6 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-
-        Log.v("sdhjkfgdsf", "HEre");
         locationPermissionGranted = false;
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
@@ -213,6 +217,7 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
                     //Altitude
                     ElevationTask task = new ElevationTask(l.latitude, l.longitude, getString(R.string.google_maps_key), this);
                     task.execute();
+                    gettingElevation = true;
 
                     setDetails();
 
@@ -259,6 +264,7 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
 
     @Override
     public void elevationResponse(double elevation) {
+        gettingElevation = false;
         currentImageMetadata.setAltitude(Util.round2DP(elevation));
         setDetails();
     }
