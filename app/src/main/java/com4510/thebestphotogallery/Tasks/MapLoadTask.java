@@ -6,55 +6,87 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.MarkerManager;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import com4510.thebestphotogallery.ClusterMarker;
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.ImageMetadataList;
-import com4510.thebestphotogallery.Listeners.LoadMarkerOptsResponseListener;
+import com4510.thebestphotogallery.Listeners.LoadMarkerResponseListener;
 /**
  * Created by joshua on 09/01/18.
  */
 
-public class MapLoadTask extends AsyncTask<GoogleMap, Void, List<MarkerOptions>> {
+public class MapLoadTask extends AsyncTask<Void, Void, ClusterMarker> {
 
-    private LoadMarkerOptsResponseListener LoadMarkerOptsResponseListenerListener;
-    private ImageMetadataList data;
+    private LoadMarkerResponseListener loadMarkerResponseListenerListener;
+    private ImageMetadata metadata;
 
-    public MapLoadTask(final ImageMetadataList data, LoadMarkerOptsResponseListener l) {
-        LoadMarkerOptsResponseListenerListener = l;
-        this.data = data;
+    public MapLoadTask(final ImageMetadata data, LoadMarkerResponseListener l) {
+        this.loadMarkerResponseListenerListener = l;
+        this.metadata = data;
     }
 
-    public MapLoadTask(final ImageMetadataList data) {
+    public MapLoadTask(final ImageMetadata data) {
         this(data, null);
     }
 
     @Override
-    protected void onPostExecute(List<MarkerOptions> markerOptList) {
-        super.onPostExecute(markerOptList);
-        if (LoadMarkerOptsResponseListenerListener != null) {
-            LoadMarkerOptsResponseListenerListener.markerOptsLoaded(markerOptList);
+    protected void onPostExecute(ClusterMarker marker) {
+        super.onPostExecute(marker);
+        if (loadMarkerResponseListenerListener != null) {
+            loadMarkerResponseListenerListener.markerLoaded(marker);
         }
     }
 
     @Override
-    protected List<MarkerOptions> doInBackground(GoogleMap... googleMaps) {
-        GoogleMap mMap = googleMaps[0];
-        ArrayList<MarkerOptions> markerOptsList = new ArrayList<>();
+    protected ClusterMarker doInBackground(Void... data) {
+        final String title = metadata.getTitle() != null ? metadata.getTitle() : metadata.file.getName();
+        final ClusterMarker marker = new ClusterMarker(metadata.getLatitude(), metadata.getLongitude(), title, "");
+        return marker;
 
-        for (ImageMetadata metadata: data.getList()) {
-            System.out.println(data.getList());
-            if (metadata != null) {
-                LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
-                MarkerOptions marker = new MarkerOptions().position(location).title(metadata.getTitle()).snippet(metadata.getDescription());
-                markerOptsList.add(marker);
-            }
-        }
-
-        return markerOptsList;
+//        Marker marker = mMap.addMarker(new MarkerOptions().position(location));
+//        if (metadata.getTitle() != null) {
+//            marker.setTitle(metadata.getTitle());
+//        } else {
+//            marker.setTitle(metadata.file.getName());
+//        }
+//        if (metadata.getDescription() != null) {
+//            marker.setSnippet(metadata.getDescription());
+//        }
+//        markersList.add(marker);
+//        markersMap.put(marker, metadata.getFilePath());
+//
+//
+//        GoogleMap mMap = googleMaps[0];
+//        ArrayList<MarkerOptions> markerOptsList = new ArrayList<>();
+//
+//        LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
+//        Marker marker = mMap.addMarker(new MarkerOptions().position(location));
+//        if (metadata.getTitle() != null) {
+//            marker.setTitle(metadata.getTitle());
+//        } else {
+//            marker.setTitle(metadata.file.getName());
+//        }
+//        if (metadata.getDescription() != null) {
+//            marker.setSnippet(metadata.getDescription());
+//        }
+//        markersList.add(marker);
+//        markersMap.put(marker, metadata.getFilePath());
+//
+//
+//        for (ImageMetadata metadata: data.getList()) {
+//            System.out.println(data.getList());
+//            if (metadata != null) {
+//                LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
+//                MarkerOptions marker = new MarkerOptions().position(location).title(metadata.getTitle()).snippet(metadata.getDescription());
+//                markerOptsList.add(marker);
+//            }
+//        }
+//
+//        return markerOptsList;
     }
 }

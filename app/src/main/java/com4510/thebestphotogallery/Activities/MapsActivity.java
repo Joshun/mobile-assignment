@@ -24,8 +24,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.MarkerManager;
+import com.google.maps.android.clustering.ClusterManager;
 
-import com4510.thebestphotogallery.Listeners.LoadMarkerOptsResponseListener;
+import com4510.thebestphotogallery.ClusterMarker;
+import com4510.thebestphotogallery.Listeners.LoadMarkerResponseListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,31 +36,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-import android.os.Handler;
-
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.ImageMetadataList;
 import com4510.thebestphotogallery.R;
+import com4510.thebestphotogallery.Tasks.MapLoadTask;
 import com4510.thebestphotogallery.Util;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LoadMarkerOptsResponseListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LoadMarkerResponseListener {
 
     private GoogleMap mMap;
-    private ImageMetadata im;
     protected ArrayList<ImageMetadata> imageList = new ArrayList<ImageMetadata>();
     private CameraUpdate cu;
     protected ImageMetadataList metadataList;
     Map<Marker, String> markersMap = new HashMap<Marker, String>();
-    private Handler handler = new Handler();
+
+    private LatLngBounds.Builder builder;
+    private ClusterManager<ClusterMarker> manager;
 
     @Override
-    public void markerOptsLoaded(List<MarkerOptions> markerOptionsList) {
-        mMap.clear();
-//        List<Marker> markersList = new ArrayList<Marker>();
-        for (MarkerOptions markerOpt : markerOptionsList) {
-            Marker marker = mMap.addMarker(markerOpt);
-
-        }
+    public void markerLoaded(ClusterMarker marker) {
+        manager.addItem(marker);
+        builder.include(marker.getPosition());
     }
 
     public void searchAddresses(String query) {
@@ -117,61 +116,65 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         //Instantiate the map
         mMap = googleMap;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mMap.clear();
+        mMap.clear();
 
-                // Create Bounds for camera movement
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                List<Marker> markersList = new ArrayList<Marker>();
+        //Create manager
+        manager = new ClusterManager<ClusterMarker>(this, mMap);
+        mMap.setOnCameraIdleListener(manager);
+        mMap.setOnMarkerClickListener(manager);
 
-                // Have to add markers in UI thread
-                for (ImageMetadata metadata : metadataList.getList()) {
-                    if (metadata != null && (metadata.getLatitude() != 0.0 || metadata.getLongitude() != 0.0)) {
-                        LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
-                        Marker marker = mMap.addMarker(new MarkerOptions().position(location));
-                        if (metadata.getTitle() != null) {
-                            marker.setTitle(metadata.getTitle());
-                        } else {
-                            marker.setTitle(metadata.file.getName());
-                        }
-                        if (metadata.getDescription() != null) {
-                            marker.setSnippet(metadata.getDescription());
-                        }
-                        markersList.add(marker);
-                        markersMap.put(marker, metadata.getFilePath());
+        // Create Bounds for camera movement
+        builder = new LatLngBounds.Builder();
+        List<Marker> markersList = new ArrayList<Marker>();
 
-                    }
-                }
-                for (Marker m : markersList) {
-                    builder.include(m.getPosition());
-                }
-                //Window only opened on marker tap to save on loading images
-                CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(MapsActivity.this);
-                mMap.setInfoWindowAdapter(adapter);
+        for (ImageMetadata metadata : metadataList.getList()) {
+            if (metadata != null && (metadata.getLatitude() != 0.0 || metadata.getLongitude() != 0.0)) {
+                MapLoadTask task = new MapLoadTask(metadata, this);
+                task.execute();
+            }
+        }
+        // Have to add markers in UI thread
+//        for (ImageMetadata metadata : metadataList.getList()) {
+//            if (metadata != null && (metadata.getLatitude() != 0.0 || metadata.getLongitude() != 0.0)) {
+//                LatLng location = new LatLng(metadata.getLatitude(), metadata.getLongitude());
+//                Marker marker = mMap.addMarker(new MarkerOptions().position(location));
+//                if (metadata.getTitle() != null) {
+//                    marker.setTitle(metadata.getTitle());
+//                } else {
+//                    marker.setTitle(metadata.file.getName());
+//                }
+//                if (metadata.getDescription() != null) {
+//                    marker.setSnippet(metadata.getDescription());
+//                }
+//                markersList.add(marker);
+//                markersMap.put(marker, metadata.getFilePath());
+//
+//            }
+//        }
+//        for (Marker m : markersList) {
+//            builder.include(m.getPosition());
+//        }
+        //Window only opened on marker tap to save on loading images
+        CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(MapsActivity.this);
+        mMap.setInfoWindowAdapter(adapter);
 
+//              When map is ready, camera zooms to fit all markers
+        if (markersList.size() > 0) {
+            mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                @Override
+                public void onMapLoaded() {
                 LatLngBounds bounds = builder.build();
                 int width = getResources().getDisplayMetrics().widthPixels;
                 int height = getResources().getDisplayMetrics().heightPixels;
                 int padding = (int) (width * 0.15); // offset from edges of the map 10% of screen
 
                 cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
-
-//              When map is ready, camera zooms to fit all markers
-                mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                    @Override
-                    public void onMapLoaded() {
-                        /**set animated zoom camera into map*/
-                        mMap.animateCamera(cu);
-
-                    }
-                });
-            }
-        });
-
-
+                mMap.animateCamera(cu);
+                }
+            });
+        }
     }
+
 
 
     protected void search(List<Address> addressList) {
