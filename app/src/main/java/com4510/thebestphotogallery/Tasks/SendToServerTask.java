@@ -2,6 +2,7 @@ package com4510.thebestphotogallery.Tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -21,9 +22,8 @@ public class SendToServerTask extends AsyncTask<ImageMetadata, Void, Void> {
     private ServerResponseListener serverResponseListener;
     private boolean uploadSucceeded = false;
 
-    private enum SERVER_RESPONSE_TYPE { SUCCESS, FAILURE }
-
-    private static final String SERVER_URI = "http://wesenseit-vm1.shef.ac.uk:8091/uploadImages ";
+    private static final String SERVER_URI = "http://wesenseit-vm1.shef.ac.uk:8091/uploadImages";
+//    private static final String SERVER_URI = "http://jmoey.com:8091/uploadpicture";
 
     public SendToServerTask(ServerResponseListener responseListener) {
         serverResponseListener = responseListener;
@@ -33,26 +33,17 @@ public class SendToServerTask extends AsyncTask<ImageMetadata, Void, Void> {
         this(null);
     }
 
-    public void handleCallback(SERVER_RESPONSE_TYPE responseType) {
-        if (serverResponseListener == null) {
-            return;
-        }
-
-        switch (responseType) {
-            case SUCCESS:
-                serverResponseListener.onServerSuccess();
-                break;
-            case FAILURE:
-                serverResponseListener.onServerFailure();
-                break;
-            default:
-                Log.e(getClass().getName(), "handleCallback: invalid responseType value " + responseType.toString());
-        }
-
-    }
 
     public String extractFilenameFromPath(String f) {
         return f.substring(f.lastIndexOf("/")+1);
+    }
+
+    public String extractFileExtFromFilename(String f) {
+        return f.substring(f.lastIndexOf(".")+1);
+    }
+
+    public String getMimetypeFromFileExt(String f) {
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extractFileExtFromFilename(f));
     }
 
     public void sendServerData(ImageMetadata imageMetadata) {
@@ -72,15 +63,22 @@ public class SendToServerTask extends AsyncTask<ImageMetadata, Void, Void> {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         multipartRequest.addValue("date", dateFormat.format(date));
 
-        multipartRequest.addFile("image",
-                "image/jpeg",
-                extractFilenameFromPath(imageMetadata.getFilePath()),
-                imageMetadata.getFilePath());
-
-
         try {
+            String imgFilename = extractFilenameFromPath(imageMetadata.getFilePath());
+            String mimeType = getMimetypeFromFileExt(extractFileExtFromFilename(imgFilename));
+            multipartRequest.addFile("image",
+                    mimeType,
+                    imgFilename,
+                    imageMetadata.getFilePath());
+
+
+            Log.v(getClass().getName(), "Attemtping to send " + imgFilename + " of type " + mimeType);
+
             multipartRequest.execute(SERVER_URI);
             uploadSucceeded = true;
+        }
+        catch (StringIndexOutOfBoundsException e) {
+            e.printStackTrace();
         }
         catch (IOException e) {
             e.printStackTrace(System.err);

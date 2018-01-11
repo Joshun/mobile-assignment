@@ -1,6 +1,5 @@
 package com4510.thebestphotogallery;
 
-import android.content.Context;
 import android.util.Log;
 
 import java.io.File;
@@ -51,6 +50,9 @@ public class OkHttpMultipartRequest {
         Log.v("*REQUEST*", request.toString());
         response = okHttpClient.newCall(request).execute();
         Log.v("*RESPONSE*", request.toString());
+        int code = response.networkResponse().code();
+        Log.v(getClass().getName(), "HTTP returned " + code);
+
 
         if (!response.isSuccessful()) {
             throw new IOException();
@@ -58,7 +60,6 @@ public class OkHttpMultipartRequest {
         else {
             strResponse = response.body().string();
             // Check for 200 OK HTTP code
-            int code = response.networkResponse().code();
             if (code != 200) {
                 throw new IOException();
             }

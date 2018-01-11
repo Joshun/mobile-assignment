@@ -104,7 +104,6 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         detailsView.setVisibility(View.GONE);
         imageIndex  = getIntent().getExtras().getInt("position");
         element = (ImageMetadata) getIntent().getSerializableExtra("metadata");
-//        element = ImageMetadataList.getInstance().get(imageIndex);
         detailsView.setOnScrollChangedListener(this);
         setDetails(element);
 
