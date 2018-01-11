@@ -132,4 +132,13 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
     }
 
 
+    public void refresh(Calendar filterStartDate, Calendar filterEndDate) {
+        loading = false;
+        softCap = 0;
+        imageMetadataList.clear();
+        bitmaps.clear();
+        doLoadImages(filterStartDate, filterEndDate);
+    }
+
+
 }

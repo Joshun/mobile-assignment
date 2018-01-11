@@ -67,6 +67,9 @@ public class MainActivity extends ImageLoadActivity {
     int filterMonth = 0;
     int filterDay = 0;
 
+    private Calendar filterStartDate = null;
+    private Calendar filterEndDate = null;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -84,9 +87,10 @@ public class MainActivity extends ImageLoadActivity {
         }
         else if (requestCode == REQUEST_FILTER_IMAGE && resultCode == RESULT_OK) {
             Log.v(getClass().getName(), "IMAGE FILTER APPLIED");
-            Calendar filterStartDate = (Calendar) data.getExtras().get("startDate");
-            Calendar filterEndDate = (Calendar) data.getExtras().get("endDate");
-            doLoadImages(filterStartDate, filterEndDate);
+            filterStartDate = (Calendar) data.getExtras().get("startDate");
+            filterEndDate = (Calendar) data.getExtras().get("endDate");
+//            doLoadImages(filterStartDate, filterEndDate);
+            refresh();
         }
     }
 
@@ -342,7 +346,7 @@ public class MainActivity extends ImageLoadActivity {
 
 
         // try to load images (will fail silently if permission not already granted)
-        doLoadImages();
+        doLoadImages(filterStartDate, filterEndDate);
         // request permissions if they haven't already been granted
         Util.requestPermissionsIfNecessary(this);
 
@@ -362,7 +366,7 @@ public class MainActivity extends ImageLoadActivity {
         });
         queueRefresh = false;
         recyclerViewAdapter.clear();
-        super.refresh();
+        super.refresh(filterStartDate, filterEndDate);
     }
 
     private void setFilterDate(int year, int month, int day) {
