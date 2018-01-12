@@ -70,7 +70,6 @@ public class MainActivity extends ImageLoadActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             if (mCurrentPhotoPath != null) {
-//                galleryAddPic(mCurrentPhotoPath);
                 notifyMediaStoreScanner(new File(mCurrentPhotoPath));
                 Log.v(getClass().getName(), "IMAGE SAVE SUCCESS");
             }
@@ -220,18 +219,6 @@ public class MainActivity extends ImageLoadActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-    private void galleryAddPic(String photoPath) {
-        // this method doesn't actually save the photo to sdcard but notifies gallery
-        File f = new File(mCurrentPhotoPath);
-        System.out.println(f);
-        Uri contentUri = Uri.fromFile(f);
-        System.out.println(contentUri);
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        mediaScanIntent.setData(contentUri);
-        System.out.println(mediaScanIntent);
-        this.sendBroadcast(mediaScanIntent);
     }
 
     @Override
