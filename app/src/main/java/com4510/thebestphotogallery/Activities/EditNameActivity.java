@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,6 +72,9 @@ public class EditNameActivity extends DetailsActivity implements UpdateImageMeta
         });
     }
 
+    public void onSavePressed(View view) {
+        onBackPressed();
+    }
 
     @Override
     public void onBackPressed() {

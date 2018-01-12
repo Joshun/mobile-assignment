@@ -33,4 +33,12 @@
     <!--Map-->
     <string name="search_hint">Search for a place...</string>
 
+    <!--Filter-->
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+
+    <!--Buttons-->
+    <string name="btn_filter">Filter</string>
+    <string name="btn_save">Save</string>
+
 </resources>

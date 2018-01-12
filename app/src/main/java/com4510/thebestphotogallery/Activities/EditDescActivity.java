@@ -3,9 +3,11 @@ package com4510.thebestphotogallery.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.XmlRes;
 import android.support.design.widget.TextInputEditText;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +71,9 @@ public class EditDescActivity extends DetailsActivity implements UpdateImageMeta
         });
     }
 
+    public void onSavePressed(View view) {
+        onBackPressed();
+    }
 
     @Override
     public void onBackPressed() {

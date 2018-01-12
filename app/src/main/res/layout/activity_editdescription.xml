@@ -94,4 +94,23 @@
             android:hint="@string/details_default" />
     </LinearLayout>
 
+    <RelativeLayout
+        app:layout_constraintTop_toBottomOf="@id/edit_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_save"
+            android:onClick="onSavePressed"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:textColor="@color/colorOffWhite" />
+
+    </RelativeLayout>
+
+
 </android.support.constraint.ConstraintLayout>
