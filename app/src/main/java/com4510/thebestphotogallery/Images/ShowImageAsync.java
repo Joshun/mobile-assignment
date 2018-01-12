@@ -37,20 +37,6 @@ public class ShowImageAsync extends ImageAsync {
             loadingView.get().setVisibility(View.GONE);
             imageView.get().setImageBitmap(bitmap);
 
-            //Generate mipmaps
-//            final int DIVIDER = 2;
-//            Bitmap mip1 = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / DIVIDER, bitmap.getHeight() / DIVIDER, true);
-//            Bitmap mip2 = Bitmap.createScaledBitmap(mip1, mip1.getWidth() / DIVIDER, mip1.getHeight() / DIVIDER, true);
-//            Bitmap mip3 = Bitmap.createScaledBitmap(mip2, mip2.getWidth() / DIVIDER, mip2.getHeight() / DIVIDER, true);
-//            Bitmap mip4 = Bitmap.createScaledBitmap(mip3, mip3.getWidth() / DIVIDER, mip3.getHeight() / DIVIDER, true);
-//            if (bitmapMipMaps.get() != null) {
-//                bitmapMipMaps.get().add(bitmap);
-//                bitmapMipMaps.get().add(mip1);
-//                bitmapMipMaps.get().add(mip2);
-//                bitmapMipMaps.get().add(mip3);
-//                bitmapMipMaps.get().add(mip4);
-//            }
-
             //Fading animation
             detailsView.get().setVisibility(View.VISIBLE);
             detailsView.get().setAlpha(0.0f);

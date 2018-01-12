@@ -8,7 +8,7 @@ import java.util.Date;
 import com4510.thebestphotogallery.ImageMetadataList;
 
 /**
- * Created by joshua on 27/12/17.
+ * Singleton database connection class
  */
 
 @android.arch.persistence.room.Database(entities = {ImageMetadata.class}, version = 5)
@@ -23,25 +23,5 @@ public abstract class AppDatabase extends RoomDatabase {
             INSTANCE = Room.databaseBuilder(applicationContext, AppDatabase.class, "photogallery-db").fallbackToDestructiveMigration().build();
         }
         return INSTANCE;
-    }
-}
-
-class DateTypeConverter {
-    @TypeConverter
-    public static Long fromDate(Date date) {
-        if (date==null) {
-            return(null);
-        }
-
-        return(date.getTime());
-    }
-
-    @TypeConverter
-    public static Date toDate(Long millisSinceEpoch) {
-        if (millisSinceEpoch==null) {
-            return(null);
-        }
-
-        return(new Date(millisSinceEpoch));
     }
 }
