@@ -34,7 +34,7 @@ import java.util.List;
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Listeners.OnScrollChangedListener;
 import com4510.thebestphotogallery.R;
-import com4510.thebestphotogallery.Images.ShowImageAsync;
+import com4510.thebestphotogallery.Tasks.ShowImageAsync;
 import com4510.thebestphotogallery.ShowImageScrollView;
 import com4510.thebestphotogallery.Util;
 

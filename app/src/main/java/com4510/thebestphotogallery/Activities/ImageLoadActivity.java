@@ -1,14 +1,10 @@
 package com4510.thebestphotogallery.Activities;
 
 import android.Manifest;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,9 +15,8 @@ import java.util.List;
 
 import com4510.thebestphotogallery.Database.DatabaseResponseListener;
 import com4510.thebestphotogallery.Database.ImageMetadata;
-import com4510.thebestphotogallery.ImageMetadataList;
-import com4510.thebestphotogallery.Images.LoadImagesResponseListener;
-import com4510.thebestphotogallery.Images.PreloadImageAsync;
+import com4510.thebestphotogallery.Listeners.LoadImagesResponseListener;
+import com4510.thebestphotogallery.Tasks.PreloadImageAsync;
 import com4510.thebestphotogallery.Tasks.LoadImagesTask;
 import com4510.thebestphotogallery.Util;
 

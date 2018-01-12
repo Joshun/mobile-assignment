@@ -19,7 +19,7 @@ import java.util.List;
 
 import com4510.thebestphotogallery.Database.AppDatabase;
 import com4510.thebestphotogallery.Database.ImageMetadata;
-import com4510.thebestphotogallery.Images.LoadImagesResponseListener;
+import com4510.thebestphotogallery.Listeners.LoadImagesResponseListener;
 
 /**
  * AsyncTask for querying Android MediaStore to obtain image paths and extracting metadata

@@ -1,12 +1,10 @@
-package com4510.thebestphotogallery.Images;
+package com4510.thebestphotogallery.Tasks;
 
 import android.graphics.Bitmap;
-import android.os.Process;
 import android.util.Log;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import com4510.thebestphotogallery.Activities.ImageLoadActivity;
 import com4510.thebestphotogallery.Util;

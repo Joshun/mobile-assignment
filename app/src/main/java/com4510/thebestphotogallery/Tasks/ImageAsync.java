@@ -1,4 +1,4 @@
-package com4510.thebestphotogallery.Images;
+package com4510.thebestphotogallery.Tasks;
 
 import android.content.Context;
 import android.content.Intent;
