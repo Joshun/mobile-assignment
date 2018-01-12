@@ -19,6 +19,7 @@ import com4510.thebestphotogallery.R;
 import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
 
 /**
+ * The activity for editing image descriptions
  * Created by George on 08-Jan-18.
  */
 
@@ -48,6 +49,8 @@ public class EditDescActivity extends DetailsActivity implements UpdateImageMeta
     @Override
     protected void onResume() {
         super.onResume();
+
+        //After 300 milliseconds, the input field is focused and the keyboard appears
         descriptionInput.postDelayed(new Runnable() {
             public void run() {
                 descriptionInput.setFocusableInTouchMode(true);
@@ -59,6 +62,10 @@ public class EditDescActivity extends DetailsActivity implements UpdateImageMeta
         }, 300);
     }
 
+    /**
+     * Callback for when the metadata has successfully updated in the DB
+     * @param imageMetadata the updated metadata
+     */
     @Override
     public void imageUpdated(ImageMetadata imageMetadata) {
         Log.v(getClass().getName(), "Image " + imageMetadata.getFilePath() + " metadata update successful");
@@ -66,15 +73,24 @@ public class EditDescActivity extends DetailsActivity implements UpdateImageMeta
         EditDescActivity.super.onBackPressed();
     }
 
+    /**
+     * Used in the XML onClick parameter for when the save button is pressed
+     * @param view the button view
+     */
     public void onSavePressed(View view) {
         onBackPressed();
     }
 
+    /**
+     * Method for when the back button is pressed
+     */
     @Override
     public void onBackPressed() {
         if (currentImageMetadata != null) {
+            //Updating the metadata with the new data
             currentImageMetadata.setDescription(descriptionInput.getText().toString());
 
+            //Starting an asynchronous task to update the DB entry
             Log.v(getClass().getName(), "Updating metadata for image " + currentImageMetadata.getFilePath());
             UpdateImageMetadataTask updateImageMetadataTask = new UpdateImageMetadataTask(this);
             UpdateImageMetadataTask.UpdateMetadataParam updateMetadataParam = new UpdateImageMetadataTask.UpdateMetadataParam();
@@ -82,6 +98,7 @@ public class EditDescActivity extends DetailsActivity implements UpdateImageMeta
             updateMetadataParam.imageMetadata = currentImageMetadata;
             updateImageMetadataTask.execute(updateMetadataParam);
 
+            //Passing the updated metadata to the parent activity
             Intent intent = new Intent();
             intent.putExtra("metadata", currentImageMetadata);
             setResult(RESULT_OK, intent);

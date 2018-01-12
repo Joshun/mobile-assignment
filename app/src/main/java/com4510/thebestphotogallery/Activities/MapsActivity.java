@@ -1,6 +1,7 @@
 package com4510.thebestphotogallery.Activities;
 
 /**
+ * Activity for handling the main map
  * Created by FrancisALR on 31/12/2017.
  */
 import android.os.Bundle;
@@ -47,50 +48,61 @@ import com4510.thebestphotogallery.Util;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LoadMarkerResponseListener, ClusterManager.OnClusterItemClickListener<ClusterMarker> {
 
     private GoogleMap mMap;
-    protected ArrayList<ImageMetadata> imageList = new ArrayList<ImageMetadata>();
-    private CameraUpdate cu;
     protected ImageMetadataList metadataList;
 
     private LatLngBounds.Builder builder;
-    private String currentFilePath = ""; //This is gross but I couldn't think how else to do it
+    private String currentFilePath = "";
     private int numMarkersLoaded = 0;
     private int numToLoad = 0;
     private ClusterManager<ClusterMarker> manager;
 
+    /**
+     * Callback for when a marker has loaded
+     * @param metadata the metadata linked with the marker
+     * @param marker the loaded marker
+     */
     @Override
     public void markerLoaded(ImageMetadata metadata, ClusterMarker marker) {
         manager.addItem(marker);
         builder.include(marker.getPosition());
         ++numMarkersLoaded;
+
+        //Checks whether a certain number of markers have loaded
         if (numToLoad < 10 && numMarkersLoaded == numToLoad || numMarkersLoaded == numToLoad / 4) {
             markerBatchLoaded();
         }
     }
 
+    /**
+     * Method to animate the camera once a certain number of markers have loaded
+     */
     public void markerBatchLoaded() {
         LatLngBounds bounds = builder.build();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
         int padding = (int) (width * 0.15); // offset from edges of the map 10% of screen
 
-        cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
         mMap.animateCamera(cu);
     }
 
+    /**
+     * Method that searches for addresses based on a query
+     * @param query the address query
+     */
     public void searchAddresses(String query) {
         Geocoder geocoder = new Geocoder(getBaseContext());
 
         try {
             // Getting 3 address to match input using geocoder
             List<Address> addressList = geocoder.getFromLocationName(query, 1);
-            if (addressList != null && !addressList.equals(""))
-                search(addressList);
+            if (addressList != null)
+                moveToAddress(addressList.get(0));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +132,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        //Setting up the map
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
@@ -132,7 +145,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.clear();
 
-        //Create manager
+        //Create cluster manager
         manager = new ClusterManager<ClusterMarker>(this, mMap);
         mMap.setOnCameraIdleListener(manager);
         mMap.setOnMarkerClickListener(manager);
@@ -146,6 +159,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         builder = new LatLngBounds.Builder();
         List<Marker> markersList = new ArrayList<Marker>();
 
+        //Executing marker loading in async tasks
         for (ImageMetadata metadata : metadataList.getList()) {
             if (metadata != null && (metadata.getLatitude() != 0.0 || metadata.getLongitude() != 0.0)) {
                 ++numToLoad;
@@ -155,25 +169,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
-
-    protected void search(List<Address> addressList) {
-
-        Address address = (Address) addressList.get(0);
-
+    /**
+     * Moves the camera to the searched address
+     * @param address the address to move the camera to
+     */
+    protected void moveToAddress(Address address) {
         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
     }
 
+    /**
+     * Callback for when a marker (that isn't a cluster marker) is pressed
+     * @param marker the pressed marker
+     * @return boolean
+     */
     @Override
     public boolean onClusterItemClick(ClusterMarker marker) {
         currentFilePath = marker.getFilepath();
         return false;
     }
 
+    /**
+     * Local class for custom display for marker information
+     */
     private class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         private Activity context;

@@ -21,6 +21,7 @@ import com4510.thebestphotogallery.Tasks.LoadImagesTask;
 import com4510.thebestphotogallery.Util;
 
 /**
+ * Parent activity for handling activites with batch image loading
  * Created by George on 03-Jan-18.
  */
 
@@ -33,10 +34,15 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
     protected Util.BitmapList bitmaps = new Util.BitmapList();
     private int softCap = 0;
 
+    /**
+     * Method for dispatching an image load batch
+     * @param numberToLoad the number of images to load in the batch
+     */
     public void dispatchBitmapLoad(final int numberToLoad) {
         if (numberToLoad > 0) {
             loading = true;
 
+            //Reserves space in the bitmap list and dispatches async tasks to load the images
             final int offset = bitmaps.getList().size();
             for (int i = 0; i < numberToLoad; ++i) {
                 //Checking whether there is actually a file to load to prevent null pointer exceptions
@@ -50,6 +56,10 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         }
     }
 
+    /**
+     * Callback for when a batch has finished loading
+     * @param bitmaps the loaded bitmaps
+     */
     public void onFinishedBitmapLoad(List<Bitmap> bitmaps) {
         loading = false;
     }
@@ -58,18 +68,33 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         return loading;
     }
 
+    /**
+     * Whether the number of loaded bitmaps has reached a soft limit (for battery-preserving purposes)
+     * @return whether the soft limit has been hit or not
+     */
     public final boolean atSoftCap() {
         return bitmaps.getLoadedSize() >= softCap;
     }
 
+    /**
+     * Increases the soft limit
+     */
     public void incSoftCap() {
         softCap += BLOCK_SIZE * 4;
     }
 
+    /**
+     * Whether there are more bitmaps to be loaded still
+     * @return whether there are more bitmaps to be loaded still
+     */
     public final boolean moreToLoad() {
         return bitmaps.getList().size() < imageMetadataList.size();
     }
 
+    /**
+     * Callback for when all of the metadata has been loaded
+     * @param imageMetadataList the list of loaded metadata objects
+     */
     @Override
     public void imagesLoaded(List<ImageMetadata> imageMetadataList) {
         this.imageMetadataList.clear();
@@ -100,17 +125,25 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
 
     }
 
-
+    /**
+     * Starts an initial load of images
+     */
     public void doLoadImages(){
         doLoadImages(null,null);
     }
 
+    /**
+     * Starts an initial load of images
+     * @param filterStartDate start date to get images from
+     * @param filterEndDate end date to get images from
+     */
     public void doLoadImages(Calendar filterStartDate, Calendar filterEndDate) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Log.v(getClass().getName(), "doLoadImages: read permission not granted");
             return;
         }
 
+        //Clears the bitmaps and starts a new image load
         this.bitmaps.clear();
         LoadImagesTask loadImagesTask = new LoadImagesTask(this);
         LoadImagesTask.LoadImagesTaskParam loadImagesTaskParam = new LoadImagesTask.LoadImagesTaskParam();
@@ -120,10 +153,18 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
         loadImagesTask.execute(loadImagesTaskParam);
     }
 
+    /**
+     * Refreshes the list
+     */
     public void refresh() {
         refresh(null, null);
     }
 
+    /**
+     * Refreshes the list
+     * @param filterStartDate start date to get images from
+     * @param filterEndDate end date to get images from
+     */
     public void refresh(Calendar filterStartDate, Calendar filterEndDate) {
         loading = false;
         softCap = 0;

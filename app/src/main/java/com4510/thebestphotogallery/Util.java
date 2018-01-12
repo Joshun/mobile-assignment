@@ -45,14 +45,20 @@ import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 /**
+ * Utility class for useful static methods to be used across the project
  * Created by joshua on 22/11/17.
  */
 
 public class Util{
 
+    //ids for requests
     private static final int REQUEST_READ_EXTERNAL_STORAGE = 2987;
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 7829;
 
+    /**
+     * Helper class for reserving space for bitmaps and the number of bitmaps
+     * actually loaded
+     */
     public static class BitmapList  {
 
         private List<Bitmap> bitmaps;
@@ -83,21 +89,6 @@ public class Util{
         }
     }
 
-    public static class MetaDataList {
-        private ArrayList<ImageMetadata> metaDataList;
-
-        public MetaDataList() {
-            this.metaDataList = new ArrayList<>();
-        }
-
-        public final List<ImageMetadata> getList() {
-            return metaDataList;
-        }
-
-
-
-    }
-
     /**
      * it initialises EasyImage
      */
@@ -109,6 +100,13 @@ public class Util{
                 .setAllowMultiplePickInGallery(true);
     }
 
+    /**
+     * Helper method that efficiently loads bitmaps based on various parameters
+     * @param file File for image to be loaded
+     * @param dimension Size in pixels to resize to. Resulting bitmap's shortest side will be this size
+     * @param square Whether the bitmap should be trimmed down to a square
+     * @return The final bitmap image
+     */
     public static Bitmap loadBitmap(File file, int dimension, boolean square) {
         // don't try to load nonexistent files
         if (!file.exists()) {
@@ -168,10 +166,21 @@ public class Util{
         return bitmap;
     }
 
+    /**
+     * Helper method that efficiently loads bitmaps based on various parameters
+     * @param file File for image to be loaded
+     * @param dimension Size in pixels to resize to. Resulting bitmap's shortest side will be this size
+     * @return The final bitmap image
+     */
     public static Bitmap loadBitmap(File file, int dimension) {
         return loadBitmap(file, dimension, true);
     }
 
+    /**
+     * Helper method that efficiently loads bitmaps based on various parameters
+     * @param file File for image to be loaded
+     * @return The final bitmap image
+     */
     public static Bitmap loadBitmap(File file) {
         return loadBitmap(file, 128);
     }
@@ -190,6 +199,12 @@ public class Util{
         }
     }
 
+    /**
+     * Helper method that rounds a double to a specified number of decimal places
+     * @param x The double to be rounded
+     * @param dp The number of decimal places to round to
+     * @return The rounded double
+     */
     public static double roundDP(double x, int dp) {
         StringBuilder sb = new StringBuilder();
         sb.append("#.");
@@ -200,11 +215,21 @@ public class Util{
         return Double.valueOf(df.format(x));
     }
 
-
+    /**
+     * Helper method that rounds a double to two decimal places
+     * @param x The double to be rounded
+     * @return The rounded double
+     */
     public static double round2DP(double x) {
         return roundDP(x, 2);
     }
 
+    /**
+     * Helper method that takes a url to a server and produces a response
+     * @param urlLink Url of server to query
+     * @param response Out parameter of the server response
+     * @return Response code
+     */
     public static int getHttpToServer(String urlLink, StringBuffer response) {
         try {
             URL obj = new URL(urlLink);

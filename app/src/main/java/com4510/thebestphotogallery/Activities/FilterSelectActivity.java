@@ -21,16 +21,22 @@ import java.util.Calendar;
 
 import com4510.thebestphotogallery.R;
 
+/**
+ * The activity for altering the date filter
+ * Created by joshua on 11/01/17.
+ */
+
 public class FilterSelectActivity extends AppCompatActivity {
 
     private Calendar startDate;
     private Calendar endDate;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter_select);
+
+        //Setting up toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -41,6 +47,7 @@ public class FilterSelectActivity extends AppCompatActivity {
             Log.w(getClass().getName(), "toolbar is null");
         }
 
+        //Grabbing views
         TextInputEditText startDateEntry = findViewById(R.id.startdate_entry);
         TextInputEditText endDateEntry = findViewById(R.id.enddate_entry);
         Button filterActionBtn = findViewById(R.id.filter_action_btn);

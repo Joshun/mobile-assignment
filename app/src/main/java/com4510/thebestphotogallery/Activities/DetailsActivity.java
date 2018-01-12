@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import com4510.thebestphotogallery.R;
 
 /**
+ * Parent activity for details-based activities
  * Created by joshua on 29/12/17.
  */
 
@@ -39,6 +40,8 @@ public abstract class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Details activities all have a unique title
         Toolbar toolbar = findViewById(toolbarId);
         Log.v("Toolbar", toolbar == null ? "true" : "false");
         if (toolbar != null) {

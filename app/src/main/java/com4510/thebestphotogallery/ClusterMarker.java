@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
 /**
+ * Specialised marker used for the Google maps ClusterManager
  * Created by George on 11-Jan-18.
  */
 

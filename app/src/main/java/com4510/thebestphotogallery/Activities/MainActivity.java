@@ -37,6 +37,10 @@ import com4510.thebestphotogallery.R;
 import com4510.thebestphotogallery.Util;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
+/**
+ * Main activity that the app opens on
+ */
+
 public class MainActivity extends ImageLoadActivity {
     private int ANIM_LOAD_DURATION;
 
@@ -57,30 +61,44 @@ public class MainActivity extends ImageLoadActivity {
     private Calendar filterStartDate = null;
     private Calendar filterEndDate = null;
 
+    /**
+     * Method for dispatching an image load batch
+     * @param numberToLoad the number of images to load in the batch
+     */
     @Override
     public void dispatchBitmapLoad(final int numberToLoad) {
+        //Hides the refresh icon if there is nothing to load
         if (numberToLoad == 0) {
             swipeContainer.setRefreshing(false);
         }
         super.dispatchBitmapLoad(numberToLoad);
     }
 
+    /**
+     * Callback method for results from child activities
+     * @param requestCode activity request code
+     * @param resultCode activity result code
+     * @param data returning intent
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        //Camera
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             if (mCurrentPhotoPath != null) {
-//                galleryAddPic(mCurrentPhotoPath);
                 notifyMediaStoreScanner(new File(mCurrentPhotoPath));
                 Log.v(getClass().getName(), "IMAGE SAVE SUCCESS");
             }
         }
+        //Gallery image
         else if (requestCode == UPDATE_DATA) {
             final int position = data.getIntExtra("position", 0);
             final ImageMetadata metadata = (ImageMetadata) data.getSerializableExtra("metadata");
             imageMetadataList.set(position, metadata);
             recyclerViewAdapter.setItem(position, metadata);
         }
+        //Filter
         else if (requestCode == REQUEST_FILTER_IMAGE && resultCode == RESULT_OK) {
             Toast.makeText(this, "Applying filter...", Toast.LENGTH_LONG).show();
             Log.v(getClass().getName(), "IMAGE FILTER APPLIED");
@@ -90,20 +108,27 @@ public class MainActivity extends ImageLoadActivity {
         }
     }
 
+    /**
+     * Callback for when a batch has finished loading
+     * @param bitmaps the loaded bitmaps
+     */
     @Override
     public void onFinishedBitmapLoad(List<Bitmap> bitmaps) {
         super.onFinishedBitmapLoad(bitmaps);
+
+        //If a refresh has been queued and nothing is loading, start the refresh
         if (queueRefresh && this.bitmaps.loaded()) {
             refresh();
         }
+        //If this is the first time loading...
         else if (firstLoad) {
             firstLoad = false;
-            mainView.setAlpha(0.0f);
-            mainView.setVisibility(View.VISIBLE);
 
+            //Setting up toolbar
             Toolbar toolbar = findViewById(R.id.main_toolbar);
             setSupportActionBar(toolbar);
 
+            //Setting up recycler view for displaying the gallery
             recyclerView = findViewById(R.id.grid_recycler_view);
             int numberOfColumns = 4;
             final GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
@@ -112,6 +137,7 @@ public class MainActivity extends ImageLoadActivity {
             recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
                 @Override
                 public void onBottomReached(int position) {
+                    //If close to the bottom of the list is reached, increase the soft limit and load some more
                     if (!queueRefresh) {
                         if (atSoftCap()) {
                             incSoftCap();
@@ -125,6 +151,7 @@ public class MainActivity extends ImageLoadActivity {
             });
             recyclerView.setAdapter(recyclerViewAdapter);
 
+            //Setting up the swipe container for refreshing the gallery
             swipeContainer = findViewById(R.id.swipe_refresh_layout);
             swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
@@ -139,6 +166,7 @@ public class MainActivity extends ImageLoadActivity {
                         filterEndDate = null;
                     }
 
+                    //If something is not currently loading, immediately refresh. Otherwise, queue a refresh
                     if (!getLoading()) {
                         refresh();
                     }
@@ -148,7 +176,9 @@ public class MainActivity extends ImageLoadActivity {
                 }
             });
 
-
+            //Animate the gallery in and the loading animation out
+            mainView.setAlpha(0.0f);
+            mainView.setVisibility(View.VISIBLE);
             mainView.animate().alpha(1.0f).setDuration(ANIM_LOAD_DURATION).setListener(null);
             loadingView.animate().alpha(0.0f).setDuration(ANIM_LOAD_DURATION).setListener(new AnimatorListenerAdapter() {
                 @Override
@@ -158,6 +188,7 @@ public class MainActivity extends ImageLoadActivity {
                 }
             });
         }
+        //Otherwise, just update the gallery
         else {
             swipeContainer.setRefreshing(false);
             if (recyclerViewAdapter.isEmpty()) {
@@ -166,6 +197,7 @@ public class MainActivity extends ImageLoadActivity {
             recyclerViewAdapter.addBitmaps(bitmaps);
         }
 
+        //If not at the soft limit and there's more to load, dispatch another image batch
         if (!atSoftCap() && moreToLoad() && !queueRefresh) {
             if (recyclerView.getVisibility() == View.GONE) {
                 recyclerView.setVisibility(View.VISIBLE);
@@ -222,18 +254,11 @@ public class MainActivity extends ImageLoadActivity {
         }
     }
 
-    private void galleryAddPic(String photoPath) {
-        // this method doesn't actually save the photo to sdcard but notifies gallery
-        File f = new File(mCurrentPhotoPath);
-        System.out.println(f);
-        Uri contentUri = Uri.fromFile(f);
-        System.out.println(contentUri);
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        mediaScanIntent.setData(contentUri);
-        System.out.println(mediaScanIntent);
-        this.sendBroadcast(mediaScanIntent);
-    }
-
+    /**
+     * Callback for when an options menu item is selected
+     * @param item the selected item
+     * @return boolean
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         initEasyImage();
@@ -262,7 +287,6 @@ public class MainActivity extends ImageLoadActivity {
                     }
                 }
                 break;
-
             case R.id.btn_map:
                 intent = new Intent(this, MapsActivity.class);
                 ImageMetadataList imInstance = new ImageMetadataList();
@@ -302,7 +326,6 @@ public class MainActivity extends ImageLoadActivity {
         loadingView = findViewById(R.id.loading_view);
         mainView.setVisibility(View.GONE);
 
-
         // try to load images (will fail silently if permission not already granted)
         doLoadImages(filterStartDate, filterEndDate);
         // request permissions if they haven't already been granted
@@ -314,7 +337,11 @@ public class MainActivity extends ImageLoadActivity {
         return activity;
     }
 
+    /**
+     * Refreshes the list
+     */
     public void refresh() {
+        //Animating the gallery view out
         recyclerView.animate().alpha(0.0f).setDuration(ANIM_LOAD_DURATION).setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {

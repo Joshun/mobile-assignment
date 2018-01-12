@@ -42,7 +42,6 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
     private final int UPDATE_DATA = 1;
 
     private GoogleMap map;
-    private List<Bitmap> bitmapMipMaps;
 
     private ShowImageScrollView detailsView;
     private View imageContainer;
@@ -99,7 +98,6 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         detailsView = findViewById(R.id.details);
         imageContainer = findViewById(R.id.image_container);
         imageView = findViewById(R.id.image);
-        bitmapMipMaps = new ArrayList<>();
 
         detailsView.setVisibility(View.GONE);
         imageIndex  = getIntent().getExtras().getInt("position");
@@ -126,7 +124,7 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
             }
         }
 
-        ShowImageAsync imageAsync = new ShowImageAsync(imageView, loadingView, detailsView, bitmapMipMaps, element.file);
+        ShowImageAsync imageAsync = new ShowImageAsync(imageView, loadingView, detailsView, element.file);
         imageAsync.execute();
 
         if (toolbar != null) {

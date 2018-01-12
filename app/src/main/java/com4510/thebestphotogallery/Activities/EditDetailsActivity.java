@@ -35,18 +35,19 @@ import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
 import com4510.thebestphotogallery.Util;
 
 /**
+ * The activity for housing the image options menu
  * Created by George on 02-Jan-18.
  */
 
 public class EditDetailsActivity extends DetailsActivity implements ServerResponseListener, UpdateImageMetadataListener, ElevationResponseListener {
 
+    //Various request codes
     private final int PICKER_REQUEST = 1;
     private final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2;
     private final int UPDATE_DATA = 3;
 
     private ImageMetadata currentImageMetadata = null;
     private Integer imageIndex = null;
-    private PlaceDetectionClient placeDetectionClient;
     private boolean locationPermissionGranted = false;
     private boolean gettingElevation = false;
 
@@ -69,14 +70,15 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
         setContentView(R.layout.activity_editimagedetails);
         super.onCreate(savedInstanceState);
 
-        placeDetectionClient = Places.getPlaceDetectionClient(this, null);
-
         currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
         imageIndex = getIntent().getExtras().getInt("position");
         setDetails();
 
     }
 
+    /**
+     * Sets all of the details in the various buttons in the menu
+     */
     private void setDetails() {
         TextView name = findViewById(R.id.btn_edit_name_text);
         TextView desc = findViewById(R.id.btn_edit_description_text);
@@ -101,8 +103,12 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
         }
     }
 
+    /**
+     * Method for when the back button is pressed
+     */
     @Override
     public void onBackPressed() {
+        //If the elevation hasn't been found yet, stop the user from going back
         if (!gettingElevation) {
             Intent intent = new Intent();
             intent.putExtra("metadata", currentImageMetadata);
@@ -115,6 +121,10 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
         }
     }
 
+    /**
+     * Used in the XML onClick parameter for when a button is pressed
+     * @param view the button view
+     */
     public void btnSelected(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -134,6 +144,9 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
         }
     }
 
+    /**
+     * Requests permission to access the user's location if necessary
+     */
     private void getLocationPermission() {
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -149,6 +162,12 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
         }
     }
 
+    /**
+     * Callback for when the permission result arrives, then opens the map
+     * @param requestCode the specific request
+     * @param permissions the permissions requested
+     * @param grantResults the permissions granted
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
@@ -167,29 +186,14 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
         openMap();
     }
 
+    /**
+     * Method for opening the map if permissions are granted
+     */
     private void openMap() {
         try {
             if (locationPermissionGranted) {
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
                 Intent intent = builder.build(this);
-//                Task<PlaceLikelihoodBufferResponse> placeResult = placeDetectionClient.getCurrentPlace(null);
-//                placeResult.addOnCompleteListener(new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
-//                        if (task.isSuccessful()) {
-//                            PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
-//                            float highest = 0.0f;
-//                            for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-//                                highest = Math.max(highest, placeLikelihood.getLikelihood());
-//                            }
-//                            likelyPlaces.release();
-//                        }
-//                        else {
-//                            Log.e("Edit Location", "Task failed");
-//                        }
-//                    }
-//                });
-
                 startActivityForResult(intent, PICKER_REQUEST);
             }
         }
@@ -201,10 +205,17 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
         }
     }
 
+    /**
+     * Callback method for results from child activities
+     * @param requestCode activity request code
+     * @param resultCode activity result code
+     * @param data returning intent
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        //Map
         if (requestCode == PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
@@ -214,13 +225,15 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
                     currentImageMetadata.setLatitude(l.latitude);
                     currentImageMetadata.setLongitude(l.longitude);
 
-                    //Altitude
+                    //Starting a task to find altitude based on returned latitude and longitude
                     ElevationTask task = new ElevationTask(l.latitude, l.longitude, getString(R.string.google_maps_key), this);
                     task.execute();
                     gettingElevation = true;
 
+                    //Setting button details
                     setDetails();
 
+                    //Updating DB entry
                     Log.v(getClass().getName(), "Updating metadata for image " + currentImageMetadata.getFilePath());
                     UpdateImageMetadataTask updateImageMetadataTask = new UpdateImageMetadataTask(this);
                     UpdateImageMetadataTask.UpdateMetadataParam updateMetadataParam = new UpdateImageMetadataTask.UpdateMetadataParam();
@@ -231,24 +244,36 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
 
             }
         }
+        //Name or description
         else if (requestCode == UPDATE_DATA) {
             currentImageMetadata = (ImageMetadata) data.getSerializableExtra("metadata");
             setDetails();
         }
     }
 
+    /**
+     * Callback for when the metadata has successfully updated in the DB
+     * @param imageMetadata the updated metadata
+     */
     @Override
     public void imageUpdated(ImageMetadata imageMetadata) {
         Log.v(getClass().getName(), "Image " + imageMetadata.getFilePath() + " metadata update successful");
         Toast.makeText(getApplicationContext(), "Location Updated", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Method for launching edit activities
+     * @param intent intent to pass to activity
+     */
     private void launchActivity(final Intent intent) {
         intent.putExtra("position", imageIndex);
         intent.putExtra("metadata", currentImageMetadata);
         startActivityForResult(intent, UPDATE_DATA);
     }
 
+    /**
+     * Method for updating data on the server
+     */
     private void uploadToServer() {
         Log.v(getClass().getName(), "upload to server option selected");
         Toast.makeText(this, "Uploading...", Toast.LENGTH_SHORT).show();
@@ -257,6 +282,10 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
 
     }
 
+    /**
+     * Callback once the elevation from the Google Elevation API has been found
+     * @param elevation
+     */
     @Override
     public void elevationResponse(double elevation) {
         gettingElevation = false;
