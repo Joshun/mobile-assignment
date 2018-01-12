@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import com4510.thebestphotogallery.Database.DatabaseResponseListener;
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Listeners.LoadImagesResponseListener;
 import com4510.thebestphotogallery.Tasks.PreloadImageAsync;
@@ -24,7 +23,7 @@ import com4510.thebestphotogallery.Util;
  * Created by George on 03-Jan-18.
  */
 
-public abstract class ImageLoadActivity extends AppCompatActivity implements LoadImagesResponseListener, DatabaseResponseListener {
+public abstract class ImageLoadActivity extends AppCompatActivity implements LoadImagesResponseListener {
     protected final int UPDATE_DATA = 2;
 
     private boolean loading = false;
@@ -81,11 +80,6 @@ public abstract class ImageLoadActivity extends AppCompatActivity implements Loa
 
         incSoftCap();
         dispatchBitmapLoad(Math.min(BLOCK_SIZE, imageMetadataList.size()));
-    }
-
-    @Override
-    public void onDatabaseRead(List<ImageMetadata> imageMetadataList) {
-        Log.v(getClass().getName(), "loaded image metadata database.");
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

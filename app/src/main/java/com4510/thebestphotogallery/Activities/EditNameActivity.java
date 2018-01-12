@@ -12,8 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
-import com4510.thebestphotogallery.Database.UpdateImageMetadataListener;
-import com4510.thebestphotogallery.ImageMetadataList;
+import com4510.thebestphotogallery.Listeners.UpdateImageMetadataListener;
 import com4510.thebestphotogallery.R;
 import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
 

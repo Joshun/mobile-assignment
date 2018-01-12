@@ -18,14 +18,8 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.HttpURLConnection;
-
 import com4510.thebestphotogallery.Database.ImageMetadata;
-import com4510.thebestphotogallery.Database.UpdateImageMetadataListener;
+import com4510.thebestphotogallery.Listeners.UpdateImageMetadataListener;
 import com4510.thebestphotogallery.Listeners.ElevationResponseListener;
 import com4510.thebestphotogallery.Listeners.ServerResponseListener;
 import com4510.thebestphotogallery.R;
