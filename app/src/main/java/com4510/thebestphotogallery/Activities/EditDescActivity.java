@@ -3,7 +3,6 @@ package com4510.thebestphotogallery.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.XmlRes;
 import android.support.design.widget.TextInputEditText;
 import android.util.Log;
 import android.view.MenuItem;
@@ -13,8 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com4510.thebestphotogallery.Database.ImageMetadata;
-import com4510.thebestphotogallery.Database.UpdateImageMetadataListener;
-import com4510.thebestphotogallery.ImageMetadataList;
+import com4510.thebestphotogallery.Listeners.UpdateImageMetadataListener;
 import com4510.thebestphotogallery.R;
 import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
 
@@ -24,7 +22,6 @@ import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
 
 public class EditDescActivity extends DetailsActivity implements UpdateImageMetadataListener {
 
-    private Integer imageIndex;
     private ImageMetadata currentImageMetadata = null;
     private TextInputEditText descriptionInput;
 
@@ -37,7 +34,6 @@ public class EditDescActivity extends DetailsActivity implements UpdateImageMeta
         setContentView(R.layout.activity_editdescription);
         super.onCreate(savedInstanceState);
 
-        imageIndex = getIntent().getExtras().getInt("position");
         currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
         TextView oldName = findViewById(R.id.edit_description_text_old);
         descriptionInput = findViewById(R.id.edit_description_text);
