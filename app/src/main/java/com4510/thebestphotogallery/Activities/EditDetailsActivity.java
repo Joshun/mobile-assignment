@@ -240,12 +240,7 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
     @Override
     public void imageUpdated(ImageMetadata imageMetadata) {
         Log.v(getClass().getName(), "Image " + imageMetadata.getFilePath() + " metadata update successful");
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), "Location Updated", Toast.LENGTH_SHORT).show();
-            }
-        });
+        Toast.makeText(getApplicationContext(), "Location Updated", Toast.LENGTH_SHORT).show();
     }
 
     private void launchActivity(final Intent intent) {

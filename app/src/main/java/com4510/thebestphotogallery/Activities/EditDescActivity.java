@@ -60,13 +60,8 @@ public class EditDescActivity extends DetailsActivity implements UpdateImageMeta
     @Override
     public void imageUpdated(ImageMetadata imageMetadata) {
         Log.v(getClass().getName(), "Image " + imageMetadata.getFilePath() + " metadata update successful");
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), "Description Updated", Toast.LENGTH_SHORT).show();
-                EditDescActivity.super.onBackPressed();
-            }
-        });
+        Toast.makeText(getApplicationContext(), "Description Updated", Toast.LENGTH_SHORT).show();
+        EditDescActivity.super.onBackPressed();
     }
 
 
