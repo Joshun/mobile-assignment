@@ -15,7 +15,7 @@ import com4510.thebestphotogallery.R;
 import com4510.thebestphotogallery.Util;
 
 /**
- * Created by George on 11-Jan-18.
+ * AsyncTask for querying Google Maps elevation API
  */
 
 public class ElevationTask extends AsyncTask<Void, Void, String> {

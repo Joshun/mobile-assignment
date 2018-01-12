@@ -15,7 +15,7 @@ import com4510.thebestphotogallery.OkHttpMultipartRequest;
 import okhttp3.OkHttpClient;
 
 /**
- * Created by joshua on 10/01/18.
+ * AsyncTask for uploading an image and some of its metadata to a server
  */
 
 public class SendToServerTask extends AsyncTask<ImageMetadata, Void, Void> {

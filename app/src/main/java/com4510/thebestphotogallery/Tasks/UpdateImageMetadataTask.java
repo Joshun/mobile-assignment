@@ -9,7 +9,7 @@ import com4510.thebestphotogallery.Database.ImageMetadataDao;
 import com4510.thebestphotogallery.Database.UpdateImageMetadataListener;
 
 /**
- * Created by joshua on 02/01/18.
+ * AsyncTask for updating image metadata, notably when it is edited by the user
  */
 
 public class UpdateImageMetadataTask extends AsyncTask<UpdateImageMetadataTask.UpdateMetadataParam, Void, Void> {
