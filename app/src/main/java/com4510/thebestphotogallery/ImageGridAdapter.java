@@ -1,11 +1,9 @@
 /*
- * Copyright (c) 2017. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
+ * Adapter to populate main view with images at runtime
  */
 
 package com4510.thebestphotogallery;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
@@ -22,13 +20,13 @@ import com4510.thebestphotogallery.Activities.ShowImageActivity;
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Listeners.OnBottomReachedListener;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
+public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.View_Holder> {
     private MainActivity activity;
     private CopyOnWriteArrayList<ImageMetadata> items;
     private CopyOnWriteArrayList<Bitmap> bitmaps;
     private OnBottomReachedListener onBottomReachedListener;
 
-    public MyAdapter(final MainActivity activity, List<ImageMetadata> items, List<Bitmap> bitmaps) {
+    public ImageGridAdapter(final MainActivity activity, List<ImageMetadata> items, List<Bitmap> bitmaps) {
         super();
         this.items = new CopyOnWriteArrayList<>(items);
         this.bitmaps = new CopyOnWriteArrayList<>(bitmaps);
@@ -54,6 +52,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
 
             if (bitmaps.get(position) != null) {
                 holder.imageView.setImageBitmap(bitmaps.get(position));
+
+                // Starts view image intent on tap
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

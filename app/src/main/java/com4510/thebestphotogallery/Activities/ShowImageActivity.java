@@ -47,10 +47,7 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
     private View imageContainer;
     private ImageView imageView;
 
-    Integer imageIndex = null;
     private ImageMetadata element;
-
-    private static final String SERVER_URI = "http://jmoey.com:8091";
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -62,7 +59,6 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        intent.putExtra("position", imageIndex);
         intent.putExtra("metadata", element);
         setResult(RESULT_OK, intent);
         finish();
@@ -77,7 +73,6 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
                 Log.v(getClass().getName(), "edit detail option selected");
                 intent = new Intent(this, EditDetailsActivity.class);
                 intent.putExtra("metadata", element);
-                intent.putExtra("position", imageIndex);
                 startActivityForResult(intent, UPDATE_DATA);
                 return true;
             case android.R.id.home:
@@ -100,7 +95,6 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         imageView = findViewById(R.id.image);
 
         detailsView.setVisibility(View.GONE);
-        imageIndex  = getIntent().getExtras().getInt("position");
         element = (ImageMetadata) getIntent().getSerializableExtra("metadata");
         detailsView.setOnScrollChangedListener(this);
         setDetails(element);
@@ -108,21 +102,6 @@ public class ShowImageActivity extends AppCompatActivity implements OnScrollChan
         //Map
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.show_map);
         mapFragment.getMapAsync(this);
-
-        if (savedInstanceState != null) {
-            Log.v(getClass().getName(), "loaded instance state");
-            imageIndex = savedInstanceState.getInt("position");
-
-        }
-        else {
-            Bundle b = getIntent().getExtras();
-            //            int position = -1;
-            imageIndex = -1;
-            if (b != null) {
-                // this is the image position in the itemList
-                imageIndex = b.getInt("position");
-            }
-        }
 
         ShowImageAsync imageAsync = new ShowImageAsync(imageView, loadingView, detailsView, element.file);
         imageAsync.execute();

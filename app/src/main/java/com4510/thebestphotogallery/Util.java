@@ -40,8 +40,6 @@ import java.util.List;
 
 import javax.net.ssl.SSLException;
 
-import com4510.thebestphotogallery.Database.ImageMetadata;
-import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 /**
@@ -206,6 +204,7 @@ public class Util{
      * @return The rounded double
      */
     public static double roundDP(double x, int dp) {
+        // rounds to an arbitrary number of decimal places
         StringBuilder sb = new StringBuilder();
         sb.append("#.");
         for (int i=0; i<dp; i++) {

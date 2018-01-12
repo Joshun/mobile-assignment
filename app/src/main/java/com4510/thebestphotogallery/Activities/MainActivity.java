@@ -32,7 +32,7 @@ import java.util.List;
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.ImageMetadataList;
 import com4510.thebestphotogallery.Listeners.OnBottomReachedListener;
-import com4510.thebestphotogallery.MyAdapter;
+import com4510.thebestphotogallery.ImageGridAdapter;
 import com4510.thebestphotogallery.R;
 import com4510.thebestphotogallery.Util;
 import pl.aprilapps.easyphotopicker.EasyImage;
@@ -49,7 +49,7 @@ public class MainActivity extends ImageLoadActivity {
     private RecyclerView recyclerView;
     private View mainView;
     private View loadingView;
-    private MyAdapter recyclerViewAdapter;
+    private ImageGridAdapter recyclerViewAdapter;
     private SwipeRefreshLayout swipeContainer;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_FILTER_IMAGE = 4;
@@ -133,7 +133,7 @@ public class MainActivity extends ImageLoadActivity {
             int numberOfColumns = 4;
             final GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
             recyclerView.setLayoutManager(layoutManager);
-            recyclerViewAdapter = new MyAdapter(this, imageMetadataList, bitmaps);
+            recyclerViewAdapter = new ImageGridAdapter(this, imageMetadataList, bitmaps);
             recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
                 @Override
                 public void onBottomReached(int position) {

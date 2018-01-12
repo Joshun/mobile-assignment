@@ -11,10 +11,12 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by joshua on 27/12/17.
+ * Object to represent image metadata (name, description, exif, filepath)
+ * Mapped to sqlite database using Android Room library
  */
+
+// filePath is unique - if an image is already in the database, we leave it as it is
 @Entity(tableName = "image_metadata", indices = {@Index(value="filePath", unique = true)})
-//@Entity(tableName = "image_metadata")
 public class ImageMetadata implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int uid;

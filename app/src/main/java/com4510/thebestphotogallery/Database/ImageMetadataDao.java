@@ -11,7 +11,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by joshua on 27/12/17.
+ * Dao (Database Access Object) interface for ImageMetadata
+ * Maps queries to functions using Room persistence library
  */
 
 @Dao

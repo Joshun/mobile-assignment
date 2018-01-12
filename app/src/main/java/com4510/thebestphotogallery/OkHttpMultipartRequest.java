@@ -14,7 +14,7 @@ import okhttp3.Response;
 
 
 /**
- * Created by joshua on 10/01/18.
+ * Used by SendToServerTask to make multipart requests
  */
 
 public class OkHttpMultipartRequest {
@@ -32,7 +32,7 @@ public class OkHttpMultipartRequest {
     }
 
     public void addFile(String name, String mimetype, String fileName, String filePath) {
-        System.out.println("uploading " + filePath + "...");
+        Log.v(getClass().getName(), "uploading " + filePath + "...");
         multipartBody.addFormDataPart(name,
             fileName,
             RequestBody.create(MediaType.parse(mimetype), new File(filePath))

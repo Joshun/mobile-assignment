@@ -18,14 +18,8 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.HttpURLConnection;
-
 import com4510.thebestphotogallery.Database.ImageMetadata;
-import com4510.thebestphotogallery.Database.UpdateImageMetadataListener;
+import com4510.thebestphotogallery.Listeners.UpdateImageMetadataListener;
 import com4510.thebestphotogallery.Listeners.ElevationResponseListener;
 import com4510.thebestphotogallery.Listeners.ServerResponseListener;
 import com4510.thebestphotogallery.R;
@@ -47,7 +41,6 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
     private final int UPDATE_DATA = 3;
 
     private ImageMetadata currentImageMetadata = null;
-    private Integer imageIndex = null;
     private boolean locationPermissionGranted = false;
     private boolean gettingElevation = false;
 
@@ -71,7 +64,6 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
         super.onCreate(savedInstanceState);
 
         currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
-        imageIndex = getIntent().getExtras().getInt("position");
         setDetails();
 
     }
@@ -266,7 +258,6 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
      * @param intent intent to pass to activity
      */
     private void launchActivity(final Intent intent) {
-        intent.putExtra("position", imageIndex);
         intent.putExtra("metadata", currentImageMetadata);
         startActivityForResult(intent, UPDATE_DATA);
     }

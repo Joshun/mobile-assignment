@@ -7,7 +7,7 @@ import android.widget.ScrollView;
 import com4510.thebestphotogallery.Listeners.OnScrollChangedListener;
 
 /**
- * Created by George on 06-Jan-18.
+ * Extends the layout with styles and adds listener to loadnew images when the bottom is reached
  */
 
 public class ShowImageScrollView extends ScrollView {

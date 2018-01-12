@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import com4510.thebestphotogallery.Database.AppDatabase;
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Database.ImageMetadataDao;
-import com4510.thebestphotogallery.Database.UpdateImageMetadataListener;
+import com4510.thebestphotogallery.Listeners.UpdateImageMetadataListener;
 
 /**
  * AsyncTask for updating image metadata, notably when it is edited by the user

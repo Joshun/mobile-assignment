@@ -94,7 +94,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Geocoder geocoder = new Geocoder(getBaseContext());
 
         try {
-            // Getting 3 address to match input using geocoder
+            // Getting an address to match input using geocoder
             List<Address> addressList = geocoder.getFromLocationName(query, 1);
             if (addressList != null)
                 moveToAddress(addressList.get(0));
