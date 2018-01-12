@@ -22,7 +22,7 @@ import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.Images.LoadImagesResponseListener;
 
 /**
- * Created by joshua on 02/01/18.
+ * AsyncTask for querying Android MediaStore to obtain image paths and extracting metadata
  */
 
 public class LoadImagesTask extends AsyncTask<LoadImagesTask.LoadImagesTaskParam, Void, List<ImageMetadata>> {

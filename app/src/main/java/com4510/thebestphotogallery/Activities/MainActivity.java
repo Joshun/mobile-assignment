@@ -3,9 +3,6 @@ package com4510.thebestphotogallery.Activities;
 import android.app.Activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,33 +13,27 @@ import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.util.Log;
 import android.net.Uri;
 import android.support.v4.content.FileProvider;
-import android.widget.DatePicker;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.io.IOException;
 import java.io.File;
 import java.util.List;
-import java.util.TimeZone;
 
-import com4510.thebestphotogallery.Database.AppDatabase;
 import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.ImageMetadataList;
 import com4510.thebestphotogallery.Listeners.OnBottomReachedListener;
 import com4510.thebestphotogallery.MyAdapter;
 import com4510.thebestphotogallery.R;
-import com4510.thebestphotogallery.Tasks.ReadFromDatabaseTask;
 import com4510.thebestphotogallery.Util;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
@@ -310,9 +301,6 @@ public class MainActivity extends ImageLoadActivity {
         mainView = findViewById(R.id.main_view);
         loadingView = findViewById(R.id.loading_view);
         mainView.setVisibility(View.GONE);
-
-        ReadFromDatabaseTask readFromDatabaseTask = new ReadFromDatabaseTask(this);
-        readFromDatabaseTask.execute(AppDatabase.getInstance(this).imageMetadataDao());
 
 
         // try to load images (will fail silently if permission not already granted)

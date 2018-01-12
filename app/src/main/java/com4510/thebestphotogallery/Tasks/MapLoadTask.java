@@ -17,7 +17,7 @@ import com4510.thebestphotogallery.Database.ImageMetadata;
 import com4510.thebestphotogallery.ImageMetadataList;
 import com4510.thebestphotogallery.Listeners.LoadMarkerResponseListener;
 /**
- * Created by joshua on 09/01/18.
+ * AsyncTask for constructing map markers from metadata
  */
 
 public class MapLoadTask extends AsyncTask<Void, Void, ClusterMarker> {

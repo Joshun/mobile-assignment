@@ -62,14 +62,8 @@ public class EditNameActivity extends DetailsActivity implements UpdateImageMeta
     @Override
     public void imageUpdated(ImageMetadata imageMetadata) {
         Log.v(getClass().getName(), "Image " + imageMetadata.getFilePath() + " metadata update successful");
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), "Name Updated", Toast.LENGTH_SHORT).show();
-                EditNameActivity.super.onBackPressed();
-            }
-        });
+        Toast.makeText(getApplicationContext(), "Name Updated", Toast.LENGTH_SHORT).show();
+        EditNameActivity.super.onBackPressed();
     }
 
     public void onSavePressed(View view) {

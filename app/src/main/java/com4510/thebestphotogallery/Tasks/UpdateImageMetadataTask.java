@@ -9,11 +9,12 @@ import com4510.thebestphotogallery.Database.ImageMetadataDao;
 import com4510.thebestphotogallery.Database.UpdateImageMetadataListener;
 
 /**
- * Created by joshua on 02/01/18.
+ * AsyncTask for updating image metadata, notably when it is edited by the user
  */
 
 public class UpdateImageMetadataTask extends AsyncTask<UpdateImageMetadataTask.UpdateMetadataParam, Void, Void> {
     private UpdateImageMetadataListener updateImageMetadataListener;
+    private ImageMetadata updatedMetadata = null;
 
     public UpdateImageMetadataTask() {
         updateImageMetadataListener = null;
@@ -32,9 +33,15 @@ public class UpdateImageMetadataTask extends AsyncTask<UpdateImageMetadataTask.U
     protected Void doInBackground(UpdateImageMetadataTask.UpdateMetadataParam... updateImageMetadataTasks) {
         ImageMetadataDao imageMetadataDao = AppDatabase.getInstance(updateImageMetadataTasks[0].activity).imageMetadataDao();
         imageMetadataDao.update(updateImageMetadataTasks[0].imageMetadata);
-        if (updateImageMetadataListener != null) {
-            updateImageMetadataListener.imageUpdated(updateImageMetadataTasks[0].imageMetadata);
-        }
+        updatedMetadata = updateImageMetadataTasks[0].imageMetadata;
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        if (updateImageMetadataListener != null) {
+            updateImageMetadataListener.imageUpdated(updatedMetadata);
+        }
     }
 }
