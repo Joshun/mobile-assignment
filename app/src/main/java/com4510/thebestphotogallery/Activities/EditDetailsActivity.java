@@ -39,7 +39,6 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
     private final int UPDATE_DATA = 3;
 
     private ImageMetadata currentImageMetadata = null;
-    private Integer imageIndex = null;
     private PlaceDetectionClient placeDetectionClient;
     private boolean locationPermissionGranted = false;
     private boolean gettingElevation = false;
@@ -66,7 +65,6 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
         placeDetectionClient = Places.getPlaceDetectionClient(this, null);
 
         currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
-        imageIndex = getIntent().getExtras().getInt("position");
         setDetails();
 
     }
@@ -238,7 +236,6 @@ public class EditDetailsActivity extends DetailsActivity implements ServerRespon
     }
 
     private void launchActivity(final Intent intent) {
-        intent.putExtra("position", imageIndex);
         intent.putExtra("metadata", currentImageMetadata);
         startActivityForResult(intent, UPDATE_DATA);
     }

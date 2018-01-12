@@ -21,8 +21,6 @@ import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
  */
 
 public class EditNameActivity extends DetailsActivity implements UpdateImageMetadataListener {
-
-    private Integer imageIndex;
     private ImageMetadata currentImageMetadata = null;
     private TextInputEditText nameInput;
 
@@ -35,7 +33,6 @@ public class EditNameActivity extends DetailsActivity implements UpdateImageMeta
         setContentView(R.layout.activity_editname);
         super.onCreate(savedInstanceState);
 
-        imageIndex = getIntent().getExtras().getInt("position");
         currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
 
         TextView oldName = findViewById(R.id.edit_name_text_old);

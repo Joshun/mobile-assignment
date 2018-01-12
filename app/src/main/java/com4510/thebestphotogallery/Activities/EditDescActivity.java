@@ -22,7 +22,6 @@ import com4510.thebestphotogallery.Tasks.UpdateImageMetadataTask;
 
 public class EditDescActivity extends DetailsActivity implements UpdateImageMetadataListener {
 
-    private Integer imageIndex;
     private ImageMetadata currentImageMetadata = null;
     private TextInputEditText descriptionInput;
 
@@ -35,7 +34,6 @@ public class EditDescActivity extends DetailsActivity implements UpdateImageMeta
         setContentView(R.layout.activity_editdescription);
         super.onCreate(savedInstanceState);
 
-        imageIndex = getIntent().getExtras().getInt("position");
         currentImageMetadata = (ImageMetadata) getIntent().getSerializableExtra("metadata");
         TextView oldName = findViewById(R.id.edit_description_text_old);
         descriptionInput = findViewById(R.id.edit_description_text);
