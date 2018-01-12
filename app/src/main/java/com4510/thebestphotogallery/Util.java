@@ -40,12 +40,10 @@ import java.util.List;
 
 import javax.net.ssl.SSLException;
 
-import com4510.thebestphotogallery.Database.ImageMetadata;
-import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 /**
- * Created by joshua on 22/11/17.
+ * Miscellaneous utilities used throughout the application
  */
 
 public class Util{
@@ -81,21 +79,6 @@ public class Util{
             bitmaps.clear();
             loadedSize = 0;
         }
-    }
-
-    public static class MetaDataList {
-        private ArrayList<ImageMetadata> metaDataList;
-
-        public MetaDataList() {
-            this.metaDataList = new ArrayList<>();
-        }
-
-        public final List<ImageMetadata> getList() {
-            return metaDataList;
-        }
-
-
-
     }
 
     /**
@@ -191,6 +174,7 @@ public class Util{
     }
 
     public static double roundDP(double x, int dp) {
+        // rounds to an arbitrary number of decimal places
         StringBuilder sb = new StringBuilder();
         sb.append("#.");
         for (int i=0; i<dp; i++) {
